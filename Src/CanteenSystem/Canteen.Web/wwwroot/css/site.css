@@ -1,8 +1,85 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+/* DEFINE ALL OF THE COLORS USED ALL THE WAY THROUGH THE DESIGN */
+
+
+/* SET THE MAIN FONT FAMILY, AND ADD FALLBACKS */
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+
+.page-row {
+
+}
+
+.page-row .col-12:first-of-type {
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.canteenMenuItem {
+    padding: 20px;
+    background-color: #131313;
+    margin: 15px 0px 15px 0px;
+    min-height: 200px;
+    color: white;
+    justify-content: center;
+    align-content: center;
+}
+
+.canteenMenuItem:hover {
+    animation: canteenMenuItemHoverEffect ease-in-out 2s;
+    animation-iteration-count: infinite;
+}
+
+
+.canteenMenuItem .canteenMenuItemInfoIcon {
+    position: absolute;
+    top: 22px;
+    right: 25px;
+    font-size: 25px;
+    opacity: 0.6;
+    transition: opacity 0.5s ease;
+}
+
+.canteenMenuItem .canteenMenuItemInfoIcon:hover {
+    opacity: 1;
+}
+
+.canteenMenuItem .canteenMenuItemContent {
+    transform: translate(-50%, -50%);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    text-align: center;
+}
+
+.canteenMenuItem.allergic {
+    box-shadow: rgba(255, 0, 0) 0px 0px 10px;
+}
+
+.canteenMenuItem.notAllergic {
+    box-shadow: rgba(0, 240, 10) 0px 0px 10px;
+}
+
+
+
+
+
+@keyframes canteenMenuItemHoverEffect {
+    0% {
+        box-shadow: rgba(0, 240, 10) 0px 0px 10px;
+    }
+
+    50% {
+        box-shadow: rgba(0, 240, 10) 0px 0px 0px;
+    }
+
+    100% {
+        box-shadow: rgba(0, 240, 10) 0px 0px 10px;
+    }
+}
+
 
 a, .btn-link {
     color: #0366d6;
@@ -42,9 +119,9 @@ a, .btn-link {
     z-index: 1000;
 }
 
-    #blazor-error-ui .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
-    }
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}

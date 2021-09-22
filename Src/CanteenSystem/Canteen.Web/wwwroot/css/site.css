@@ -1,15 +1,20 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-/* DEFINE ALL OF THE COLORS USED ALL THE WAY THROUGH THE DESIGN */
+/* Define all of the variables that should be used throughout the code */
+:root {
+    /* Background colors */
+    --primaryColor: #131313;
+    --secondaryColor: #2A2A2A;
 
-
-/* SET THE MAIN FONT FAMILY, AND ADD FALLBACKS */
-html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    /* Font colors */
+    --darkFontColor: white;
+    --lightFontColor: black;
 }
 
-.page-row {
 
+/* Set the main font and at all of the fallbacks */
+html, body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 .page-row .col-12:first-of-type {
@@ -19,19 +24,14 @@ html, body {
 
 .canteenMenuItem {
     padding: 20px;
-    background-color: #131313;
+    background-color: var(--primaryColor);
     margin: 15px 0px 15px 0px;
     min-height: 200px;
     color: white;
     justify-content: center;
     align-content: center;
+    color: var(--darkFontColor);
 }
-
-.canteenMenuItem:hover {
-    animation: canteenMenuItemHoverEffect ease-in-out 2s;
-    animation-iteration-count: infinite;
-}
-
 
 .canteenMenuItem .canteenMenuItemInfoIcon {
     position: absolute;
@@ -66,19 +66,29 @@ html, body {
 
 
 
-@keyframes canteenMenuItemHoverEffect {
-    0% {
-        box-shadow: rgba(0, 240, 10) 0px 0px 10px;
-    }
 
-    50% {
-        box-shadow: rgba(0, 240, 10) 0px 0px 0px;
-    }
 
-    100% {
-        box-shadow: rgba(0, 240, 10) 0px 0px 10px;
-    }
+
+
+/* CHange the background in general for the dark table */
+table.table-dark {
+    background-color: var(--primaryColor);
 }
+
+/* Change the background color of the table header */
+table.table-dark thead {
+    background-color: var(--secondaryColor);
+    color: var(--darkFontColor);
+}
+
+/* Remove all of the borders from the dark tables */
+.table-dark td, .table-dark th, .table-dark thead th {
+    border: none;
+}
+
+
+
+
 
 
 a, .btn-link {

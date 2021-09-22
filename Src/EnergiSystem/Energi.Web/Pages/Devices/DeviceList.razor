@@ -1,0 +1,24 @@
+﻿@page "/devicelist"
+@using Energi.Service.DeviceService
+@using Energi.Service.DeviceService.DTO
+
+@inject IDeviceService deviceService
+
+<h3>Device list</h3>
+
+<h2>Device count: @deviceList.Count()</h2>
+
+@code {
+    private List<SlimDeviceDTO> deviceList; 
+
+    protected override async Task OnInitializedAsync()
+    {
+        deviceList = await deviceService.GetAllAsync();
+
+        if (deviceList == null)
+        {
+            deviceList = new List<SlimDeviceDTO>();
+        }
+
+    }
+}

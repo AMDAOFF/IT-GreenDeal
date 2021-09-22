@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DeviceService\DTO\" />
+    <ProjectReference Include="..\Energi.DataAccess\Energi.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

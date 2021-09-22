@@ -17,6 +17,16 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+
+/* Global text styling */
+p {
+    margin: 0px !important;
+}
+
+h5 {
+    margin: 0px;
+}
+
 .page-row .col-12:first-of-type {
     text-align: center;
     text-transform: uppercase;
@@ -84,6 +94,25 @@ table.table-dark thead {
 /* Remove all of the borders from the dark tables */
 .table-dark td, .table-dark th, .table-dark thead th {
     border: none;
+}
+
+
+/* Custom rounded bootstrap button */
+.btn.btn-rounded {
+    border-radius: 100px;
+    padding: 5px 11px;
+}
+
+.btn.btn-rounded.btn-small-text {
+    font-size: 20px;
+}
+
+.btn.btn-rounded.btn-normal-text {
+    font-size: 25px;
+}
+
+.btn.btn-rounded.btn-big-text {
+    font-size: 30px;
 }
 
 

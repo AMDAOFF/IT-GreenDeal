@@ -27,6 +27,8 @@ h5 {
     margin: 0px;
 }
 
+/* End of global text styling */
+
 .page-row .col-12:first-of-type {
     text-align: center;
     text-transform: uppercase;
@@ -80,7 +82,7 @@ h5 {
 
 
 
-/* CHange the background in general for the dark table */
+/* Change the background in general for the dark table */
 table.table-dark {
     background-color: var(--primaryColor);
 }
@@ -119,7 +121,7 @@ table.table-dark thead {
 
 
 
-
+/* Blazor default classes */
 a, .btn-link {
     color: #0366d6;
 }

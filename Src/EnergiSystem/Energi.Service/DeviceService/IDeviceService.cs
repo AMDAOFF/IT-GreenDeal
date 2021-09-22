@@ -10,7 +10,9 @@ namespace Energi.Service.DeviceService
 {
     public interface IDeviceService
     {
+
+        Task<List<SlimDeviceDTO>> GetAllDevicesSlimAsync();
+        Task<List<StatusDeviceDTO>> GetAllDevicesStatusAsync();
         Task SeedData();
-        Task<List<SlimDeviceDTO>> GetAllAsync();
     }
 }

@@ -6,19 +6,21 @@
 
 <h3>Device list</h3>
 
-<h2>Device count: @deviceList.Count()</h2>
+<h2>Device count: @count</h2>
 
 @code {
-    private List<SlimDeviceDTO> deviceList; 
+    int count = 0;
+    private List<SlimDeviceDTO> deviceList;
 
     protected override async Task OnInitializedAsync()
     {
-        deviceList = await deviceService.GetAllAsync();
+        deviceList = await deviceService.GetAllDevicesSlimAsync();
 
         if (deviceList == null)
         {
             deviceList = new List<SlimDeviceDTO>();
         }
 
+        count = deviceList.Count();
     }
 }

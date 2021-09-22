@@ -1,0 +1,29 @@
+﻿@page "/settings"
+
+
+
+@using Energi.Service.DeviceService
+@using Energi.Service.DeviceService.DTO
+
+@inject IJSRuntime JsRuntime
+@inject IDeviceService deviceService
+
+<h3>Settings</h3>
+
+    <p>
+        Seed the database:
+        <button class="btn btn-primary btn-sm" @onclick="SeedData">SeedData</button>
+    </p>
+
+
+
+@code {
+
+    //  This is only for the POC applications!!!
+    private async void SeedData()
+    {
+        await deviceService.SeedData();
+
+        await JsRuntime.InvokeVoidAsync("alert", "Database seeded");
+    }
+}

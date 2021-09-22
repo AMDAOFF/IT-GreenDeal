@@ -1,7 +1,86 @@
 ﻿@page "/dashboard"
 
+
+@using Energi.Service.DeviceService
+@using Energi.Service.DeviceService.DTO
+
+@inject IDeviceService deviceService
+
 <h3>Dashboard</h3>
+
+<div class="row">
+
+
+    @foreach (var device in deviceList)
+    {
+        <div class="col-sm-6" style="margin-bottom: 30px;">
+            <div class="card">
+                <div class="card-header text-center">
+                    @device.Name
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-center">Class: @device.Classroom</h5>
+                    <div class="container row">
+                        <div class="col-6">
+                            <pre>Temperature: @device.Temperature<br>Ventilation valve: @device.VentilationValveStatus<br>Fan one: @device.FanOneStatus<br>Fan two: @device.FanTwoStatus</pre>
+                        </div>
+                        @*Shadow https://toruskit.com/docs/utilities/shadows/*@
+                        <div class="col-6">
+                            <div style="display:flex">
+                                <div class="rounded border border-dark shadow shadow-danger shadow-intensity-lg" style="flex: 1; margin: 10px;">
+                                    <img src="Images/Fan.svg" />
+                                </div>
+                                <div class="rounded border border-dark shadow shadow-success shadow-intensity-lg" style="flex: 1; margin: 10px;">
+                                    <img style="margin:5px;" src="Images/Electronic1.svg" />
+                                </div>
+                            </div>
+                            <div style="display:flex">
+                                <div class="rounded border border-dark" style="flex: 1; margin: 10px;">
+                                    <img src="Images/Fan.svg" />
+                                </div>
+                                <div class="rounded border border-dark" style="flex: 1; margin: 10px;">
+                                    <img src="Images/Electronic1.svg" />
+                                </div>
+                            </div>
+                            @*<div row>
+                <img class="col-5" src="Images/Fan.svg" />
+                <img class="col-5" src="Images/Electronic1.svg" />
+            </div>
+            <div row>
+                <img class="col-5 border-dark" src="Images/Fan.svg" />
+                <img class="col-5" src="Images/Electronic1.svg" />
+            </div>*@
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                    @if (device.OnlineStatus)
+                    {
+                        <p class="text-success text-center">Online</p>
+                    }
+                    else
+                    {
+                        <p class="text-danger text-center">Offline</p>
+                    }
+                </div>
+            </div>
+
+        </div>
+    }
+
+</div>
 
 @code {
 
+    private List<StatusDeviceDTO> deviceList = new List<StatusDeviceDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        deviceList = await deviceService.GetAllDevicesStatusAsync();
+
+        if (deviceList == null)
+        {
+            deviceList = new List<StatusDeviceDTO>();
+        }
+    }
 }

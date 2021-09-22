@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Energi.DataAccess.Entity
+namespace Energi.Service.DeviceService.DTO
 {
-    public class Device : IEntity
+    public class FullDeviceDTO
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -17,7 +17,7 @@ namespace Energi.DataAccess.Entity
         public string Classroom { get; set; }
         public double Temperature { get; set; }
         public bool FanOneStatus { get; set; }
-        public bool FanTwoStatus { get; set; }
+        public bool FanTwoSTatus { get; set; }
         public bool VentilationValveStatus { get; set; }
     }
 }

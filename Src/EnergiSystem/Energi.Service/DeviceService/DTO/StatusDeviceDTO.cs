@@ -4,16 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Energi.DataAccess.Entity
+namespace Energi.Service.DeviceService.DTO
 {
-    public class Device : IEntity
+    public class StatusDeviceDTO
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
-        public bool OnlineStatus { get; set; }
-        public string IP { get; set; }
-        public string MAC { get; set; }
+        //public string Description { get; set; }
+        public bool OnlineStatus { get; set; }             
         public string Classroom { get; set; }
         public double Temperature { get; set; }
         public bool FanOneStatus { get; set; }

@@ -8,10 +8,17 @@ namespace Canteen.Web.Models
 {
     public class Allergy
     {
-        [ModalFieldType(ModalFieldTypes.Hidden)] // Set the field type for the edit modal for this property
+        #region Set modal attributes for the property
+        [ModalFieldType(ModalFieldTypes.Text)]
+        [ModalDisableField]
+        [ModalHideField]
+        #endregion
         public int Id { get; set; }
 
-        [ModalFieldType(ModalFieldTypes.Text)] // Set the field typåe for the edit modal for this property
+        #region Set modal attributes for the property
+        [ModalFieldType(ModalFieldTypes.Text)]
+        [ModalDisableField]
+        #endregion
         public string Name { get; set; }
     }
 }

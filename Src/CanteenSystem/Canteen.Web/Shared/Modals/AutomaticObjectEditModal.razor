@@ -1,5 +1,7 @@
 ﻿
 @using Canteen.Web.Models;
+@using Service.AttributeService; 
+@using System.Reflection; 
 
 @code {
     [Parameter]
@@ -51,10 +53,36 @@
                                 object value = prop.GetValue(Data, null);
                                 var name = prop.Name;
 
-                                <div class="form-group s">
-                                    <label>@name</label>
-                                    <input type="text" value="@value" class="form-control" />
-                                </div>     
+                                string fieldType = "";
+                                bool hideField = false;
+                                bool disableField = false;
+
+                                if (Attribute.IsDefined(prop, typeof(ModalFieldTypeAttribute)))
+                                {
+                                    fieldType = prop.GetCustomAttribute<ModalFieldTypeAttribute>().FieldType;
+                                }
+
+                                if (Attribute.IsDefined(prop, typeof(ModalHideFieldAttribute)))
+                                {
+                                    hideField = true;
+                                }
+
+                                if (Attribute.IsDefined(prop, typeof(ModalDisableFieldAttribute)))
+                                {
+                                    disableField = true;
+                                }
+
+
+
+                                if (!hideField)
+                                {
+                                    <div class="form-group">
+                                        <label>@name</label>
+                                        <input type="@fieldType" disabled="@disableField" value="@value" class="form-control" />
+                                    </div>
+                                }
+
+
                             }
                         }
                     }

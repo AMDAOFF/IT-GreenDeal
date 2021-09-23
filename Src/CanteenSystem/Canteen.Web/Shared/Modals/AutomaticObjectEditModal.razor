@@ -1,0 +1,69 @@
+﻿
+@using Canteen.Web.Models;
+
+@code {
+    [Parameter]
+    public string ModalName { get; set; }
+
+    [Parameter]
+    public string ModalTitle { get; set; }
+
+    [Parameter]
+    public object Data { get; set; }
+
+    private string ModalLabelName
+    {
+        get
+        {
+            return ModalName + "Label";
+        }
+
+        set
+        {
+            ModalLabelName = value;
+        }
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+}
+
+
+<div class="modal fade" id="@ModalName" tabindex="-1" role="dialog" aria-labelledby="@ModalLabelName" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="@ModalLabelName">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    @{
+                        if (Data != null)
+                        {
+                            foreach (var prop in Data.GetType().GetProperties())
+                            {
+                                object value = prop.GetValue(Data, null);
+                                var name = prop.Name;
+
+                                <div class="form-group s">
+                                    <label>@name</label>
+                                    <input type="text" value="@value" class="form-control" />
+                                </div>     
+                            }
+                        }
+                    }
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

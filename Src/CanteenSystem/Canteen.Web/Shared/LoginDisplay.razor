@@ -12,11 +12,8 @@
 		<a href="Identity/Account/Manage/Index">
 			Hello, @IdentityUser.UserName!
 		</a>
-		<form action="/Identity/Account/Logout" @onmousedown="@UpdateUrl" method="post">
-			<input hidden name="ReturnUrl" value="@ReturnUrl" />
-			<button class="nav-link btn btn-link" type="submit">Logout</button>
-			@*<input name="__RequestVerificationToken" type="hidden"
-				value="@TokenProvider.XsrfToken">*@
+		<form method="post" action="Identity/Account/LogOut">
+			<button type="submit" class="nav-link btn btn-link">Log out</button>
 		</form>
 	</Authorized>
 	<NotAuthorized>

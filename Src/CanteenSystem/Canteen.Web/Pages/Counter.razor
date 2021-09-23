@@ -1,4 +1,6 @@
 ﻿@page "/counter"
+@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navigation
 @attribute [Authorize]
 
 <h1>Counter</h1>
@@ -8,10 +10,29 @@
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 @code {
-    private int currentCount = 0;
+	private int currentCount = 0;
 
-    private void IncrementCount()
-    {
-        currentCount++;
-    }
+	private void IncrementCount()
+	{
+		currentCount++;
+	}
+
+
+	protected override async Task OnInitializedAsync()
+	{
+		try
+		{
+			var authState = await authStateProvider.GetAuthenticationStateAsync();
+			var user = authState.User;
+
+			if (!user.IsInRole("Admin"))
+			{
+				navigation.NavigateTo("/");
+			}
+		}
+		catch (Exception)
+		{
+			navigation.NavigateTo("/");
+		}
+	}
 }

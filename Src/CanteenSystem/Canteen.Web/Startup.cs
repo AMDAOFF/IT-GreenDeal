@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Canteen.Web.Areas.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Canteen.Web
 {
@@ -35,6 +36,7 @@ namespace Canteen.Web
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddSingleton<WeatherForecastService>();
         }
 

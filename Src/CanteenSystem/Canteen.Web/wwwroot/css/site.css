@@ -74,7 +74,12 @@ h5 {
     box-shadow: rgba(0, 240, 10) 0px 0px 10px;
 }
 
-
+.modalInfoVariableValue {
+    font-size: 17px;
+    position: relative;
+    top: -1px;
+    left: 10px;
+}
 
 
 

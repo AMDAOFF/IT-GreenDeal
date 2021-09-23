@@ -9,5 +9,7 @@ namespace Canteen.Web.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+
+        public int Test { get; set; } = 0;
     }
 }

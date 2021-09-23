@@ -23,4 +23,8 @@
     <Folder Include="Pages\Worker\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Service\Service.csproj" />
+  </ItemGroup>
+
 </Project>

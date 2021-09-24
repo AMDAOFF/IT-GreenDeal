@@ -18,6 +18,7 @@ class PCF8574 final : public ILedController
 
 	void SetLedState (uint8_t ledNumber, bool state) final override;
 	void ToggleLed(uint8_t ledNumber) final override;
+	void ClearAll() final override;
 	
 	private:
 	PCF8574( const PCF8574 &c );

@@ -9,12 +9,14 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Identity
 {
-	public class IdentityContext : IdentityDbContext<IdentityUser>
+	public class IdentityContext : IdentityDbContext
 	{
 		public IdentityContext(DbContextOptions<IdentityContext> options)
 			: base(options)
 		{
 		}
+
+		public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{

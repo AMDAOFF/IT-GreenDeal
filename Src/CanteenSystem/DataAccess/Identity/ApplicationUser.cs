@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Service.UserService.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.UserService
+namespace DataAccess.Identity
 {
-	public interface IUserService
+	public class ApplicationUser : IdentityUser
 	{
-		Task<List<SimpleApplicationUserDTO>> GetUsersAsync();
+		public string Name { get; set; }
+
+		public string Surname { get; set; }
 	}
 }

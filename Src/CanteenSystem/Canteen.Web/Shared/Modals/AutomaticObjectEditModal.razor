@@ -11,7 +11,10 @@
     public string ModalTitle { get; set; }
 
     [Parameter]
-    public object Data { get; set; }
+    public object ModalData { get; set; }
+
+    [Parameter]
+    public Action ModalActionButtonCallback { get; set; }
 
     private string ModalLabelName
     {
@@ -38,7 +41,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="@ModalLabelName">Modal title</h5>
+                <h5 class="modal-title" id="@ModalLabelName">@(ModalTitle != "" ? ModalTitle : "Modal Title")</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -46,11 +49,11 @@
             <div class="modal-body">
                 <form>
                     @{
-                        if (Data != null)
+                        if (ModalData != null)
                         {
-                            foreach (var prop in Data.GetType().GetProperties())
+                            foreach (var prop in ModalData.GetType().GetProperties())
                             {
-                                object value = prop.GetValue(Data, null);
+                                object value = prop.GetValue(ModalData, null);
                                 var name = prop.Name;
 
                                 string fieldType = "";
@@ -90,7 +93,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary"  @onclick="@ModalActionButtonCallback">Save changes</button>
             </div>
         </div>
     </div>

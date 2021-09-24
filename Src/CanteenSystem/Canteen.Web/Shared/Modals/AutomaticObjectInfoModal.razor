@@ -1,4 +1,7 @@
-﻿@code {
+﻿@using Service.AttributeService;
+@using System.Reflection;  
+
+@code {
     [Parameter]
     public string ModalName { get; set; }
 
@@ -6,7 +9,10 @@
     public string ModalTitle { get; set; }
 
     [Parameter]
-    public object Data { get; set; }
+    public object ModalData { get; set; }
+
+    [Parameter]
+    public Action ModalActionButtonCallback { get; set; }
 
     private string ModalLabelName
     {
@@ -26,40 +32,48 @@
     {
 
     }
-}
+    }
 
 
-<div class="modal fade" id="@ModalName" tabindex="-1" role="dialog" aria-labelledby="@ModalLabelName" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="@ModalLabelName">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    @{
-                        if (Data != null)
-                        {
-                            foreach (var prop in Data.GetType().GetProperties())
+    <div class="modal fade" id="@ModalName" tabindex="-1" role="dialog" aria-labelledby="@ModalLabelName" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="@ModalLabelName">@ModalTitle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+
+                            @{
+                            if (ModalData != null)
                             {
-                                object value = prop.GetValue(Data, null);
-                                var name = prop.Name;
+                                foreach (var prop in ModalData.GetType().GetProperties())
+                                {
+                                    object value = prop.GetValue(ModalData, null);
+                                    var name = prop.Name;
 
-                                <div class="col-6">
-                                    <h5>@name.ToUpper():<span class="modalInfoVariableValue"> @value</span></h5>
-                                </div>
+
+                                    if (Attribute.IsDefined(prop, typeof(ModalHideFieldAttribute)))
+                                    {
+                                        <div class="col-6">
+                                            <h5>@name.ToUpper():<span class="modalInfoVariableValue"> @value</span></h5>
+                                        </div>
+                                    }
+
+
+                                }
                             }
                         }
-                    }
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" @onclick="@ModalActionButtonCallback">Save changes</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+

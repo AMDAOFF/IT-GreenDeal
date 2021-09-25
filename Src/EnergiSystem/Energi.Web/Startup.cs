@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Energi.Service;
 using Energi.Service.DeviceService;
 using Energi.Extentions.Database;
+using Energi.Service.MQTTService;
 
 namespace Energi.Web
 {
@@ -39,6 +40,7 @@ namespace Energi.Web
 
             // Add services.
             services.AddScoped<IDeviceService, DeviceService>();
+            services.AddSingleton<IMqttService, MqttService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

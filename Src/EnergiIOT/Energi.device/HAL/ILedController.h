@@ -16,6 +16,7 @@ class ILedController
 	
 	virtual void SetLedState (uint8_t ledNumber, bool state) = 0;
 	virtual void ToggleLed(uint8_t ledNumber) = 0;
+	virtual void ClearAll() = 0;
 	
 
 }; //ILedController

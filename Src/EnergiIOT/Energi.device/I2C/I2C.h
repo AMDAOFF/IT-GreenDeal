@@ -11,8 +11,7 @@
 class I2C final : public II2C
 {
 	public:
-	I2C();
-	//~I2C() = default;
+	I2C() = default;
 
 	void Initialize(void);
 	void WriteRegister(uint8_t* address, uint8_t* reg) final override;
@@ -31,8 +30,6 @@ class I2C final : public II2C
 	uint8_t WriteReg(uint8_t devaddr, uint8_t regaddr, uint8_t* data, uint16_t length);
 	uint8_t ReadReg(uint8_t devaddr, uint8_t regaddr, uint8_t* data, uint16_t length);
 	void Stop(void);
-
-
 };
 
 #endif //__I2CHANDLER_H__

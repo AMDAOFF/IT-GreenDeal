@@ -8,30 +8,29 @@ _portexpander { portexpander },
 _chronos { chronos }
 {}
 
+
 void Serialport::Initialize(){
 	
-	UBRR0H = (unsigned char)(BRC >> 8); //baud rate register set to 9600 BAUD
+	UBRR0H = (unsigned char)(BRC >> 8); //baud rate register set to 9600 BAUD.
 	UBRR0L = (unsigned char) BRC;
 	
-	//TXEN0 enables tx so no gpio anymore, when disabled the buffer will be finished first
-	//RXEN0 enables rx
-	//RXCIE0 enables the interrupt to be used with the ISR(USART_RX_vect)
+	//TXEN0 enables tx.
+	//RXEN0 enables rx.
+	//RXCIE0 enables the interrupt, and can be used with the ISR.
 	UCSR0B = (1<<RXEN0) | (1<<TXEN0) | (1 << RXCIE0);
 	
-	//Set frame format: 8data, 1stop bit, no parity.
-	//UMSEL01 and UMSEL00 are both 0 to get asynchronous communication
-	//UPM01 and UPM00 used to set parity, it's 0 here so no parity
+	//Set the frame format: 8data, 1stop bit, no parity.
+	//UMSEL01 and UMSEL00 are both 0 for asynchronous communication.
+	//UPM01 and UPM00 sets "no parity".
 	//USBS0 set to 0 is 1 stop bit. set to 1 is 2 stop bits.
-	//USCZ00 - USCZ02 is used to set the character size, here it's set to 8 bits
-	//UCPOL0 is clock parity and only used for synchronized transmission, not used
-	
+	//USCZ00 - USCZ02 sets the character size, to 8 bits.		
 	UCSR0C = (1 << UCSZ01) | (3<<UCSZ00);
-	//UCSR0C = (1 << UCSZ01) | (3<<UCSZ00) | (1 << UCSZ01);
 	
-	//sei();
+	sei();
 	
 	return;
 }
+
 
 void Serialport::Write(const char c[], SerialPorts port)
 {
@@ -49,7 +48,7 @@ void Serialport::Write(const char c[], SerialPorts port)
 void Serialport::Write(const char c[], uint8_t strlen, SerialPorts port)
 {
 	_portexpander->ChangePort(port);
-		
+	
 	for(uint8_t i = 0; i <= strlen; i++) // put the string you want to write in a buffer.
 	{
 		Transmit(c[i]); // Transmit bite on by one.
@@ -88,7 +87,7 @@ uint8_t Serialport::ReadTagWithTimeout(SerialPorts port, char buffer[], const ch
 
 	while (_chronos->Time() - start < timeout)
 	{
-		if (ReadByteWithTimeout(&c, 5)) // Wait bite for 5 mil.
+		if (ReadByteWithTimeout(&c, 5)) // Wait byte for 5 milli.
 		{
 			_ringBuffer.Push(c);
 		}
@@ -105,7 +104,7 @@ uint8_t Serialport::ReadTagWithTimeout(SerialPorts port, char buffer[], const ch
 
 	if (_chronos->Time() - start >= timeout)
 	{
-		//Logger.LogError(">>> TIMEOUT ERROR <<<");
+		Logger.LogError(">>> TIMEOUT ERROR <<<");
 	}
 	
 	_portexpander->ChangePort(saveCurrentPort);
@@ -116,8 +115,8 @@ uint8_t Serialport::ReadTagWithTimeout(SerialPorts port, char buffer[], const ch
 
 char Serialport::ReadByte()
 {
-	while(!(UCSR0A & _BV(RXC0)));   // Wait for byte
-	return UDR0 ;              // Data Read
+	while(!(UCSR0A & _BV(RXC0)));   // Wait for byte.
+	return UDR0 ; // Data Read
 }
 
 bool Serialport::ReadByteWithTimeout(unsigned char* byte, unsigned int timeout)
@@ -137,9 +136,7 @@ bool Serialport::ReadByteWithTimeout(unsigned char* byte, unsigned int timeout)
 
 void Serialport::EnableInterrupt()
 {
-	//RXCIE0 enables the interrupt to be used with the ISR(USART_RX_vect)
-	UCSR0B |= (1 << RXCIE0);
-	
+	UCSR0B |= (1 << RXCIE0);	
 	return;
 }
 
@@ -149,74 +146,11 @@ void Serialport::DisableInterrupt()
 	return;
 }
 
-#define RX_BUFF_SIZE 100
-char _rxBuffer[RX_BUFF_SIZE];
-volatile uint8_t current_index;
-volatile bool process_data = false;
-volatile char temp;
-
-ISR(USART_RX_vect)
-{
-	temp = UDR0;
-	
-	if (temp == '\r' || temp == '\n' && current_index == 0)
-	{
-		return;
-	}
-	else
-	{
-		if (temp == '\0') // Make one big string
-		{
-			_rxBuffer[current_index++] = '#';
-		}
-		else
-		{
-			_rxBuffer[current_index++] = temp;
-		}
-
-		if (temp == '\n')
-		{
-			_rxBuffer[current_index] = '\0';
-			
-			
-			if (_rxBuffer[current_index - 2] == '#')
-			{
-				process_data = true;
-			}
-			current_index = 0;
-		}
-	}
-	
-	// Prevent stack overflow.
-	if (current_index >= RX_BUFF_SIZE)
-	{
-		current_index = 0;
-	}
-
-	
-	return;
-}
 
 void Serialport::Transmit(unsigned char data )
 {
 	
 	while( !( UCSR0A & (1<<UDRE0)) ); // Wait for empty transmit buffer
-	UDR0 = data; // Put data into buffer, sends the data
-	return;
-}
-
-char* Serialport::GetRxBuffer()
-{
-	return _rxBuffer;
-}
-
-bool Serialport::DataReadyForProcess()
-{
-	return process_data;
-}
-
-void Serialport::ClearReadyForProcess()
-{
-	process_data = false;
+	UDR0 = data; // Put data into buffer, for sending the data.
 	return;
 }

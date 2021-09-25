@@ -13,8 +13,6 @@
 #define Prescaler 1
 #define TWBR_val ((((F_CPU / F_SCL) / Prescaler) - 16 ) / 2)
 
-I2C::I2C(){}
-
 void I2C::Initialize(void)
 {
 	TWBR = (uint8_t)TWBR_val;
@@ -22,8 +20,6 @@ void I2C::Initialize(void)
 
 void I2C::WriteRegister(uint8_t* address, uint8_t* reg)
 {
-	//uint8_t adress = 0x38;
-	
 	Start(*address << 1);
 	Write(*reg);
 	Stop();

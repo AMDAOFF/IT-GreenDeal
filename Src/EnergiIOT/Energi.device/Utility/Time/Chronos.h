@@ -12,11 +12,7 @@ class Chronos : public IChronos
 
 	unsigned long Time() final override;
 	void ResetTimer() final override;
-	void Delay(unsigned int timeout) final override;
-
-	private:
-	Chronos( const Chronos &c );
-	Chronos& operator=( const Chronos &c );
+	void Delay(unsigned long timeout) final override;
 };
 
 #endif //__CHRONOS_H__

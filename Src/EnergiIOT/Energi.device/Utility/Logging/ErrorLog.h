@@ -17,9 +17,6 @@ class ErrorLog
 	void LogError(const char msg[]);
 
 	private:
-	ErrorLog( const ErrorLog &c );
-	ErrorLog& operator=( const ErrorLog &c );
-
 	ISerialport* _serial;
 	SerialPorts _defaultPort;
 };

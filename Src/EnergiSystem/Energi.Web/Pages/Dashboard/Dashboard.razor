@@ -1,8 +1,9 @@
-﻿@page "/dashboard"
-
+﻿@*@page "/dashboard"*@
+@page "/"
 
 @using Energi.Service.DeviceService
 @using Energi.Service.DeviceService.DTO
+@*@using System.Data.Linq;*@
 
 @inject IDeviceService deviceService
 
@@ -14,54 +15,56 @@
     @foreach (var device in deviceList)
     {
         <div class="col-sm-6" style="margin-bottom: 30px;">
-            <div class="card">
+            <div class="card border-dark">
                 <div class="card-header text-center">
-                    @device.Name
+                    <strong>Room nr: @device.Classroom</strong>
                 </div>
-                <div class="card-body">
-                    <h5 class="card-title text-center">Class: @device.Classroom</h5>
+                <div class="card-body" style="background-color: White; ">
+                    @*<h5 class="card-title text-center">Class: @device.Classroom</h5>*@
                     <div class="container row">
                         <div class="col-6">
-                            <pre>Temperature: @device.Temperature<br>Ventilation valve: @device.VentilationValveStatus<br>Fan one: @device.FanOneStatus<br>Fan two: @device.FanTwoStatus</pre>
+                            <ul class="list-unstyled">
+                                <li><strong>Device name:</strong> @device.Name</li>
+                                <li><strong>Temperature:</strong> @device.Temperature</li>
+                                <li><strong>People count:</strong> @device.PeopleCount</li>
+                                <li><strong>Ventilation valve:</strong> @device.VentilationValve</li>
+                                <li><strong>Recycling fan</strong>: @device.RecyclingFan</li>
+                                <li><strong>Ventilation fan:</strong> @device.VentilationFan</li>
+                                <li><strong>Radiator:</strong> @device.Radiator</li>
+                                <li><strong>Device type:</strong> @device.DeviceType</li>
+                            </ul>
                         </div>
                         @*Shadow https://toruskit.com/docs/utilities/shadows/*@
                         <div class="col-6">
                             <div style="display:flex">
-                                <div class="rounded border border-dark shadow shadow-danger shadow-intensity-lg" style="flex: 1; margin: 10px;">
-                                    <img src="Images/Fan.svg" />
+                                <div class="boardImg @(device.HeatingStatus ? "running" : "") " @onclick="() => Heating(device.Id)">
+                                    <img style="margin:5px;" src="Images/Heating.svg" />
+                                    <p class="boardP">Heating</p>
                                 </div>
-                                <div class="rounded border border-dark shadow shadow-success shadow-intensity-lg" style="flex: 1; margin: 10px;">
-                                    <img style="margin:5px;" src="Images/Electronic1.svg" />
+                                <div class="boardImg @(device.RecyclingStatus ? "running" : "") " @onclick="() => Recycling(device.Id)">
+                                    <img style="margin:5px;" src="Images/Recycling.svg" />
+                                    <p class="text-center boardP">Recycling</p>
                                 </div>
                             </div>
                             <div style="display:flex">
-                                <div class="rounded border border-dark" style="flex: 1; margin: 10px;">
-                                    <img src="Images/Fan.svg" />
-                                </div>
-                                <div class="rounded border border-dark" style="flex: 1; margin: 10px;">
-                                    <img src="Images/Electronic1.svg" />
+                                <div class="informationBox">
+                                    <p class="boardP">Provider</p>
                                 </div>
                             </div>
-                            @*<div row>
-                <img class="col-5" src="Images/Fan.svg" />
-                <img class="col-5" src="Images/Electronic1.svg" />
-            </div>
-            <div row>
-                <img class="col-5 border-dark" src="Images/Fan.svg" />
-                <img class="col-5" src="Images/Electronic1.svg" />
-            </div>*@
                         </div>
                     </div>
-                </div>
-                <div class="card-footer text-muted">
+                </div>                
+                <div class="card-footer alert  @(device.OnlineStatus ? "alert-success" : "alert-secondary")">
                     @if (device.OnlineStatus)
                     {
-                        <p class="text-success text-center">Online</p>
+                        <p class="boardP text-center">Online</p>
                     }
                     else
                     {
-                        <p class="text-danger text-center">Offline</p>
+                        <p class="boardP text-center">Offline</p>
                     }
+
+
                 </div>
             </div>
 
@@ -74,6 +77,8 @@
 
     private List<StatusDeviceDTO> deviceList = new List<StatusDeviceDTO>();
 
+    private bool running = false;
+
     protected override async Task OnInitializedAsync()
     {
         deviceList = await deviceService.GetAllDevicesStatusAsync();
@@ -82,5 +87,26 @@
         {
             deviceList = new List<StatusDeviceDTO>();
         }
+    }
+
+    private async void Heating(int id)
+    {
+        StatusDeviceDTO device = deviceList.Where(x => x.Id == id).FirstOrDefault();
+
+        device.HeatingStatus = (device.HeatingStatus == false) ? true : false;
+
+        device.VentilationFan = (device.VentilationFan == false) ? true : false; ;
+        device.Radiator = (device.Radiator == false) ? true : false; ;
+
+
+    }
+
+    private async void Recycling(int id)
+    {
+        StatusDeviceDTO device = deviceList.Where(x => x.Id == id).FirstOrDefault();
+
+        device.RecyclingStatus = (device.RecyclingStatus == false) ? true : false;
+
+        device.RecyclingFan = (device.RecyclingFan == false) ? true : false;
     }
 }

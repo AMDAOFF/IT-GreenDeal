@@ -29,7 +29,7 @@ namespace Energi.DataAccess.MongoDB
             return await _collection.Find(filter).ToListAsync();
         }
 
-        public async Task<T> GetAsync(Guid id)
+        public async Task<T> GetAsync(int id)
         {
             FilterDefinition<T> filter = filterBuilder.Eq(entity => entity.Id, id);
             return await _collection.Find(filter).FirstOrDefaultAsync();
@@ -61,7 +61,7 @@ namespace Energi.DataAccess.MongoDB
             await _collection.ReplaceOneAsync(filter, entity);
         }
 
-        public async Task RemoveAsync(Guid id)
+        public async Task RemoveAsync(int id)
         {
             FilterDefinition<T> filter = filterBuilder.Eq(entity => entity.Id, id);
             await _collection.DeleteOneAsync(filter);

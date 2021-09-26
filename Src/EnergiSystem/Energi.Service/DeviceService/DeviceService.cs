@@ -33,11 +33,14 @@ namespace Energi.Service.DeviceService
                         Id = device.Id, 
                         Name = device.Name,
                         Classroom = device.Classroom,
-                        FanOneStatus = device.FanOneStatus,
-                        FanTwoStatus = device.FanTwoStatus,
+                        DeviceType = device.DeviceType,
+                        PeopleCount = device.PeopleCount,
+                        RecyclingFan = device.RecyclingFan,
+                        VentilationFan = device.VentilationFan,
                         OnlineStatus = device.OnlineStatus,
                         Temperature = device.Temperature,
-                        VentilationValveStatus = device.VentilationValveStatus
+                        Radiator = device.Radiator,
+                        VentilationValve = device.VentilationValveStatus
                     });
                 }
             }

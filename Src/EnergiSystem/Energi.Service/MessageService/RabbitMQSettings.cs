@@ -1,0 +1,13 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Energi.Service.MessageService
+{
+    public class RabbitMQSettings
+    {
+        public string Host { get; init; }
+    }
+}

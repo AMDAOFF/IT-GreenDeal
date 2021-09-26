@@ -3,9 +3,10 @@
 
 @using Energi.Service.DeviceService
 @using Energi.Service.DeviceService.DTO
-@*@using System.Data.Linq;*@
+
 
 @inject IDeviceService deviceService
+
 
 <h3>Dashboard</h3>
 
@@ -53,7 +54,7 @@
                             </div>
                         </div>
                     </div>
-                </div>                
+                </div>
                 <div class="card-footer alert  @(device.OnlineStatus ? "alert-success" : "alert-secondary")">
                     @if (device.OnlineStatus)
                     {

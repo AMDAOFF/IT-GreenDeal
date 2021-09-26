@@ -4,16 +4,20 @@
 
 @using Energi.Service.DeviceService
 @using Energi.Service.DeviceService.DTO
+@using Energi.Service.MessageService
+@using Energi.Service.MessageService.DTO
 
 @inject IJSRuntime JsRuntime
 @inject IDeviceService deviceService
+@inject IMessageService messageService;
 
 <h3>Settings</h3>
 
-    <p>
-        Seed the database:
-        <button class="btn btn-primary btn-sm" @onclick="SeedData">SeedData</button>
-    </p>
+<p>
+    Seed the database:
+    <button class="btn btn-primary btn-sm" @onclick="SeedData">SeedData</button>
+    <button class="btn btn-primary btn-sm" @onclick="SendMessageRabbitMQ">SendMessageRabbitMQ</button>
+</p>
 
 
 
@@ -25,5 +29,14 @@
         await deviceService.SeedData();
 
         await JsRuntime.InvokeVoidAsync("alert", "Database seeded");
+    }
+
+    private async void SendMessageRabbitMQ()
+    {
+        PublishMessageDTO message = new PublishMessageDTO() { PeopleCount = 37, RoomNr = "51.125", TimeStamp = DateTime.Now };
+
+        await messageService.SendMessage(message);
+
+
     }
 }

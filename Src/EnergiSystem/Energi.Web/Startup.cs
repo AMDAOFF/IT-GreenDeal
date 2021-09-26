@@ -15,6 +15,8 @@ using Energi.Service;
 using Energi.Service.DeviceService;
 using Energi.Extentions.Database;
 using Energi.Service.MQTTService;
+using Energi.Web.HostedService;
+using Energi.Service.MessageService;
 
 namespace Energi.Web
 {
@@ -31,6 +33,8 @@ namespace Energi.Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            ServiceSettings serviceSettings = Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
+
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
@@ -41,6 +45,24 @@ namespace Energi.Web
             // Add services.
             services.AddScoped<IDeviceService, DeviceService>();
             services.AddSingleton<IMqttService, MqttService>();
+            services.AddSingleton<IMessageService, MessageService>();
+
+            // RabbitMQ.
+            //services.AddMassTransit(x =>
+            //{
+            //    x.UsingRabbitMq((context, configurater) =>
+            //    {
+            //        RabbitMQSettings rabbitMQSettings = Configuration.GetSection(nameof(RabbitMQSettings)).Get<RabbitMQSettings>();
+            //        configurater.Host(rabbitMQSettings.Host);
+            //        configurater.ConfigureEndpoints(context, new KebabCaseEndpointNameFormatter(serviceSettings.ServiceName, false));
+
+            //    });
+            //});
+
+            //services.AddMassTransitHostedService();
+
+            // Hosted services.
+            //services.AddHostedService<MessageHostedService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

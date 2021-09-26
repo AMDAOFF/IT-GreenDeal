@@ -14,7 +14,8 @@ using Canteen.Web.Areas.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Components.Authorization;
 using Service.UserService;
-using DataAccess.Identity;
+using Service.LoginService;
+using Service.EncryptionService;
 
 namespace Canteen.Web
 {
@@ -35,11 +36,12 @@ namespace Canteen.Web
             //       .AddRoles<IdentityRole>()
             //       .AddEntityFrameworkStores<IdentityContext>();
 
-
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ILoginService, LoginService>();
+            services.AddScoped<IEncryptionService, EncryptionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

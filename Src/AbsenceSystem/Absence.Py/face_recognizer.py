@@ -43,7 +43,7 @@ while True:
 
 	names = []
 
-    # Loop over the facial embeddings.
+    # Loop over the facial encodings.
 	for encoding in encodings:
 
 		# Attempt to match each face from the webcam stream to our known encodings. (Adjust tolerance for stricter matching.)

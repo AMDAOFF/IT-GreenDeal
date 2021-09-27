@@ -9,9 +9,12 @@
 
 <AuthorizeView>
 	<Authorized>
-		<a href="Identity/Account/Manage/Index">
-			Hello, @IdentityUser?.Email!
-		</a>
+		@if (IdentityUser != null)
+		{
+			<a href="Identity/Account/Manage/Index">
+				Hello, @IdentityUser?.Name!
+			</a>
+		}
 		<form method="post" action="Identity/Account/LogOut">
 			<button type="submit" class="nav-link btn btn-link">Log out</button>
 		</form>
@@ -23,7 +26,7 @@
 </AuthorizeView>
 
 @code {
-	public SimpleApplicationUserDTO IdentityUser { get; set; } = new SimpleApplicationUserDTO { };
+	public SimpleApplicationUserDTO IdentityUser { get; set; }
 
 	private string returnUrl;
 
@@ -47,7 +50,8 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		IdentityUser = await _userService.GetUserAsync();
+		//IdentityUser = await _userService.GetUserAsync();
+		StateHasChanged();
 	}
 
 

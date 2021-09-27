@@ -18,12 +18,12 @@ namespace Service.UserService
 		private readonly IdentityContext _identityContext;
 		private readonly IEncryptionService _encryptionService;
 		private readonly IHttpContextAccessor _httpContextAccessor;
-		private readonly UserManager<SimpleApplicationUserDTO> _userManager;
+		private readonly UserManager<ApplicationUser> _userManager;
 
 		public UserService(IdentityContext identityContext,
 			IEncryptionService encryptionService,
 			IHttpContextAccessor httpContextAccessor,
-			UserManager<SimpleApplicationUserDTO> userManager)
+			UserManager<ApplicationUser> userManager)
 		{
 			_identityContext = identityContext;
 			_encryptionService = encryptionService;
@@ -45,7 +45,7 @@ namespace Service.UserService
 				applicationUsers.Add(new SimpleApplicationUserDTO()
 				{
 					Name = decryptedName.Trim(),
-					Surname = decryptedSurname,
+					Surname = decryptedSurname.Trim(),
 					Email = user.Email
 				});
 			}
@@ -56,7 +56,7 @@ namespace Service.UserService
 		public async Task<SimpleApplicationUserDTO> GetUserAsync()
 		{
 			var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
-			SimpleApplicationUserDTO simpleUser = new SimpleApplicationUserDTO()
+			SimpleApplicationUserDTO simpleUser = new()
 			{
 				Name = user.Name,
 				Surname = user.Surname,

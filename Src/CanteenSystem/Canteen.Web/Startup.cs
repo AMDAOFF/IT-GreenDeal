@@ -39,7 +39,7 @@ namespace Canteen.Web
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
-            services.AddScoped<IUserService, UserService>();
+            services.AddTransient<IUserService, UserService>();
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IEncryptionService, EncryptionService>();
         }

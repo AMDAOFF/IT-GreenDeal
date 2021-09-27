@@ -1,5 +1,25 @@
-﻿<h3>UserList</h3>
+﻿@page "/admin/user/userlist"
+@inject IUserService _service
+<h3>UserList</h3>
+
+<div>
+	@if (Users != null)
+	{
+		<ul>
+			@foreach (var user in Users)
+			{
+				<li>@user.Name</li>
+			}
+		</ul>
+	}
+</div>
 
 @code {
+	private List<SimpleApplicationUserDTO> Users;
 
+	protected override async Task OnInitializedAsync()
+	{
+		Users = await _service.GetUsersAsync();
+		StateHasChanged();
+	}
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using Service.UserService.Dto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +10,6 @@ namespace Service.UserService
 {
 	public interface IUserService
 	{
-
+		Task<List<SimpleApplicationUserDTO>> GetUsersAsync();
 	}
 }

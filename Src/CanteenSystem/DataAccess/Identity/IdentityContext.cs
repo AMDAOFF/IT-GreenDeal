@@ -19,6 +19,7 @@ namespace DataAccess.Identity
 
 		public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 		public DbSet<Allergy> Allergies { get; set; }
+		public DbSet<Ingredient> Ingredients { get; set; }
 		public DbSet<Dish> Dishes { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)

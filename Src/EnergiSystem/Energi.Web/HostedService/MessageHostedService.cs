@@ -13,17 +13,13 @@ namespace Energi.Web.HostedService
     public class MessageHostedService : IHostedService
     {
         private readonly IHubContext<deviceHub> _deviceHub;
-        //private readonly IPublishEndpoint _publishEndpoint;
-        //public MessageHostedService(IHubContext<deviceHub> deviceHub, IBus publishEndpoint)
         public MessageHostedService(IHubContext<deviceHub> deviceHub)
         {
             _deviceHub = deviceHub;
-            //_publishEndpoint = publishEndpoint;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            //_deviceHub.Clients.All.SendAsync("updateCurrentTime", "PARAM");
             throw new NotImplementedException();
         }
 

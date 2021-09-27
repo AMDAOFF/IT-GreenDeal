@@ -3,34 +3,34 @@
 @using Canteen.Web.Models;
 
 @code {
-    List<Allergy> objs { get; set; } = new List<Allergy>();
-    Allergy selectedAllergy { get; set; }
     string Test { get; set; }
+    Allergy selectedAllergy { get; set; }
+    List<Allergy> allergies { get; set; } = new List<Allergy>();
 
     protected override async Task OnInitializedAsync()
     {
-        objs.Add(new Allergy {
+        allergies.Add(new Allergy
+        {
             Id = 1,
-            Name = "Gluten Allergi",
+            Name = "Test"
         });
 
-        objs.Add(new Allergy
+        allergies.Add(new Allergy
         {
             Id = 2,
-            Name = "Tomat Allergi",
+            Name = "Test2"
         });
     }
 
     public void LoadInfoModal(int allergyID)
     {
-        selectedAllergy = objs.Where(obj => obj.Id == allergyID).FirstOrDefault();
+        selectedAllergy = allergies.Where(obj => obj.Id == allergyID).FirstOrDefault();
         StateHasChanged();
     }
 
-    public void ActionButtonClicked()
+    public void Funz()
     {
-        Test += "WELCOME";
-        StateHasChanged();
+
     }
 }
 
@@ -209,4 +209,4 @@
     </div>
 </div>
 
-<AutomaticObjectInfoModal ModalName="exampleModal" ModalData="@selectedAllergy" ModalTitle="@Test" ModalActionButtonCallback='@ActionButtonClicked'></AutomaticObjectInfoModal>
+<AutomaticObjectEditModal ModalName="exampleModal" ModalData="@selectedAllergy" ModalTitle="Edit Data"></AutomaticObjectEditModal>

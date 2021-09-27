@@ -55,7 +55,7 @@
                                     var name = prop.Name;
 
 
-                                    if (Attribute.IsDefined(prop, typeof(ModalHideFieldAttribute)))
+                                    if (!Attribute.IsDefined(prop, typeof(ModalHideFieldAttribute)))
                                     {
                                         <div class="col-6">
                                             <h5>@name.ToUpper():<span class="modalInfoVariableValue"> @value</span></h5>
@@ -70,7 +70,12 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" @onclick="@ModalActionButtonCallback">Save changes</button>
+
+                    @if (ModalActionButtonCallback != null)
+                    {
+                        <button type="button" class="btn btn-primary" @onclick="@ModalActionButtonCallback">Save changes</button>
+                    }
+
                 </div>
             </div>
         </div>

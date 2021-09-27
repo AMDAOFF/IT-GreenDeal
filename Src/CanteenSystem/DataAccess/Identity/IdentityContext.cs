@@ -26,10 +26,8 @@ namespace DataAccess.Identity
 		{
 			base.OnModelCreating(builder);
 
-			builder.Entity<UserAllergy>().HasKey(ua => new
-			{
-				ua.AllergyId,
-				ua.UserId
+			builder.Entity<UserAllergy>().HasKey(ua => new {
+				ua.UserAllergyId
 			});
 		}
 	}

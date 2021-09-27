@@ -45,26 +45,7 @@ namespace Energi.Web
             // Add services.
             services.AddScoped<IDeviceService, DeviceService>();
             services.AddSingleton<IMqttService, MqttService>();
-
-            MessageBusSettings rabbitMQSettings = Configuration.GetSection(nameof(MessageBusSettings)).Get<MessageBusSettings>();
-            services.AddSingleton<IMessageService, MessageService>();
-
-            // RabbitMQ.
-            //services.AddMassTransit(x =>
-            //{
-            //    x.UsingRabbitMq((context, configurater) =>
-            //    {
-            //        RabbitMQSettings rabbitMQSettings = Configuration.GetSection(nameof(RabbitMQSettings)).Get<RabbitMQSettings>();
-            //        configurater.Host(rabbitMQSettings.Host);
-            //        configurater.ConfigureEndpoints(context, new KebabCaseEndpointNameFormatter(serviceSettings.ServiceName, false));
-
-            //    });
-            //});
-
-            //services.AddMassTransitHostedService();
-
-            // Hosted services.
-            
+            services.AddTransient<IMessageService, MessageService>();
             services.AddHostedService<MessageHostedService>();
         }
 

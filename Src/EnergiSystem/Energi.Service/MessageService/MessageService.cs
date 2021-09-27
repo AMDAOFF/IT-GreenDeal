@@ -12,19 +12,8 @@ namespace Energi.Service.MessageService
 {
     public class MessageService : IMessageService
     {
-        //private readonly IPublishEndpoint _publishEndpoint;
-
         private MessageBusSettings _setting;
         IBusControl _busControl;
-
-        public MessageService(MessageBusSettings settings)
-        {
-            //_publishEndpoint = publishEndpoint;
-            //SetupRabbitMQ();
-            _setting = settings;
-        }
-
-
 
         public async Task SendMessage(PublishMessageDTO message)
         {
@@ -37,8 +26,12 @@ namespace Energi.Service.MessageService
         }
 
 
-        public async Task Initialize()
+        public async Task Initialize(MessageBusSettings settings, Func<ConsumeContext<RoomUpdate>, Task> callback)
         {
+            _setting = settings;
+
+            //ReceivedMessage hodler = new ReceivedMessage();
+
             _busControl = Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
                 cfg.Host(_setting.Host, "/", h =>
@@ -49,7 +42,7 @@ namespace Energi.Service.MessageService
 
                 cfg.ReceiveEndpoint(_setting.Queue, e =>
                 {
-                    e.Consumer<ReceivedMessage>();
+                    e.Consumer(() => (IConsumer<RoomUpdate>)callback.Target);
                 });
             });
 
@@ -58,12 +51,12 @@ namespace Energi.Service.MessageService
             await _busControl.StartAsync(source.Token);
         }
 
-        class ReceivedMessage : IConsumer<RoomUpdate>
-        {
-            public async Task Consume(ConsumeContext<RoomUpdate> context)
-            {
-                Console.WriteLine("Order Submitted: {0}", context.Message.RoomNr);
-            }
-        }
+        //class ReceivedMessage : IConsumer<RoomUpdate>
+        //{
+        //    public async Task Consume(ConsumeContext<RoomUpdate> context)
+        //    {
+        //        Console.WriteLine("Classroom update: {0}", context.Message.RoomNr);
+        //    }
+        //}
     }
 }

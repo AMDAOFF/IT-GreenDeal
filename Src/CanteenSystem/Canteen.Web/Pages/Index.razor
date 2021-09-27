@@ -5,6 +5,7 @@
 @code {
     List<Allergy> objs { get; set; } = new List<Allergy>();
     Allergy selectedAllergy { get; set; }
+    string Test { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -23,6 +24,12 @@
     public void LoadInfoModal(int allergyID)
     {
         selectedAllergy = objs.Where(obj => obj.Id == allergyID).FirstOrDefault();
+        StateHasChanged();
+    }
+
+    public void ActionButtonClicked()
+    {
+        Test += "WELCOME";
         StateHasChanged();
     }
 }
@@ -202,4 +209,4 @@
     </div>
 </div>
 
-<MenuAllergyInfoModal ModalName="exampleModal" Allergy="@selectedAllergy"></MenuAllergyInfoModal>
+<AutomaticObjectInfoModal ModalName="exampleModal" ModalData="@selectedAllergy" ModalTitle="@Test" ModalActionButtonCallback='@ActionButtonClicked'></AutomaticObjectInfoModal>

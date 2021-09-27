@@ -11,10 +11,8 @@ namespace DataAccess.Identity
 {
 	public class ApplicationUser : IdentityUser
 	{
-		[MaxLength(16)]
 		public string Name { get; set; }
 
-		[MaxLength(16)]
 		public string Surname { get; set; }
 	}
 }

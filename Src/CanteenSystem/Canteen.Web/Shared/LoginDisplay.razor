@@ -3,15 +3,14 @@
 @using Microsoft.AspNetCore.Http
 @using DataAccess.Identity
 
-@inject IHttpContextAccessor httpContextAccessor
-@inject UserManager<ApplicationUser> UserManager
+@inject IUserService _userService
 @inject NavigationManager Navigation
 @*@inject TokenProvider TokenProvider*@
 
 <AuthorizeView>
 	<Authorized>
 		<a href="Identity/Account/Manage/Index">
-			Hello, @IdentityUser?.UserName!
+			Hello, @IdentityUser?.Email!
 		</a>
 		<form method="post" action="Identity/Account/LogOut">
 			<button type="submit" class="nav-link btn btn-link">Log out</button>
@@ -24,7 +23,7 @@
 </AuthorizeView>
 
 @code {
-	public ApplicationUser IdentityUser { get; set; } = new ApplicationUser { };
+	public SimpleApplicationUserDTO IdentityUser { get; set; } = new SimpleApplicationUserDTO { };
 
 	private string returnUrl;
 
@@ -48,7 +47,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		IdentityUser = await UserManager.GetUserAsync(httpContextAccessor.HttpContext.User);
+		IdentityUser = await _userService.GetUserAsync();
 	}
 
 

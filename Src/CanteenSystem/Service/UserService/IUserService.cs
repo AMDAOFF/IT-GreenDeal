@@ -11,5 +11,6 @@ namespace Service.UserService
 	public interface IUserService
 	{
 		Task<List<SimpleApplicationUserDTO>> GetUsersAsync();
+		Task<SimpleApplicationUserDTO> GetUserAsync();
 	}
 }

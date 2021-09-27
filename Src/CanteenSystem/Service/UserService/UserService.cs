@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Service.UserService.Dto;
 using Service.EncryptionService;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Http;
 
 namespace Service.UserService
 {
@@ -16,13 +17,18 @@ namespace Service.UserService
 	{
 		private readonly IdentityContext _identityContext;
 		private readonly IEncryptionService _encryptionService;
+		private readonly IHttpContextAccessor _httpContextAccessor;
+		private readonly UserManager<SimpleApplicationUserDTO> _userManager;
 
 		public UserService(IdentityContext identityContext,
-			IEncryptionService encryptionService)
+			IEncryptionService encryptionService,
+			IHttpContextAccessor httpContextAccessor,
+			UserManager<SimpleApplicationUserDTO> userManager)
 		{
 			_identityContext = identityContext;
 			_encryptionService = encryptionService;
-			
+			_httpContextAccessor = httpContextAccessor;
+			_userManager = userManager;
 		}
 
 		public async Task<List<SimpleApplicationUserDTO>> GetUsersAsync()
@@ -38,13 +44,26 @@ namespace Service.UserService
 
 				applicationUsers.Add(new SimpleApplicationUserDTO()
 				{
-					Name = decryptedName,
+					Name = decryptedName.Trim(),
 					Surname = decryptedSurname,
 					Email = user.Email
 				});
 			}
 
 			return applicationUsers;
+		}
+
+		public async Task<SimpleApplicationUserDTO> GetUserAsync()
+		{
+			var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+			SimpleApplicationUserDTO simpleUser = new SimpleApplicationUserDTO()
+			{
+				Name = user.Name,
+				Surname = user.Surname,
+				Email = user.Email
+			};
+
+			return simpleUser;
 		}
 	}
 }

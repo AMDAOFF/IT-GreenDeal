@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Service.UserService;
 using Service.LoginService;
 using Service.EncryptionService;
+using Service.RegisterService;
 
 namespace Canteen.Web
 {
@@ -42,6 +43,7 @@ namespace Canteen.Web
             services.AddTransient<IUserService, UserService>();
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IEncryptionService, EncryptionService>();
+            services.AddScoped<IRegisterService, RegisterService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

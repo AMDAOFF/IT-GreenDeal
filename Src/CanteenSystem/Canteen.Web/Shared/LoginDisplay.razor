@@ -12,7 +12,7 @@
 		@if (IdentityUser != null)
 		{
 			<a href="Identity/Account/Manage/Index">
-				Hello, @IdentityUser?.Name!
+				@IdentityUser?.Name @IdentityUser.Surname
 			</a>
 		}
 		<form method="post" action="Identity/Account/LogOut">
@@ -50,7 +50,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		//IdentityUser = await _userService.GetUserAsync();
+		IdentityUser = await _userService.GetUserAsync();
 		StateHasChanged();
 	}
 

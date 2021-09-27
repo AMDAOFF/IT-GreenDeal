@@ -56,14 +56,24 @@ namespace Service.UserService
 		public async Task<SimpleApplicationUserDTO> GetUserAsync()
 		{
 			var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
-			SimpleApplicationUserDTO simpleUser = new()
+			if (user != null)
 			{
-				Name = user.Name,
-				Surname = user.Surname,
-				Email = user.Email
-			};
+				string decryptedName = _encryptionService.Decrypt(Convert.FromBase64String(user.Name), _encryptionService.GetKey(), _encryptionService.GetIV());
+				string decryptedSurname = _encryptionService.Decrypt(Convert.FromBase64String(user.Surname), _encryptionService.GetKey(), _encryptionService.GetIV());
 
-			return simpleUser;
+				SimpleApplicationUserDTO simpleUser = new()
+				{
+					Name = decryptedName,
+					Surname = decryptedSurname,
+					Email = user.Email
+				};
+
+				return simpleUser;
+			}
+			else
+			{
+				return null;
+			}
 		}
 	}
 }

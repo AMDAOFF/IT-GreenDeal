@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace Service.LoginService
 {
 	public interface ILoginService
 	{
-
+		Task<SignInResult> Login(string Email, string Password, bool RememberMe);
+		Task Logout();
 	}
 }

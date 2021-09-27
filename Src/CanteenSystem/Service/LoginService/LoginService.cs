@@ -19,10 +19,15 @@ namespace Service.LoginService
 			_signInManager = signInManager;
 		}
 
-		//public async Task<SignInResult> Login(string Email, string Password, bool RememberMe)
-		//{
-		//	return await _signInManager.PasswordSignInAsync(Email, Password, RememberMe, lockoutOnFailure: false);
-		//}
+		public async Task<SignInResult> Login(string Email, string Password, bool RememberMe)
+		{
+			return await _signInManager.PasswordSignInAsync(Email, Password, RememberMe, lockoutOnFailure: false);
+		}
+
+		public async Task Logout()
+		{
+			await _signInManager.SignOutAsync();
+		}
 
 	}
 }

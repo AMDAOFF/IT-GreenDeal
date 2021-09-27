@@ -8,6 +8,7 @@
     <PackageReference Include="M2Mqtt" Version="4.3.0" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.2.2" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.2" />
+    <PackageReference Include="MessageBroker.Contracts" Version="0.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,9 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="MessageBroker.Contracts">
-      <HintPath>..\..\MessageBroker\MessageBroker\MessageBroker.Contracts\bin\Debug\net5.0\MessageBroker.Contracts.dll</HintPath>
-    </Reference>
+    
   </ItemGroup>
 
 </Project>

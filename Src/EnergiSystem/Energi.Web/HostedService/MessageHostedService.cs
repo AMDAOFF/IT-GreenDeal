@@ -1,4 +1,5 @@
-﻿using Energi.Web.Hubs;
+﻿using Energi.Service.MessageService;
+using Energi.Web.Hubs;
 using MassTransit;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Hosting;
@@ -13,9 +14,19 @@ namespace Energi.Web.HostedService
     public class MessageHostedService : IHostedService
     {
         private readonly IHubContext<deviceHub> _deviceHub;
-        public MessageHostedService(IHubContext<deviceHub> deviceHub)
+        private readonly IMessageService _messageService;
+        private readonly MessageBusSettings _busSettings;
+
+        //private readonly IPublishEndpoint _publishEndpoint;
+        //public MessageHostedService(IHubContext<deviceHub> deviceHub, IBus publishEndpoint)
+
+
+        public MessageHostedService(IHubContext<deviceHub> deviceHub, IMessageService messageService, MessageBusSettings busSettings)
         {
-            _deviceHub = deviceHub;
+            this._deviceHub = deviceHub;
+            this._messageService = messageService;
+            this._busSettings = busSettings;
+            //_publishEndpoint = publishEndpoint;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)

@@ -5,7 +5,8 @@ namespace Energi.Service.MessageService
 {
     public interface IMessageService
     {
-        Task SendMessage(PublishMessageDTO message);
+        Task SendMessage(PublishMessageDTO message);        
+        Task Initialize();
         Task StopListener();
     }
 }

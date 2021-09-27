@@ -45,6 +45,8 @@ namespace Energi.Web
             // Add services.
             services.AddScoped<IDeviceService, DeviceService>();
             services.AddSingleton<IMqttService, MqttService>();
+
+            MessageBusSettings rabbitMQSettings = Configuration.GetSection(nameof(MessageBusSettings)).Get<MessageBusSettings>();
             services.AddSingleton<IMessageService, MessageService>();
 
             // RabbitMQ.
@@ -62,7 +64,8 @@ namespace Energi.Web
             //services.AddMassTransitHostedService();
 
             // Hosted services.
-            //services.AddHostedService<MessageHostedService>();
+            
+            services.AddHostedService<MessageHostedService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

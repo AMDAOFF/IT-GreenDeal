@@ -12,12 +12,19 @@ namespace Energi.Service.MessageService
 {
     public class MessageService : IMessageService
     {
+        //private readonly IPublishEndpoint _publishEndpoint;
+
+        private MessageBusSettings _setting;
         IBusControl _busControl;
 
-        public MessageService()
+        public MessageService(MessageBusSettings settings)
         {
-            SetupRabbitMQ();
+            //_publishEndpoint = publishEndpoint;
+            //SetupRabbitMQ();
+            _setting = settings;
         }
+
+
 
         public async Task SendMessage(PublishMessageDTO message)
         {
@@ -29,17 +36,18 @@ namespace Energi.Service.MessageService
             await _busControl.StopAsync();
         }
 
-        private async Task SetupRabbitMQ()
+
+        public async Task Initialize()
         {
             _busControl = Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
-                cfg.Host("localhost", "/", h =>
+                cfg.Host(_setting.Host, "/", h =>
                 {
-                    h.Username("guest");
-                    h.Password("guest");
+                    h.Username(_setting.UserName);
+                    h.Password(_setting.Password);
                 });
 
-                cfg.ReceiveEndpoint("RoomUpdate", e =>
+                cfg.ReceiveEndpoint(_setting.Queue, e =>
                 {
                     e.Consumer<ReceivedMessage>();
                 });
@@ -54,7 +62,7 @@ namespace Energi.Service.MessageService
         {
             public async Task Consume(ConsumeContext<RoomUpdate> context)
             {
-                Console.WriteLine("Class room update", context.Message.ClassroomNr);
+                Console.WriteLine("Order Submitted: {0}", context.Message.RoomNr);
             }
         }
     }

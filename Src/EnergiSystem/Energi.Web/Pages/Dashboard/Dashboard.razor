@@ -39,11 +39,11 @@
                         <div class="col-6">
                             <div style="display:flex">
                                 <div class="boardImg @(device.HeatingStatus ? "running" : "") " @onclick="() => Heating(device.Id)">
-                                    <img style="margin:5px;" src="Images/Heating.svg" />
+                                    <img style="margin:5px;" src="@(device.OnlineStatus ? "Images/Heating.svg" : "Images/HeatingGray.svg")" />
                                     <p class="boardP">Heating</p>
                                 </div>
                                 <div class="boardImg @(device.RecyclingStatus ? "running" : "") " @onclick="() => Recycling(device.Id)">
-                                    <img style="margin:5px;" src="Images/Recycling.svg" />
+                                    <img style="margin:5px;" src="@(device.OnlineStatus ? "Images/Recycling.svg" : "Images/RecyclingGray.svg")" />
                                     <p class="text-center boardP">Recycling</p>
                                 </div>
                             </div>
@@ -94,20 +94,24 @@
     {
         StatusDeviceDTO device = deviceList.Where(x => x.Id == id).FirstOrDefault();
 
-        device.HeatingStatus = (device.HeatingStatus == false) ? true : false;
+        if (device.OnlineStatus == true)
+        {
+            device.HeatingStatus = (device.HeatingStatus == false) ? true : false;
 
-        device.VentilationFan = (device.VentilationFan == false) ? true : false; ;
-        device.Radiator = (device.Radiator == false) ? true : false; ;
-
-
+            device.VentilationFan = (device.VentilationFan == false) ? true : false; ;
+            device.Radiator = (device.Radiator == false) ? true : false; ;
+        }
     }
 
     private async void Recycling(int id)
     {
         StatusDeviceDTO device = deviceList.Where(x => x.Id == id).FirstOrDefault();
 
-        device.RecyclingStatus = (device.RecyclingStatus == false) ? true : false;
+        if (device.OnlineStatus)
+        {
+            device.RecyclingStatus = (device.RecyclingStatus == false) ? true : false;
 
-        device.RecyclingFan = (device.RecyclingFan == false) ? true : false;
+            device.RecyclingFan = (device.RecyclingFan == false) ? true : false;
+        }
     }
 }

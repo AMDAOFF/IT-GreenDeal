@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    [Migration("20210926151646_Encryption")]
+    [Migration("20210927085511_Encryption")]
     partial class Encryption
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

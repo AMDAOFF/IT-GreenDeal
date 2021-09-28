@@ -21,21 +21,23 @@ namespace Service.DishService
 
         public async Task<DishDTO> CreateDishAsync(DishDTO dish)
         {
-            _identityContext.Dishes.Add(new Dish
+            Dish newDish = new Dish
             {
                 DishName = dish.DishName,
                 DishCO2 = dish.DishCo2,
                 DishOfTheDay = false
-            });
+            };
+
+            _identityContext.Dishes.Add(newDish);
 
             if (await _identityContext.SaveChangesAsync() > 0)
             {
                 return new DishDTO
                 {
-                    DishId = dish.DishId,
-                    DishName = dish.DishName,
-                    DishCo2 = dish.DishCo2,
-                    DishOfTheDay = dish.DishOfTheDay
+                    DishId = newDish.DishId,
+                    DishName = newDish.DishName,
+                    DishCo2 = newDish.DishCO2,
+                    DishOfTheDay = newDish.DishOfTheDay
                 };
             } 
             

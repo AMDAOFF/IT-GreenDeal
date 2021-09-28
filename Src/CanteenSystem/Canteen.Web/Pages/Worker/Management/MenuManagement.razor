@@ -12,12 +12,32 @@
     protected override async Task OnInitializedAsync()
     {
         Dishes = await dishService.GetAllDishesAsync();
+        StateHasChanged();
     }
 
-
-    public async void OnCreateModalCallback(object createDto)
+    public void TheStateHasChanged()
     {
-        string test = "ad";
+        StateHasChanged();
+    }
+
+    public async void OnCreateModalCallback(object createData)
+    {
+        DishDTO newDish = (DishDTO)createData;
+        DishDTO createdDish = await dishService.CreateDishAsync(newDish);
+
+        if (createdDish != null)
+        {
+            Dishes.Add(createdDish);
+        }
+
+        StateHasChanged();
+    }
+
+    public async void DeleteDish(int dishId)
+    {
+        DishDTO deletedDish = await dishService.DeleteDishAsync(dishId);
+        Dishes.Remove(Dishes.Where(dish => dish.DishId == deletedDish.DishId).FirstOrDefault());
+        StateHasChanged();
     }
 }
 
@@ -56,7 +76,7 @@
                                 <div class="col-6 d-flex justify-content-end">
                                     <div class="row">
                                         <div class="col-6 justify-content-end">
-                                            <button class="btn btn-primary btn-rounded btn-normal-text">
+                                            <button class="btn btn-primary btn-rounded btn-normal-text" @onclick="() => { DeleteDish(dish.DishId); }">
                                                 <i class="las la-trash"></i>
                                             </button>
                                         </div>

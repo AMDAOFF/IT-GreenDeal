@@ -18,15 +18,15 @@ namespace Service.EncryptionService
 			_config = config;
 		}
 
-		public byte[] Encrypt(string plainText, byte[] Key, byte[] IV)
+		public byte[] Encrypt(string plainText)
 		{
 			byte[] encrypted;
 
 			using (Aes aesAlg = Aes.Create())
 			{
 				aesAlg.KeySize = 128;
-				aesAlg.Key = Key;
-				aesAlg.IV = IV;
+				aesAlg.Key = Encoding.ASCII.GetBytes(_config["Encryptions:Key"]);
+				aesAlg.IV = Encoding.ASCII.GetBytes(_config["Encryptions:IV"]);
 
 				ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
 
@@ -46,16 +46,15 @@ namespace Service.EncryptionService
 			return encrypted;
 		}
 
-		public string Decrypt(byte[] cipherText, byte[] Key, byte[] IV)
+		public string Decrypt(byte[] cipherText)
 		{
 			string plaintext = null;
 
 			using (Aes aesAlg = Aes.Create())
 			{
 				aesAlg.KeySize = 128;
-				aesAlg.Key = Key;
-				aesAlg.IV = IV;
-				aesAlg.Padding = PaddingMode.None;
+				aesAlg.Key = Encoding.ASCII.GetBytes(_config["Encryptions:Key"]);
+				aesAlg.IV = Encoding.ASCII.GetBytes(_config["Encryptions:IV"]);
 
 				ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
@@ -72,16 +71,6 @@ namespace Service.EncryptionService
 			}
 
 			return plaintext;
-		}
-
-		public byte[] GetKey()
-		{
-			return Encoding.ASCII.GetBytes(_config["Encryptions:Key"]);
-		}
-
-		public byte[] GetIV()
-		{
-			return Encoding.ASCII.GetBytes(_config["Encryptions:IV"]);
 		}
 	}
 }

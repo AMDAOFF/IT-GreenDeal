@@ -43,8 +43,8 @@ namespace Service.UserService
 
 			foreach (var user in users)
 			{
-				string decryptedName = _encryptionService.Decrypt(Convert.FromBase64String(user.Name), _encryptionService.GetKey(), _encryptionService.GetIV());
-				string decryptedSurname = _encryptionService.Decrypt(Convert.FromBase64String(user.Surname), _encryptionService.GetKey(), _encryptionService.GetIV());
+				string decryptedName = _encryptionService.Decrypt(Convert.FromBase64String(user.Name));
+				string decryptedSurname = _encryptionService.Decrypt(Convert.FromBase64String(user.Surname));
 
 				applicationUsers.Add(new SimpleApplicationUserDTO()
 				{
@@ -62,8 +62,8 @@ namespace Service.UserService
 			var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
 			if (user != null)
 			{
-				string decryptedName = _encryptionService.Decrypt(Convert.FromBase64String(user.Name), _encryptionService.GetKey(), _encryptionService.GetIV());
-				string decryptedSurname = _encryptionService.Decrypt(Convert.FromBase64String(user.Surname), _encryptionService.GetKey(), _encryptionService.GetIV());
+				string decryptedName = _encryptionService.Decrypt(Convert.FromBase64String(user.Name));
+				string decryptedSurname = _encryptionService.Decrypt(Convert.FromBase64String(user.Surname));
 
 				SimpleApplicationUserDTO simpleUser = new()
 				{

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DataAccess.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,5 +14,7 @@ namespace DataAccess.Identity
 	{
 		public string Name { get; set; }
 		public string Surname { get; set; }
+
+		public List<Allergy> allergies { get; set; }
 	}
 }

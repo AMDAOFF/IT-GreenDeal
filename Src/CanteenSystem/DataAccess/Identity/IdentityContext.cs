@@ -21,15 +21,15 @@ namespace DataAccess.Identity
 		public DbSet<Allergy> Allergies { get; set; }
 		public DbSet<Dish> Dishes { get; set; }
 
-		//protected override void OnModelCreating(ModelBuilder builder)
-		//{
-		//	base.OnModelCreating(builder);
+		protected override void OnModelCreating(ModelBuilder builder)
+		{
+			base.OnModelCreating(builder);
 
-		//	builder.Entity<UserAllergy>().HasKey(ua => new
-		//	{
-		//		ua.AllergyId,
-		//		ua.UserId
-		//	});
-		//}
+			builder.Entity<UserAllergy>().HasKey(ua => new
+			{
+				ua.AllergyId,
+				ua.UserId
+			});
+		}
 	}
 }

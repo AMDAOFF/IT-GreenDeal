@@ -21,6 +21,7 @@ namespace Canteen.Web.Areas.Identity
                         context.Configuration.GetConnectionString("IdentityContextConnection")), ServiceLifetime.Transient);
 
                 services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                    .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<IdentityContext>();
             });
         }

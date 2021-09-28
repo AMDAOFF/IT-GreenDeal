@@ -40,9 +40,18 @@ namespace Service.UserService
 			List<SimpleApplicationUserDTO> applicationUsers = new();
 			List<ApplicationUser> users = await _identityContext.Users.OfType<ApplicationUser>().ToListAsync();
 
-
 			foreach (var user in users)
 			{
+				List<string> userRoles = new();
+				try
+				{
+					userRoles = (List<string>)await _userManager.GetRolesAsync(user);
+				}
+				catch (Exception)
+				{
+					userRoles.Add("Brugere");
+				}
+
 				string decryptedName = _encryptionService.Decrypt(Convert.FromBase64String(user.Name));
 				string decryptedSurname = _encryptionService.Decrypt(Convert.FromBase64String(user.Surname));
 
@@ -50,7 +59,8 @@ namespace Service.UserService
 				{
 					Name = decryptedName.Trim(),
 					Surname = decryptedSurname.Trim(),
-					Email = user.Email
+					Email = user.Email,
+					Roles = userRoles
 				});
 			}
 

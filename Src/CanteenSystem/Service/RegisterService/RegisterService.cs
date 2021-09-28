@@ -19,13 +19,16 @@ namespace Service.RegisterService
 	{
 		private readonly SignInManager<ApplicationUser> _signInManager;
 		private readonly UserManager<ApplicationUser> _userManager;
+		private readonly RoleManager<IdentityRole> _roleManager;
 
 		public RegisterService(
 			UserManager<ApplicationUser> userManager,
-			SignInManager<ApplicationUser> signInManager)
+			SignInManager<ApplicationUser> signInManager,
+			RoleManager<IdentityRole> roleManager)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
+			_roleManager = roleManager;
 		}
 
 		public async Task Register(byte[] name, string email, byte[] surname, string password, string returnUrl, ModelStateDictionary ModelState)
@@ -36,6 +39,14 @@ namespace Service.RegisterService
 				var result = await _userManager.CreateAsync(user, password);
 				if (result.Succeeded)
 				{
+					await CreateRoleIfItDoesNotExist("Admin");
+
+					// PLEASE DELETE, THIS IS ONLY FOR TESTING
+					if (email == "kenn8174@elevcampus.dk")
+					{
+						await _userManager.AddToRoleAsync(user, "Admin");
+					}
+					// ---------------------------------------
 					await _signInManager.SignInAsync(user, isPersistent: false);
 					return;
 				}
@@ -45,5 +56,14 @@ namespace Service.RegisterService
 				}
 			}
 		}
+
+		public async Task CreateRoleIfItDoesNotExist(string roleName)
+		{
+			if (!await _roleManager.RoleExistsAsync(roleName))      // If role doesnt exist, it creates the role
+			{
+				await _roleManager.CreateAsync(new IdentityRole(roleName));
+			}
+		}
+
 	}
 }

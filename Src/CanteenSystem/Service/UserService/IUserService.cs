@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DataAccess.Identity;
+using Microsoft.AspNetCore.Identity;
 using Service.UserService.Dto;
 using System;
 using System.Collections.Generic;

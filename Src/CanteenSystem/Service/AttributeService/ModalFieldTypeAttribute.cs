@@ -8,6 +8,7 @@ namespace Service.AttributeService
         public const string Text = "text";
         public const string Password = "password";
         public const string Number = "number";
+        public const string Checkbox = "checkbox";
     }
 
 

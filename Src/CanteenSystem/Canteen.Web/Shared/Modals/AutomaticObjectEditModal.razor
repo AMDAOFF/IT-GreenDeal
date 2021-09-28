@@ -1,5 +1,4 @@
-﻿
-@using Canteen.Web.Models;
+﻿@using Canteen.Web.Models;
 @using Service.AttributeService; 
 @using System.Reflection; 
 
@@ -14,7 +13,7 @@
     public object ModalData { get; set; }
 
     [Parameter]
-    public Action ModalActionButtonCallback { get; set; }
+    public EventCallback<object> ModalActionButtonCallback { get; set; }
 
     private string ModalLabelName
     {
@@ -80,8 +79,8 @@
                                 if (!hideField)
                                 {
                                     <div class="form-group">
-                                        <label>@name</label>
-                                        <input type="@fieldType" disabled="@disableField" value="@value" class="form-control" />
+                                        <label>@string.Concat(name.Select(x => Char.IsUpper(x) ? " " + x : x.ToString())).TrimStart(' ')</label>
+                                        <input type="@fieldType" disabled="@disableField" @onchange="@((ChangeEventArgs e) => prop.SetValue(ModalData, e.Value.ToString()))" class="form-control" />
                                     </div>
                                 }
 
@@ -94,9 +93,9 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 
-                @if (ModalActionButtonCallback != null)
+                @if (ModalActionButtonCallback.HasDelegate)
                 {
-                    <button type="button" class="btn btn-primary" @onclick="@ModalActionButtonCallback">Save changes</button>
+                    <button type="button" class="btn btn-primary" @onclick="@(() => { ModalActionButtonCallback.InvokeAsync(ModalData); })">Save changes</button>
                 }
             </div>
         </div>

@@ -1,5 +1,26 @@
 ﻿@page "/worker/management/menu"
 
+@using Service.DishService
+@using Service.DishService.Dto
+
+@inject IDishService dishService 
+
+@code {
+    public List<DishDTO> Dishes { get; set; } = new List<DishDTO>();
+    public DishDTO newDishObject { get; set; } = new DishDTO();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Dishes = await dishService.GetAllDishesAsync();
+    }
+
+
+    public async void OnCreateModalCallback(object createDto)
+    {
+        string test = "ad";
+    }
+}
+
 <div class="col-12 text-center mb-2">
     <h1>Menu Management</h1>
 </div>
@@ -7,7 +28,7 @@
 
 <div class="col-12">
 
-    <h3>Kantinens Retter</h3>
+    <h3>Kantinens Retter <button type="button" data-toggle="modal" data-target="#modalCreateDish" class="btn btn-primary">OPRET</button></h3>
 
     <table class="table table-dark">
         <thead>
@@ -17,66 +38,54 @@
         </thead>
 
         <tbody>
-            <tr>
-                <th>
-                    <div class="row d-flex">
-                        <div class="col-3 d-flex align-items-center">
-                            <h5>Tomatsuppe</h5>
-                        </div>
-
-                        <div class="col-3 d-flex align-items-center">
-                            <h5>200 Gram</h5>
-                        </div>
-
-                        <div class="col-6 d-flex justify-content-end">
-                            <div class="row">
-                                <div class="col-6 justify-content-end">
-                                    <button class="btn btn-primary btn-rounded btn-normal-text">
-                                        <i class="las la-trash"></i>
-                                    </button>
+            @if (Dishes.Count > 0)
+            {
+                @foreach (DishDTO dish in Dishes)
+                {
+                    <tr>
+                        <th>
+                            <div class="row d-flex">
+                                <div class="col-3 d-flex align-items-center">
+                                    <h5>@dish.DishName</h5>
                                 </div>
 
-                                <div class="col-6">
-                                    <button class="btn btn-primary btn-rounded btn-normal-text">
-                                        <i class="las la-edit"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </th>
-            </tr>
-
-
-            <tr>
-                <th>
-                    <div class="row d-flex">
-                        <div class="col-3 d-flex align-items-center">
-                            <h5>Tomatsuppe</h5>
-                        </div>
-
-                        <div class="col-3 d-flex align-items-center">
-                            <h5>200 Gram</h5>
-                        </div>
-
-                        <div class="col-6 d-flex justify-content-end">
-                            <div class="row">
-                                <div class="col-6 justify-content-end">
-                                    <button class="btn btn-primary btn-rounded btn-normal-text">
-                                        <i class="las la-trash"></i>
-                                    </button>
+                                <div class="col-3 d-flex align-items-center">
+                                    <h5>@dish.DishCo2</h5>
                                 </div>
 
-                                <div class="col-6">
-                                    <button class="btn btn-primary btn-rounded btn-normal-text">
-                                        <i class="las la-edit"></i>
-                                    </button>
+                                <div class="col-6 d-flex justify-content-end">
+                                    <div class="row">
+                                        <div class="col-6 justify-content-end">
+                                            <button class="btn btn-primary btn-rounded btn-normal-text">
+                                                <i class="las la-trash"></i>
+                                            </button>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <button class="btn btn-primary btn-rounded btn-normal-text">
+                                                <i class="las la-edit"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                        </th>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <th>
+                        <div class="row d-flex">
+                            <div class="col-12 text-center">
+                                <h5>Ingen retter oprettet</h5>
+                            </div>
                         </div>
-                    </div>
-                </th>
-            </tr>
+                    </th>
+                </tr>
+            }
+
         </tbody>
     </table>
 </div>
@@ -235,3 +244,6 @@
         </tbody>
     </table>
 </div>
+
+
+<AutomaticObjectEditModal ModalName="modalCreateDish" ModalTitle="Opret ny ret" ModalData="@newDishObject" ModalActionButtonCallback="OnCreateModalCallback"></AutomaticObjectEditModal>

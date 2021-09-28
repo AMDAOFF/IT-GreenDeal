@@ -6,6 +6,7 @@
     string Test { get; set; }
     Allergy selectedAllergy { get; set; }
     List<Allergy> allergies { get; set; } = new List<Allergy>();
+    string modalTitle { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -209,4 +210,11 @@
     </div>
 </div>
 
-<AutomaticObjectEditModal ModalName="exampleModal" ModalData="@selectedAllergy" ModalTitle="Edit Data"></AutomaticObjectEditModal>
+@{ 
+    if (selectedAllergy != null)
+    {
+        modalTitle = "View " + selectedAllergy.Name;
+    }
+}
+
+<AutomaticObjectInfoModal ModalName="exampleModal" ModalData="@selectedAllergy" ModalTitle="@modalTitle"></AutomaticObjectInfoModal>

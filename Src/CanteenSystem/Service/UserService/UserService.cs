@@ -10,6 +10,7 @@ using Service.UserService.Dto;
 using Service.EncryptionService;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Service.UserService
 {
@@ -19,16 +20,19 @@ namespace Service.UserService
 		private readonly IEncryptionService _encryptionService;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 		private readonly UserManager<ApplicationUser> _userManager;
+		private readonly SignInManager<ApplicationUser> _signInManager;
 
 		public UserService(IdentityContext identityContext,
 			IEncryptionService encryptionService,
 			IHttpContextAccessor httpContextAccessor,
-			UserManager<ApplicationUser> userManager)
+			UserManager<ApplicationUser> userManager,
+			SignInManager<ApplicationUser> signInManager)
 		{
 			_identityContext = identityContext;
 			_encryptionService = encryptionService;
 			_httpContextAccessor = httpContextAccessor;
 			_userManager = userManager;
+			_signInManager = signInManager;
 		}
 
 		public async Task<List<SimpleApplicationUserDTO>> GetUsersAsync()
@@ -74,6 +78,20 @@ namespace Service.UserService
 			{
 				return null;
 			}
+		}
+
+		public async Task<string> ChangeUserAsync(ModelStateDictionary modelState)
+		{
+			var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+
+			if (modelState.IsValid && user != null)
+			{
+				await _signInManager.RefreshSignInAsync(user);
+				return "Success";
+			}
+
+			return "Not Valid";
+
 		}
 	}
 }

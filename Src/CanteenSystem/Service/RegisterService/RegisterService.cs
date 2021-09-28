@@ -19,19 +19,13 @@ namespace Service.RegisterService
 	{
 		private readonly SignInManager<ApplicationUser> _signInManager;
 		private readonly UserManager<ApplicationUser> _userManager;
-		private readonly ILogger<RegisterService> _logger;
-		private readonly IEncryptionService _encryptionService;
 
 		public RegisterService(
 			UserManager<ApplicationUser> userManager,
-			SignInManager<ApplicationUser> signInManager,
-			ILogger<RegisterService> logger,
-			IEncryptionService encryptionService)
+			SignInManager<ApplicationUser> signInManager)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
-			_logger = logger;
-			_encryptionService = encryptionService;
 		}
 
 		public async Task Register(byte[] name, string email, byte[] surname, string password, string returnUrl, ModelStateDictionary ModelState)

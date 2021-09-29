@@ -1,91 +1,90 @@
 from os.path import exists
+from datetime import datetime
 import face_recognition
 import time
 import sys
-import argparse
 import cv2
-import pymssql
 import pika
-import json
-from datetime import datetime
+import pyodbc
 
+try:
+    SQLServer = "(LocalDb)\MSSQLLocalDB"
+    SQLDatabase = "Absence" 
+    SQLUsername = "Absence"
+    SQLPassword = "Absence123"
+    SQLConnectionString = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER='+SQLServer+';DATABASE='+SQLDatabase+';UID='+SQLUsername+';PWD='+ SQLPassword
 
-#TODO: Add Try Catches - Rabbit MQ, Webcam, SQL
-#TODO: Implement DB Con
+    conn = pyodbc.connect(SQLConnectionString)
+    cursor = conn.cursor()
 
-# Add arguments
-ap = argparse.ArgumentParser()
-ap.add_argument("-ip", "--ip", type=str, default="192.168.0.4", help="The camera's IP Address")
-ap.add_argument("-u", "--username", type=str, default=None, help="The username used to login to the camera")
-ap.add_argument("-p", "--password", type=str, default=None, help="The password used to login to the camera")
-args = vars(ap.parse_args())
+    cursor.execute("SELECT * FROM Cameras")
+    IPs = []
+    classrooms = []
+    for row in cursor.fetchall():
+        IPs.append(row[0])
+        classrooms.append(row[1])
+    cursor.close()
+    conn.close()
 
-######## Real implementation: ########
-# if args["username"] is not None and args["password"] is not None:
-#     vs = cv2.VideoCapture(f"rtsp://{args['username']}:{args['password']}@{args['ip']}/video")
-# else:
-#     vs = cv2.VideoCapture(f"http://{args['ip']}/video")
+    index = 0
+    while index < len(IPs):
+        cameraIP = IPs[index]
 
-######## POC: ########
-vs = cv2.VideoCapture(0)
+        ######## Real implementation: ########
+        # vs = cv2.VideoCapture(f"http://{IP}/video")
 
-# Allow the webcam to warm up.
-time.sleep(2)
+        ######## POC: ########
+        vs = cv2.VideoCapture(0)
 
-personsInRoom = []
+        # Allow the webcam to warm up.
+        time.sleep(2)
 
-iteration = 0
-while iteration < 10:
-    iteration += 1
-    success, img = vs.read()
-    faces = face_recognition.face_locations(img)
-    totalFaces = len(faces)
-    personsInRoom.append(totalFaces)
-    time.sleep(0.5)
+        personsInRoom = []
+        iteration = 0
+        # Counts people 10 times
+        while iteration < 10:
+            iteration += 1
+            success, img = vs.read()
+            faces = face_recognition.face_locations(img)
+            totalFaces = len(faces)
+            personsInRoom.append(totalFaces)
+            time.sleep(0.5)
 
-personCounter = max(set(personsInRoom), key=personsInRoom.count)
-previousPersonCounter = None
-cameraIP = args['ip']
+        # Set personCounter to the number with most entries / votes
+        personCounter = max(set(personsInRoom), key=personsInRoom.count)
+        previousPersonCounter = None
 
-if exists(f"Files/{cameraIP}.txt"):
-    with open(f"Files/{cameraIP}.txt", "rb") as file:
-        previousPersonCounter = file.readline()
-        print("previousPersonCounter changed")
-else:
-    print("file did not exists")
-if personCounter != int(previousPersonCounter):
-    print(f"{args['ip']};{personCounter}")
-    sys.stdout.flush()
-    with open(f'Files/{cameraIP}.txt', "w") as file:
-        file.write(f"{personCounter}")
+        if exists(f"Files/{cameraIP}.txt"):
+            with open(f"Files/{cameraIP}.txt", "rb") as file:
+                previousPersonCounter = file.readline()
+        else:
+            print("file did not exists")
 
-    credentials = pika.PlainCredentials('python', 'python123')
-    connection = pika.BlockingConnection(pika.ConnectionParameters('127.0.0.1', 5672, '/', credentials))
-    channel = connection.channel()
-    my_queue = "myJSONBodyQueue_4"
-    channel.queue_declare(queue=my_queue, durable=True)
-    channel.start_consuming()
-    
-    channel.basic_publish(exchange='', routing_key='RoomUpdate', body=f'Room2;{personCounter};{datetime.now().strftime("%d/%m/%Y %H:%M:%S")}')
-    print(f"Succeded")
-    connection.close()
-    # credentials = pika.PlainCredentials('python', 'python123')
-    # parameters = pika.ConnectionParameters('127.0.0.1', 5672, '/', credentials)
-    
-    # connection = pika.BlockingConnection(parameters)
-    
-    # channel = connection.channel()
+        if  previousPersonCounter is None or personCounter != int(previousPersonCounter):
+            with open(f'Files/{cameraIP}.txt', "w") as file:
+                file.write(f"{personCounter}")
 
-    # # channel.exchange_declare(exchange='RoomUpdate', exchange_type=, durable=True)
-    # channel.queue_declare(queue='RoomUpdate', durable=True)
-    
-    # # Turn on delivery confirmations
-    # channel.confirm_delivery()
-    
-    # channel.basic_publish(exchange='', routing_key='RoomUpdate', body=f'Room2;{personCounter};{datetime.now().strftime("%d/%m/%Y %H:%M:%S")}')
-    # print(f"Succeded")
-    # connection.close()
-else:
-    print(f"{personCounter} == {int(previousPersonCounter)}")
+            conn = pyodbc.connect(SQLConnectionString)
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT ClassroomNumber FROM Classrooms where ClassroomId = {classrooms[index]}")
 
+            classroomNumber = cursor.fetchval()
+            cursor.close()
+            conn.close()
 
+            print(classroomNumber)
+
+            credentials = pika.PlainCredentials('python', 'python123')
+            connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port=5672, virtual_host='/', credentials=credentials))
+            channel = connection.channel()
+            channel.queue_declare(queue="RoomUpdate", durable=True)
+            channel.start_consuming()
+            channel.basic_publish(exchange='', routing_key='RoomUpdate', body=f'{classroomNumber};{personCounter};{datetime.now().strftime("%d/%m/%Y %H:%M:%S")}')
+            print(f"Succeded")
+            connection.close()
+        else:
+            print(f"Operation was skipped! previousPersonCounter was the same value as the new personCounter")
+        index += 1
+except:
+    with open('errors.txt', 'a') as file:
+        file.write(f'[ERROR] - {datetime.now().strftime("%d/%m/%Y %H:%M:%S")} - {sys.exc_info()[0]}\n')

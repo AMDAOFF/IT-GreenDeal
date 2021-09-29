@@ -26,6 +26,7 @@ namespace Absence.DataAccess.Migrations
                 {
                     ClassroomId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    ClassroomNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FKSchoolId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -70,13 +71,13 @@ namespace Absence.DataAccess.Migrations
 
             migrationBuilder.InsertData(
                 table: "Classrooms",
-                columns: new[] { "ClassroomId", "FKSchoolId", "Name" },
+                columns: new[] { "ClassroomId", "ClassroomNumber", "FKSchoolId", "Name" },
                 values: new object[,]
                 {
-                    { 1, 1, "Tokyo" },
-                    { 3, 1, "Hongkong" },
-                    { 2, 2, "Oslo" },
-                    { 4, 2, "Paris" }
+                    { 1, "52.211", 1, "Tokyo" },
+                    { 3, "51.157", 1, "Hongkong" },
+                    { 2, "52.212", 2, "Oslo" },
+                    { 4, "51.131", 2, "Paris" }
                 });
 
             migrationBuilder.InsertData(

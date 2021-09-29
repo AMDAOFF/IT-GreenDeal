@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Absence.DataAccess.Migrations
 {
     [DbContext(typeof(AbsenceContext))]
-    [Migration("20210928200149_Initials")]
+    [Migration("20210929184940_Initials")]
     partial class Initials
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,6 +65,9 @@ namespace Absence.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ClassroomNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("FKSchoolId")
                         .HasColumnType("int");
 
@@ -81,24 +84,28 @@ namespace Absence.DataAccess.Migrations
                         new
                         {
                             ClassroomId = 1,
+                            ClassroomNumber = "52.211",
                             FKSchoolId = 1,
                             Name = "Tokyo"
                         },
                         new
                         {
                             ClassroomId = 2,
+                            ClassroomNumber = "52.212",
                             FKSchoolId = 2,
                             Name = "Oslo"
                         },
                         new
                         {
                             ClassroomId = 3,
+                            ClassroomNumber = "51.157",
                             FKSchoolId = 1,
                             Name = "Hongkong"
                         },
                         new
                         {
                             ClassroomId = 4,
+                            ClassroomNumber = "51.131",
                             FKSchoolId = 2,
                             Name = "Paris"
                         });

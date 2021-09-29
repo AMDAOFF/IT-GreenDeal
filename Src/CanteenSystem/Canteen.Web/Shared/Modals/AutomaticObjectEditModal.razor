@@ -1,0 +1,103 @@
+﻿@using Canteen.Web.Models;
+@using Service.AttributeService; 
+@using System.Reflection; 
+
+@code {
+    [Parameter]
+    public string ModalName { get; set; }
+
+    [Parameter]
+    public string ModalTitle { get; set; }
+
+    [Parameter]
+    public object ModalData { get; set; }
+
+    [Parameter]
+    public EventCallback<object> ModalActionButtonCallback { get; set; }
+
+    private string ModalLabelName
+    {
+        get
+        {
+            return ModalName + "Label";
+        }
+
+        set
+        {
+            ModalLabelName = value;
+        }
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+}
+
+
+<div class="modal fade" id="@ModalName" tabindex="-1" role="dialog" aria-labelledby="@ModalLabelName" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="@ModalLabelName">@(ModalTitle != "" ? ModalTitle : "Modal Title")</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    @{
+                        if (ModalData != null)
+                        {
+                            foreach (var prop in ModalData.GetType().GetProperties())
+                            {
+                                object value = prop.GetValue(ModalData, null);
+                                var name = prop.Name;
+
+                                string fieldType = "";
+                                bool hideField = false;
+                                bool disableField = false;
+
+                                if (Attribute.IsDefined(prop, typeof(ModalFieldTypeAttribute)))
+                                {
+                                    fieldType = prop.GetCustomAttribute<ModalFieldTypeAttribute>().FieldType;
+                                }
+
+                                if (Attribute.IsDefined(prop, typeof(ModalHideFieldAttribute)))
+                                {
+                                    hideField = true;
+                                }
+
+                                if (Attribute.IsDefined(prop, typeof(ModalDisableFieldAttribute)))
+                                {
+                                    disableField = true;
+                                }
+
+
+
+                                if (!hideField)
+                                {
+                                    <div class="form-group">
+                                        <label>@string.Concat(name.Select(x => Char.IsUpper(x) ? " " + x : x.ToString())).TrimStart(' ')</label>
+                                        <input type="@fieldType" disabled="@disableField" @onchange="@((ChangeEventArgs e) => prop.SetValue(ModalData, Convert.ChangeType(e.Value.ToString(), prop.PropertyType)))" class="form-control" />
+                                    </div>
+                                }
+
+
+                            }
+                        }
+                    }
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                @if (ModalActionButtonCallback.HasDelegate)
+                {
+                    <button type="button" class="btn btn-primary" @onclick="@(() => { ModalActionButtonCallback.InvokeAsync(ModalData); })" data-dismiss="modal">Save changes</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>

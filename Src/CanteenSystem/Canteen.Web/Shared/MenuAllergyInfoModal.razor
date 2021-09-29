@@ -2,14 +2,14 @@
 @using Canteen.Web.Models;
 
 @code {
-    [Parameter]
-    public string ModalName { get; set; }
+        [Parameter]
+        public string ModalName { get; set; }
 
-    [Parameter]
-    public string ModalTitle { get; set; }
+        [Parameter]
+        public string ModalTitle { get; set; }
 
-    [Parameter]
-    public Allergy Allergy { get; set; }
+        [Parameter]
+        public object Data { get; set; }
 
     private string ModalLabelName
     {
@@ -22,6 +22,12 @@
         {
             ModalLabelName = value;
         }
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        
     }
 }
 
@@ -36,11 +42,22 @@
                 </button>
             </div>
             <div class="modal-body">
-                @if (Allergy != null)
-                {
-                    <p><b>ID: </b> @Allergy.Id</p>
-                    <p><b>NAME: </b> @Allergy.Name</p>
-                }
+                <div class="row">
+                    @{
+                        if (Data != null)
+                        {
+                            foreach (var prop in Data.GetType().GetProperties())
+                            {
+                                object value = prop.GetValue(Data, null);
+                                var name = prop.Name;
+
+                                <div class="col-6">
+                                    <h5>@name.ToUpper():<span class="modalInfoVariableValue"> @value</span></h5>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

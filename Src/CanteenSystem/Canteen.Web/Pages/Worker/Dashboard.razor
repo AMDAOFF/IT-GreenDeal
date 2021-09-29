@@ -1,0 +1,213 @@
+﻿@page "/worker"
+
+@using Canteen.Web.Models;
+
+@code {
+    List<Allergy> objs { get; set; } = new List<Allergy>();
+    Allergy selectedAllergy { get; set; }
+    string Test { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        objs.Add(new Allergy
+        {
+            Id = 1,
+            Name = "Gluten Allergi",
+        });
+
+        objs.Add(new Allergy
+        {
+            Id = 2,
+            Name = "Tomat Allergi",
+        });
+    }
+
+    public void LoadInfoModal(int allergyID)
+    {
+        selectedAllergy = objs.Where(obj => obj.Id == allergyID).FirstOrDefault();
+        StateHasChanged();
+    }
+
+    public void ActionButtonClicked()
+    {
+        Test += "WELCOME";
+        StateHasChanged();
+    }
+}
+
+
+@* Start of automatic title row *@
+<div class="col-12">
+    <h1>Dagens Retter</h1>
+</div>
+@* End of automatic title row *@
+
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <div class="canteenMenuItem">
+                <span class="canteenMenuItemInfoIcon" @onclick="@(() => LoadInfoModal(1))" data-toggle="modal" data-target="#exampleModal"><i class="las la-info-circle"></i></span>
+                <div class="canteenMenuItemContent">
+                    <h1>Menu Title</h1>
+                    <h5>Menu Description</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <div class="canteenMenuItem">
+                <span class="canteenMenuItemInfoIcon" @onclick="@(() => LoadInfoModal(2))" data-toggle="modal" data-target="#exampleModal"><i class="las la-info-circle"></i></span>
+                <div class="canteenMenuItemContent">
+                    <h1>Menu Title</h1>
+                    <h5>Menu Description</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <div class="canteenMenuItem">
+                <span class="canteenMenuItemInfoIcon"><i class="las la-info-circle"></i></span>
+                <div class="canteenMenuItemContent">
+                    <h1>Menu Title</h1>
+                    <h5>Menu Description</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <div class="canteenMenuItem">
+                <span class="canteenMenuItemInfoIcon"><i class="las la-info-circle"></i></span>
+                <div class="canteenMenuItemContent">
+                    <h1>Menu Title</h1>
+                    <h5>Menu Description</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <div class="canteenMenuItem">
+                <span class="canteenMenuItemInfoIcon"><i class="las la-info-circle"></i></span>
+                <div class="canteenMenuItemContent">
+                    <h1>Menu Title</h1>
+                    <h5>Menu Description</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <div class="canteenMenuItem">
+                <span class="canteenMenuItemInfoIcon"><i class="las la-info-circle"></i></span>
+                <div class="canteenMenuItemContent">
+                    <h1>Menu Title</h1>
+                    <h5>Menu Description</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="col-12 text-center mt-5">
+    <h1>DINE ALLERGIER</h1>
+</div>
+
+<div class="container">
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th scope="col">ALLGERGI NAVN</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>
+                    <div class="row d-flex">
+                        <div class="col-6 d-flex align-items-center">
+                            <h5>Gluten allergi</h5>
+                        </div>
+
+                        <div class="col-6 d-flex justify-content-end">
+                            <button class="btn btn-primary btn-rounded btn-normal-text">
+                                <i class="las la-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+
+            <tr>
+                <th>
+                    <div class="row">
+                        <div class="col-6 d-flex align-items-center">
+                            <h5>Gluten allergi</h5>
+                        </div>
+
+                        <div class="col-6 d-flex justify-content-end">
+                            <button class="btn btn-primary btn-rounded btn-normal-text">
+                                <i class="las la-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+
+            <tr>
+                <th>
+                    <div class="row">
+                        <div class="col-6 d-flex align-items-center">
+                            <h5>Gluten allergi</h5>
+                        </div>
+
+                        <div class="col-6 d-flex justify-content-end">
+                            <button class="btn btn-primary btn-rounded btn-normal-text">
+                                <i class="las la-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+
+            <tr>
+                <th>
+                    <div class="row">
+                        <div class="col-6 d-flex align-items-center">
+                            <h5>Gluten allergi</h5>
+                        </div>
+
+                        <div class="col-6 d-flex justify-content-end">
+                            <button class="btn btn-primary btn-rounded btn-normal-text">
+                                <i class="las la-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+
+            <tr>
+                <th>
+                    <div class="row">
+                        <div class="col-6 d-flex align-items-center">
+                            <h5>Gluten allergi</h5>
+                        </div>
+
+                        <div class="col-6 d-flex justify-content-end">
+                            <button class="btn btn-primary btn-rounded btn-normal-text">
+                                <i class="las la-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="row">
+        <div class="col-12 text-left">
+            <button class="btn btn-dark">
+                Tilføj Allergi
+            </button>
+        </div>
+    </div>
+</div>
+
+<AutomaticObjectInfoModal ModalName="exampleModal" ModalData="@selectedAllergy" ModalTitle="@Test" ModalActionButtonCallback='@ActionButtonClicked'></AutomaticObjectInfoModal>

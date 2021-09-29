@@ -3,23 +3,28 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using DataAccess.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Service.UserService;
 
 namespace Canteen.Web.Areas.Identity.Pages.Account.Manage
 {
     public partial class IndexModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IUserService _userService;
 
         public IndexModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            IUserService userService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _userService = userService;
         }
 
         public string Username { get; set; }
@@ -37,7 +42,7 @@ namespace Canteen.Web.Areas.Identity.Pages.Account.Manage
             public string PhoneNumber { get; set; }
         }
 
-        private async Task LoadAsync(IdentityUser user)
+        private async Task LoadAsync(ApplicationUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
@@ -64,32 +69,47 @@ namespace Canteen.Web.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
 
-            if (!ModelState.IsValid)
-            {
-                await LoadAsync(user);
-                return Page();
-            }
+            string result = await _userService.ChangeUserAsync(ModelState);
 
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            if (Input.PhoneNumber != phoneNumber)
-            {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
-                {
-                    StatusMessage = "Unexpected error when trying to set phone number.";
+			switch (result)
+			{
+                case "Not Valid":
+                    return NotFound("Unable to load user.");
+                case "Success":
+                    StatusMessage = "Your profile has been updated";
                     return RedirectToPage();
-                }
-            }
+				default:
+                    return Page();
+			}
 
-            await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
-            return RedirectToPage();
-        }
+
+			//var user = await _userManager.GetUserAsync(User);
+			//if (user == null)
+			//{
+			//	return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+			//}
+
+			//if (!ModelState.IsValid)
+			//{
+			//	await LoadAsync(user);
+			//	return Page();
+			//}
+
+			//var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+			//if (Input.PhoneNumber != phoneNumber)
+			//{
+			//	var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
+			//	if (!setPhoneResult.Succeeded)
+			//	{
+			//		StatusMessage = "Unexpected error when trying to set phone number.";
+			//		return RedirectToPage();
+			//	}
+			//}
+
+			//await _signInManager.RefreshSignInAsync(user);
+			//StatusMessage = "Your profile has been updated";
+			//return RedirectToPage();
+		}
     }
 }

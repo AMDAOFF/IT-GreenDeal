@@ -3,27 +3,35 @@
 @using Canteen.Web.Models;
 
 @code {
-    List<Allergy> objs { get; set; } = new List<Allergy>();
+    string Test { get; set; }
     Allergy selectedAllergy { get; set; }
+    List<Allergy> allergies { get; set; } = new List<Allergy>();
+    string modalTitle { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        objs.Add(new Allergy {
+        allergies.Add(new Allergy
+        {
             Id = 1,
-            Name = "Gluten Allergi",
+            Name = "Test"
         });
 
-        objs.Add(new Allergy
+        allergies.Add(new Allergy
         {
             Id = 2,
-            Name = "Tomat Allergi",
+            Name = "Test2"
         });
     }
 
     public void LoadInfoModal(int allergyID)
     {
-        selectedAllergy = objs.Where(obj => obj.Id == allergyID).FirstOrDefault();
+        selectedAllergy = allergies.Where(obj => obj.Id == allergyID).FirstOrDefault();
         StateHasChanged();
+    }
+
+    public void Funz()
+    {
+
     }
 }
 
@@ -202,4 +210,11 @@
     </div>
 </div>
 
-<MenuAllergyInfoModal ModalName="exampleModal" Allergy="@selectedAllergy"></MenuAllergyInfoModal>
+@{ 
+    if (selectedAllergy != null)
+    {
+        modalTitle = "View " + selectedAllergy.Name;
+    }
+}
+
+<AutomaticObjectInfoModal ModalName="exampleModal" ModalData="@selectedAllergy" ModalTitle="@modalTitle"></AutomaticObjectInfoModal>

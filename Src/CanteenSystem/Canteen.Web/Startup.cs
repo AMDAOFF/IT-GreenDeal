@@ -13,6 +13,13 @@ using System.Threading.Tasks;
 using Canteen.Web.Areas.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Components.Authorization;
+using Service.UserService;
+using Service.LoginService;
+using Service.EncryptionService;
+using Service.RegisterService;
+using Service.DishService;
+using Service.IngridentsService;
+using Service.AllergyService;
 
 namespace Canteen.Web
 {
@@ -33,11 +40,16 @@ namespace Canteen.Web
             //       .AddRoles<IdentityRole>()
             //       .AddEntityFrameworkStores<IdentityContext>();
 
-
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddSingleton<WeatherForecastService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddScoped<ILoginService, LoginService>();
+            services.AddScoped<IEncryptionService, EncryptionService>();
+            services.AddScoped<IRegisterService, RegisterService>();
+            services.AddScoped<IDishService, DishService>();
+            services.AddScoped<IIngredientsService, IngredientsService>();
+            services.AddScoped<IAllergyService, AllergyService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

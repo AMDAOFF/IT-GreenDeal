@@ -1,4 +1,3 @@
-using Absence.Web.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -6,10 +5,12 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Absence.DataAccess.EFCore;
 
 namespace Absence.Web
 {
@@ -28,7 +29,7 @@ namespace Absence.Web
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
+            services.AddDbContext<AbsenceContext>(options => options.UseSqlServer(Configuration.GetConnectionString("local")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

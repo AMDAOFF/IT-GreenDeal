@@ -1,0 +1,51 @@
+﻿
+@using Canteen.Web.Models;
+
+@code {
+    [Parameter]
+    public string ModalName { get; set; }
+
+    [Parameter]
+    public string ModalTitle { get; set; }
+
+    [Parameter]
+    public Allergy Allergy { get; set; }
+
+    private string ModalLabelName
+    {
+        get
+        {
+            return ModalName + "Label";
+        }
+
+        set
+        {
+            ModalLabelName = value;
+        }
+    }
+}
+
+
+<div class="modal fade" id="@ModalName" tabindex="-1" role="dialog" aria-labelledby="@ModalLabelName" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="@ModalLabelName">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @if (Allergy != null)
+                {
+                    <p><b>ID: </b> @Allergy.Id</p>
+                    <p><b>NAME: </b> @Allergy.Name</p>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

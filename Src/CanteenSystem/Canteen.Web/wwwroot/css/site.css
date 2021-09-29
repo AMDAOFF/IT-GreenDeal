@@ -1,9 +1,127 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+/* Define all of the variables that should be used throughout the code */
+:root {
+    /* Background colors */
+    --primaryColor: #131313;
+    --secondaryColor: #2A2A2A;
+
+    /* Font colors */
+    --darkFontColor: white;
+    --lightFontColor: black;
+}
+
+
+/* Set the main font and at all of the fallbacks */
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+
+/* Global text styling */
+p {
+    margin: 0px !important;
+}
+
+h5 {
+    margin: 0px;
+}
+
+/* End of global text styling */
+
+.page-row .col-12:first-of-type {
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.canteenMenuItem {
+    padding: 20px;
+    background-color: var(--primaryColor);
+    margin: 15px 0px 15px 0px;
+    min-height: 200px;
+    color: white;
+    justify-content: center;
+    align-content: center;
+    color: var(--darkFontColor);
+}
+
+.canteenMenuItem .canteenMenuItemInfoIcon {
+    position: absolute;
+    top: 22px;
+    right: 25px;
+    font-size: 25px;
+    opacity: 0.6;
+    transition: opacity 0.5s ease;
+}
+
+.canteenMenuItem .canteenMenuItemInfoIcon:hover {
+    opacity: 1;
+}
+
+.canteenMenuItem .canteenMenuItemContent {
+    transform: translate(-50%, -50%);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    text-align: center;
+}
+
+.canteenMenuItem.allergic {
+    box-shadow: rgba(255, 0, 0) 0px 0px 10px;
+}
+
+.canteenMenuItem.notAllergic {
+    box-shadow: rgba(0, 240, 10) 0px 0px 10px;
+}
+
+
+
+
+
+
+
+
+
+/* Change the background in general for the dark table */
+table.table-dark {
+    background-color: var(--primaryColor);
+}
+
+/* Change the background color of the table header */
+table.table-dark thead {
+    background-color: var(--secondaryColor);
+    color: var(--darkFontColor);
+}
+
+/* Remove all of the borders from the dark tables */
+.table-dark td, .table-dark th, .table-dark thead th {
+    border: none;
+}
+
+
+/* Custom rounded bootstrap button */
+.btn.btn-rounded {
+    border-radius: 100px;
+    padding: 5px 11px;
+}
+
+.btn.btn-rounded.btn-small-text {
+    font-size: 20px;
+}
+
+.btn.btn-rounded.btn-normal-text {
+    font-size: 25px;
+}
+
+.btn.btn-rounded.btn-big-text {
+    font-size: 30px;
+}
+
+
+
+
+
+/* Blazor default classes */
 a, .btn-link {
     color: #0366d6;
 }
@@ -42,9 +160,9 @@ a, .btn-link {
     z-index: 1000;
 }
 
-    #blazor-error-ui .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
-    }
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}

@@ -1,0 +1,54 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Http
+
+@inject IHttpContextAccessor httpContextAccessor
+@inject UserManager<IdentityUser> UserManager
+@inject NavigationManager Navigation
+@*@inject TokenProvider TokenProvider*@
+
+<AuthorizeView>
+	<Authorized>
+		<a href="Identity/Account/Manage/Index">
+			Hello, @IdentityUser.UserName!
+		</a>
+		<form method="post" action="Identity/Account/LogOut">
+			<button type="submit" class="nav-link btn btn-link">Log out</button>
+		</form>
+	</Authorized>
+	<NotAuthorized>
+		<a href="Identity/Account/Register">Register</a>
+		<a href="Identity/Account/Login">Login</a>
+	</NotAuthorized>
+</AuthorizeView>
+
+@code {
+	public IdentityUser IdentityUser { get; set; } = new IdentityUser { };
+
+	private string returnUrl;
+
+	public string ReturnUrl
+	{
+		get
+		{
+			return "~/" + Navigation.ToBaseRelativePath(Navigation.Uri);
+		}
+		set
+		{
+			returnUrl = value;
+		}
+	}
+
+	private void UpdateUrl()
+	{
+		ReturnUrl = "~/" + Navigation.ToBaseRelativePath(Navigation.Uri);
+		StateHasChanged();
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		IdentityUser = await UserManager.GetUserAsync(httpContextAccessor.HttpContext.User);
+	}
+
+
+}

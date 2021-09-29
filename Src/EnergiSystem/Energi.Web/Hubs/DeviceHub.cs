@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Energi.Service.DeviceService.DTO;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,11 @@ using System.Threading.Tasks;
 
 namespace Energi.Web.Hubs
 {
-    public class deviceHub : Hub
+    public class DeviceHub : Hub
     {
+        //public async Task TaskAsync(StatusDeviceDTO device)
+        //{
+        //    await Clients.All.SendAsync("UpdateDevice", device);
+        //}
     }
 }

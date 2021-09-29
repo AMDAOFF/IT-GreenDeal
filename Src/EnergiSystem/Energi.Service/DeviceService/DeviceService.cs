@@ -1,4 +1,5 @@
 ﻿using Energi.DataAccess.Entity;
+using Energi.DataAccess.Enums;
 using Energi.DataAccess.MongoDB;
 using Energi.Service.DeviceService.DTO;
 using System;
@@ -18,6 +19,42 @@ namespace Energi.Service.DeviceService
             _context = context;
         }
 
+        public async Task<StatusDeviceDTO> GetDeviceByClassNumber(string ClassNr)
+        {
+            Device device = await _context.GetAsync(x => x.Classroom == ClassNr);
+
+            StatusDeviceDTO deviceStatus = DeviceAsStatusDevice(device);
+
+            return deviceStatus;
+        }
+
+        public async Task UpdateDevice(StatusDeviceDTO device)
+        {            
+            await _context.UpdateAsync(StatusDeviceAsDevice(device));
+        }
+
+        public async Task<StatusDeviceDTO> GetProvider()
+        {
+            Device device = await _context.GetAsync(x => x.EnvirementStatus == EnvirementStatus.NeedConsumer);
+
+            if (device == null)
+            {
+                return default;
+            }
+
+            return DeviceAsStatusDevice(device);
+        }
+
+        public async Task UpdateClasseRoom(ClassInfoDTO classroomInfo)
+        {
+            Device device = await _context.GetAsync(classroomInfo.Id);
+
+            device.PeopleCount = classroomInfo.PeopleCount;
+            device.TimeStamp = classroomInfo.TimeStamp;
+
+            await _context.UpdateAsync(device);
+        }
+
         public async Task<List<StatusDeviceDTO>> GetAllDevicesStatusAsync()
         {
             IReadOnlyCollection<Device> deviceList;
@@ -29,24 +66,11 @@ namespace Energi.Service.DeviceService
 
                 foreach (var device in deviceList)
                 {
-                    deviceDtoList.Add(new StatusDeviceDTO() { 
-                        Id = device.Id, 
-                        Name = device.Name,
-                        Classroom = device.Classroom,
-                        DeviceType = device.DeviceType,
-                        PeopleCount = device.PeopleCount,
-                        RecyclingFan = device.RecyclingFan,
-                        VentilationFan = device.VentilationFan,
-                        OnlineStatus = device.OnlineStatus,
-                        Temperature = device.Temperature,
-                        Radiator = device.Radiator,
-                        VentilationValve = device.VentilationValveStatus
-                    });
+                    deviceDtoList.Add(DeviceAsStatusDevice(device));
                 }
             }
             catch (Exception)
             {
-
                 throw;
             }
 
@@ -69,7 +93,6 @@ namespace Energi.Service.DeviceService
             }
             catch (Exception)
             {
-
                 throw;
             }
 
@@ -78,8 +101,6 @@ namespace Energi.Service.DeviceService
 
         public async Task SeedData()
         {
-
-
             try
             {
                 IReadOnlyCollection<Device> holder = await _context.GetAllAsync();
@@ -90,7 +111,7 @@ namespace Energi.Service.DeviceService
                     {
                         await _context.CreateAsync(device);
                     }
-                }                
+                }
             }
             catch (Exception)
             {
@@ -99,6 +120,56 @@ namespace Energi.Service.DeviceService
             }
 
             return;
+        }
+
+        public static StatusDeviceDTO DeviceAsStatusDevice(Device device)
+        {
+            if (device == null)
+            {
+                return default;
+            }
+
+            return new StatusDeviceDTO()
+            {
+                Id = device.Id,
+                Name = device.Name,
+                Classroom = device.Classroom,
+                TimeStamp = device.TimeStamp,
+                DeviceType = device.DeviceType,
+                PeopleCount = device.PeopleCount,
+                RecyclingFan = device.RecyclingFan,
+                VentilationFan = device.VentilationFan,
+                OnlineStatus = device.OnlineStatus,
+                Temperature = device.Temperature,
+                Radiator = device.Radiator,
+                VentilationValveStatus = device.VentilationValveStatus,
+                EnvirementStatus = Enum.GetName(typeof(EnvirementStatus), device.EnvirementStatus)
+            };
+        }
+
+        public Device StatusDeviceAsDevice(StatusDeviceDTO device)
+        {
+            if (device == null)
+            {
+                return default;
+            }
+
+            return new Device()
+            {
+                Id = device.Id,
+                Name = device.Name,
+                Classroom = device.Classroom,
+                TimeStamp = device.TimeStamp,
+                DeviceType = device.DeviceType,
+                PeopleCount = device.PeopleCount,
+                RecyclingFan = device.RecyclingFan,
+                VentilationFan = device.VentilationFan,
+                OnlineStatus = device.OnlineStatus,
+                Temperature = device.Temperature,
+                Radiator = device.Radiator,
+                VentilationValveStatus = device.VentilationValveStatus,
+                EnvirementStatus = (EnvirementStatus)Enum.Parse(typeof(EnvirementStatus), device.EnvirementStatus)
+            };
         }
     }
 }

@@ -17,6 +17,9 @@ using Energi.Extentions.Database;
 using Energi.Service.MQTTService;
 using Energi.Web.HostedService;
 using Energi.Service.MessageService;
+using Energi.Web.Hubs;
+using Microsoft.AspNetCore.ResponseCompression;
+using Energi.Service.HeatingService;
 
 namespace Energi.Web
 {
@@ -42,16 +45,26 @@ namespace Energi.Web
             services.PrepareMongo()
             .AddMongoDB<Device>("Devices");
 
+            // Add hubs.
+            services.AddResponseCompression(opts =>
+            {
+                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                    new[] { "application/octet-stream" });
+            });
+
             // Add services.
-            services.AddScoped<IDeviceService, DeviceService>();
+            services.AddTransient<IDeviceService, DeviceService>();
             services.AddSingleton<IMqttService, MqttService>();
             services.AddTransient<IMessageService, MessageService>();
             services.AddHostedService<MessageHostedService>();
+            services.AddTransient<IHeatingService, HeatingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseResponseCompression();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -71,6 +84,7 @@ namespace Energi.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapBlazorHub();
+                endpoints.MapHub<DeviceHub>("/hub/devicehub");
                 endpoints.MapFallbackToPage("/_Host");
             });
         }

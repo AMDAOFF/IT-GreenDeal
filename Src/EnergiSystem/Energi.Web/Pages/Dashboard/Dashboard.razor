@@ -3,6 +3,9 @@
 
 @using Energi.Service.DeviceService
 @using Energi.Service.DeviceService.DTO
+@using Microsoft.AspNetCore.SignalR.Client
+@inject NavigationManager NavigationManager
+@implements IAsyncDisposable
 
 
 @inject IDeviceService deviceService
@@ -28,7 +31,7 @@
                                 <li><strong>Device name:</strong> @device.Name</li>
                                 <li><strong>Temperature:</strong> @device.Temperature</li>
                                 <li><strong>People count:</strong> @device.PeopleCount</li>
-                                <li><strong>Ventilation valve:</strong> @device.VentilationValve</li>
+                                <li><strong>Ventilation valve:</strong> @device.VentilationValveStatus</li>
                                 <li><strong>Recycling fan</strong>: @device.RecyclingFan</li>
                                 <li><strong>Ventilation fan:</strong> @device.VentilationFan</li>
                                 <li><strong>Radiator:</strong> @device.Radiator</li>
@@ -49,7 +52,7 @@
                             </div>
                             <div style="display:flex">
                                 <div class="informationBox">
-                                    <p class="boardP">Provider</p>
+                                    <p class="boardP">@device.EnvirementStatus</p>
                                 </div>
                             </div>
                         </div>
@@ -68,7 +71,6 @@
 
                 </div>
             </div>
-
         </div>
     }
 
@@ -80,6 +82,8 @@
 
     private bool running = false;
 
+    private HubConnection hubConnection;
+
     protected override async Task OnInitializedAsync()
     {
         deviceList = await deviceService.GetAllDevicesStatusAsync();
@@ -88,6 +92,24 @@
         {
             deviceList = new List<StatusDeviceDTO>();
         }
+
+        // SignalR.
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/hub/devicehub"))
+            .Build();
+
+        hubConnection.On<List<StatusDeviceDTO>>("UpdateDevice", (devices) =>
+        {
+            foreach (var device in devices)
+            {
+                var oldItemIndex = deviceList.FindIndex(x => x.Id == device.Id);
+                deviceList[oldItemIndex] = device;
+            }
+
+            StateHasChanged();
+        });
+
+        await hubConnection.StartAsync();
     }
 
     private async void Heating(int id)
@@ -112,6 +134,14 @@
             device.RecyclingStatus = (device.RecyclingStatus == false) ? true : false;
 
             device.RecyclingFan = (device.RecyclingFan == false) ? true : false;
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Energi.DataAccess.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace Energi.DataAccess.Entity
         public string IP { get; set; }
         public string MAC { get; set; }
         public string Classroom { get; set; }
+        public DateTime TimeStamp { get; set; }
         public int PeopleCount { get; set; }
         public double Temperature { get; set; }
         public bool RecyclingFan { get; set; }
@@ -22,5 +24,6 @@ namespace Energi.DataAccess.Entity
         public bool VentilationValveStatus { get; set; }
         public bool Radiator { get; set; }
         public string DeviceType { get; set; }
+        public EnvirementStatus EnvirementStatus { get; set; }
     }
 }

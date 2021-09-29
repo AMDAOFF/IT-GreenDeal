@@ -9,7 +9,7 @@ namespace Energi.Service.MessageService
     public interface IMessageService
     {
         Task SendMessage(PublishMessageDTO message);        
-        Task Initialize(MessageBusSettings settings, Func<ConsumeContext<RoomUpdate>, Task> callback);
+        Task Initialize(MessageBusSettings settings, Func<ConsumeContext<MessageAsString>, Task> callback);
         Task StopListener();
     }
 }

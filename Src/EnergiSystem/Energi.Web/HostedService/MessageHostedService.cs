@@ -13,24 +13,17 @@ using static MessageBroker.Contracts.Contracts;
 
 namespace Energi.Web.HostedService
 {
-    public class MessageHostedService : IHostedService, IConsumer<RoomUpdate>
+    public class MessageHostedService : IHostedService, IConsumer<MessageAsString>
     {
         private readonly IHubContext<deviceHub> _deviceHub;
         private readonly IMessageService _messageService;
-        private readonly MessageBusSettings _settings;
-        private readonly MessageBusSettings _busSettings;
-
-        //private readonly IPublishEndpoint _publishEndpoint;
-        //public MessageHostedService(IHubContext<deviceHub> deviceHub, IBus publishEndpoint)
-
+        private readonly MessageBusSettings _settings;        
 
         public MessageHostedService(IHubContext<deviceHub> deviceHub, IMessageService messageService, IConfiguration Configuration)
         {
             _settings = Configuration.GetSection(nameof(MessageBusSettings)).Get<MessageBusSettings>();
             _deviceHub = deviceHub;
             _messageService = messageService;             
-            //this._busSettings = busSettings;
-            //_publishEndpoint = publishEndpoint;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -43,17 +36,11 @@ namespace Energi.Web.HostedService
             await _messageService.StopListener();
         }
 
-        public async Task Consume(ConsumeContext<RoomUpdate> context)
+        public async Task Consume(ConsumeContext<MessageAsString> context)
         {
-            Console.WriteLine("Classroom update: {0}", context.Message.RoomNr);
-        }
+            List<string> stringList = context.Message.ToString().Split(';').ToList();
 
-        //class ReceivedMessage : IConsumer<RoomUpdate>
-        //{
-        //    public async Task Consume(ConsumeContext<RoomUpdate> context)
-        //    {
-        //        Console.WriteLine("Classroom update: {0}", context.Message.RoomNr);
-        //    }
-        //}
+            Console.WriteLine("Classroom update: {0}", context.Message);
+        }
     }
 }

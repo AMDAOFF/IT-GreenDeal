@@ -26,11 +26,9 @@ namespace Energi.Service.MessageService
         }
 
 
-        public async Task Initialize(MessageBusSettings settings, Func<ConsumeContext<RoomUpdate>, Task> callback)
+        public async Task Initialize(MessageBusSettings settings, Func<ConsumeContext<MessageAsString>, Task> callback)
         {
             _setting = settings;
-
-            //ReceivedMessage hodler = new ReceivedMessage();
 
             _busControl = Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
@@ -50,13 +48,5 @@ namespace Energi.Service.MessageService
 
             await _busControl.StartAsync(source.Token);
         }
-
-        //class ReceivedMessage : IConsumer<RoomUpdate>
-        //{
-        //    public async Task Consume(ConsumeContext<RoomUpdate> context)
-        //    {
-        //        Console.WriteLine("Classroom update: {0}", context.Message.RoomNr);
-        //    }
-        //}
     }
 }

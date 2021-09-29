@@ -8,9 +8,7 @@ namespace Service.EncryptionService
 {
 	public interface IEncryptionService
 	{
-		byte[] Encrypt(string plainText, byte[] Key, byte[] IV);
-		string Decrypt(byte[] cipherText, byte[] Key, byte[] IV);
-		byte[] GetKey();
-		byte[] GetIV();
+		byte[] Encrypt(string plainText);
+		string Decrypt(byte[] cipherText);
 	}
 }

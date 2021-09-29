@@ -10,6 +10,7 @@ using Service.UserService.Dto;
 using Service.EncryptionService;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Service.UserService
 {
@@ -19,16 +20,19 @@ namespace Service.UserService
 		private readonly IEncryptionService _encryptionService;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 		private readonly UserManager<ApplicationUser> _userManager;
+		private readonly SignInManager<ApplicationUser> _signInManager;
 
 		public UserService(IdentityContext identityContext,
 			IEncryptionService encryptionService,
 			IHttpContextAccessor httpContextAccessor,
-			UserManager<ApplicationUser> userManager)
+			UserManager<ApplicationUser> userManager,
+			SignInManager<ApplicationUser> signInManager)
 		{
 			_identityContext = identityContext;
 			_encryptionService = encryptionService;
 			_httpContextAccessor = httpContextAccessor;
 			_userManager = userManager;
+			_signInManager = signInManager;
 		}
 
 		public async Task<List<SimpleApplicationUserDTO>> GetUsersAsync()
@@ -36,17 +40,27 @@ namespace Service.UserService
 			List<SimpleApplicationUserDTO> applicationUsers = new();
 			List<ApplicationUser> users = await _identityContext.Users.OfType<ApplicationUser>().ToListAsync();
 
-
 			foreach (var user in users)
 			{
-				string decryptedName = _encryptionService.Decrypt(Convert.FromBase64String(user.Name), _encryptionService.GetKey(), _encryptionService.GetIV());
-				string decryptedSurname = _encryptionService.Decrypt(Convert.FromBase64String(user.Surname), _encryptionService.GetKey(), _encryptionService.GetIV());
+				List<string> userRoles = new();
+				try
+				{
+					userRoles = (List<string>)await _userManager.GetRolesAsync(user);
+				}
+				catch (Exception)
+				{
+					userRoles.Add("Brugere");
+				}
+
+				string decryptedName = _encryptionService.Decrypt(Convert.FromBase64String(user.Name));
+				string decryptedSurname = _encryptionService.Decrypt(Convert.FromBase64String(user.Surname));
 
 				applicationUsers.Add(new SimpleApplicationUserDTO()
 				{
 					Name = decryptedName.Trim(),
 					Surname = decryptedSurname.Trim(),
-					Email = user.Email
+					Email = user.Email,
+					Roles = userRoles
 				});
 			}
 
@@ -58,8 +72,8 @@ namespace Service.UserService
 			var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
 			if (user != null)
 			{
-				string decryptedName = _encryptionService.Decrypt(Convert.FromBase64String(user.Name), _encryptionService.GetKey(), _encryptionService.GetIV());
-				string decryptedSurname = _encryptionService.Decrypt(Convert.FromBase64String(user.Surname), _encryptionService.GetKey(), _encryptionService.GetIV());
+				string decryptedName = _encryptionService.Decrypt(Convert.FromBase64String(user.Name));
+				string decryptedSurname = _encryptionService.Decrypt(Convert.FromBase64String(user.Surname));
 
 				SimpleApplicationUserDTO simpleUser = new()
 				{
@@ -74,6 +88,20 @@ namespace Service.UserService
 			{
 				return null;
 			}
+		}
+
+		public async Task<string> ChangeUserAsync(ModelStateDictionary modelState)
+		{
+			var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+
+			if (modelState.IsValid && user != null)
+			{
+				await _signInManager.RefreshSignInAsync(user);
+				return "Success";
+			}
+
+			return "Not Valid";
+
 		}
 	}
 }

@@ -79,8 +79,8 @@ namespace Canteen.Web.Areas.Identity.Pages.Account
             returnUrl ??= Url.Content("~/");
             //ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-            byte[] encryptedName = _encryptionService.Encrypt(Input.Name, _encryptionService.GetKey(), _encryptionService.GetIV());
-            byte[] encryptedSurname = _encryptionService.Encrypt(Input.Surname, _encryptionService.GetKey(), _encryptionService.GetIV());
+            byte[] encryptedName = _encryptionService.Encrypt(Input.Name);
+            byte[] encryptedSurname = _encryptionService.Encrypt(Input.Surname);
 
             await _registerService.Register(encryptedName, Input.Email, encryptedSurname, Input.Password, returnUrl, ModelState);
             return LocalRedirect(returnUrl);

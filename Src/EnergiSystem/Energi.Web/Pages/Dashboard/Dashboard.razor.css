@@ -1,0 +1,40 @@
+﻿.boardImg {
+    flex: 1;
+    margin: 5px;
+    text-align: center;
+    border: 1px solid #000000;
+    border-radius: 5px; 
+    padding: 15px; 
+    background-color: white;
+}
+
+    .boardImg:hover {
+        opacity: 0.6;
+    }
+
+.informationBox {
+    flex: 1;
+    margin: 5px;
+    text-align: center;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    padding: 15px;
+    background-color: white;
+}
+
+.boardP {
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.running {    
+    box-shadow: LimeGreen 0px 0px 6px 1px;
+}
+}
+
+.stopped {
+    box-shadow: Crimson 0px 0px 6px 1px;
+}

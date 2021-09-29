@@ -1,4 +1,5 @@
-using Energi.Web.Data;
+using Energi.DataAccess;
+using Energi.DataAccess.Entity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +11,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Energi.Service;
+using Energi.Service.DeviceService;
+using Energi.Extentions.Database;
+using Energi.Service.MQTTService;
+using Energi.Web.HostedService;
+using Energi.Service.MessageService;
 
 namespace Energi.Web
 {
@@ -26,9 +33,20 @@ namespace Energi.Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            ServiceSettings serviceSettings = Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
+
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
+
+            // Add database to IOC, from extentions.
+            services.PrepareMongo()
+            .AddMongoDB<Device>("Devices");
+
+            // Add services.
+            services.AddScoped<IDeviceService, DeviceService>();
+            services.AddSingleton<IMqttService, MqttService>();
+            services.AddTransient<IMessageService, MessageService>();
+            services.AddHostedService<MessageHostedService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

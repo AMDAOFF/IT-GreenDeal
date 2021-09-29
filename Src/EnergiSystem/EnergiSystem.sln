@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energi.Web", "Energi.Web\Energi.Web.csproj", "{48F10EB5-15C0-4709-9B5D-EE72B9C14D58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energi.Web", "Energi.Web\Energi.Web.csproj", "{48F10EB5-15C0-4709-9B5D-EE72B9C14D58}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energi.Service", "Energi.Service\Energi.Service.csproj", "{18242D3C-7D85-4A90-8B02-ED297AF57073}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energi.DataAccess", "Energi.DataAccess\Energi.DataAccess.csproj", "{551ACB9B-492E-4635-BE78-6C222F8A4387}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{48F10EB5-15C0-4709-9B5D-EE72B9C14D58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48F10EB5-15C0-4709-9B5D-EE72B9C14D58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48F10EB5-15C0-4709-9B5D-EE72B9C14D58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18242D3C-7D85-4A90-8B02-ED297AF57073}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18242D3C-7D85-4A90-8B02-ED297AF57073}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18242D3C-7D85-4A90-8B02-ED297AF57073}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18242D3C-7D85-4A90-8B02-ED297AF57073}.Release|Any CPU.Build.0 = Release|Any CPU
+		{551ACB9B-492E-4635-BE78-6C222F8A4387}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{551ACB9B-492E-4635-BE78-6C222F8A4387}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{551ACB9B-492E-4635-BE78-6C222F8A4387}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{551ACB9B-492E-4635-BE78-6C222F8A4387}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

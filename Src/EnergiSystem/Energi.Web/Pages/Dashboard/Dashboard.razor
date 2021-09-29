@@ -1,0 +1,117 @@
+﻿@*@page "/dashboard"*@
+@page "/"
+
+@using Energi.Service.DeviceService
+@using Energi.Service.DeviceService.DTO
+
+
+@inject IDeviceService deviceService
+
+
+<h3>Dashboard</h3>
+
+<div class="row">
+
+
+    @foreach (var device in deviceList)
+    {
+        <div class="col-sm-6" style="margin-bottom: 30px;">
+            <div class="card border-dark">
+                <div class="card-header text-center">
+                    <strong>Room nr: @device.Classroom</strong>
+                </div>
+                <div class="card-body" style="background-color: White; ">
+                    @*<h5 class="card-title text-center">Class: @device.Classroom</h5>*@
+                    <div class="container row">
+                        <div class="col-6">
+                            <ul class="list-unstyled">
+                                <li><strong>Device name:</strong> @device.Name</li>
+                                <li><strong>Temperature:</strong> @device.Temperature</li>
+                                <li><strong>People count:</strong> @device.PeopleCount</li>
+                                <li><strong>Ventilation valve:</strong> @device.VentilationValve</li>
+                                <li><strong>Recycling fan</strong>: @device.RecyclingFan</li>
+                                <li><strong>Ventilation fan:</strong> @device.VentilationFan</li>
+                                <li><strong>Radiator:</strong> @device.Radiator</li>
+                                <li><strong>Device type:</strong> @device.DeviceType</li>
+                            </ul>
+                        </div>
+                        @*Shadow https://toruskit.com/docs/utilities/shadows/*@
+                        <div class="col-6">
+                            <div style="display:flex">
+                                <div class="boardImg @(device.HeatingStatus ? "running" : "") " @onclick="() => Heating(device.Id)">
+                                    <img style="margin:5px;" src="@(device.OnlineStatus ? "Images/Heating.svg" : "Images/HeatingGray.svg")" />
+                                    <p class="boardP">Heating</p>
+                                </div>
+                                <div class="boardImg @(device.RecyclingStatus ? "running" : "") " @onclick="() => Recycling(device.Id)">
+                                    <img style="margin:5px;" src="@(device.OnlineStatus ? "Images/Recycling.svg" : "Images/RecyclingGray.svg")" />
+                                    <p class="text-center boardP">Recycling</p>
+                                </div>
+                            </div>
+                            <div style="display:flex">
+                                <div class="informationBox">
+                                    <p class="boardP">Provider</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer alert  @(device.OnlineStatus ? "alert-success" : "alert-secondary")">
+                    @if (device.OnlineStatus)
+                    {
+                        <p class="boardP text-center">Online</p>
+                    }
+                    else
+                    {
+                        <p class="boardP text-center">Offline</p>
+                    }
+
+
+                </div>
+            </div>
+
+        </div>
+    }
+
+</div>
+
+@code {
+
+    private List<StatusDeviceDTO> deviceList = new List<StatusDeviceDTO>();
+
+    private bool running = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        deviceList = await deviceService.GetAllDevicesStatusAsync();
+
+        if (deviceList == null)
+        {
+            deviceList = new List<StatusDeviceDTO>();
+        }
+    }
+
+    private async void Heating(int id)
+    {
+        StatusDeviceDTO device = deviceList.Where(x => x.Id == id).FirstOrDefault();
+
+        if (device.OnlineStatus == true)
+        {
+            device.HeatingStatus = (device.HeatingStatus == false) ? true : false;
+
+            device.VentilationFan = (device.VentilationFan == false) ? true : false; ;
+            device.Radiator = (device.Radiator == false) ? true : false; ;
+        }
+    }
+
+    private async void Recycling(int id)
+    {
+        StatusDeviceDTO device = deviceList.Where(x => x.Id == id).FirstOrDefault();
+
+        if (device.OnlineStatus)
+        {
+            device.RecyclingStatus = (device.RecyclingStatus == false) ? true : false;
+
+            device.RecyclingFan = (device.RecyclingFan == false) ? true : false;
+        }
+    }
+}

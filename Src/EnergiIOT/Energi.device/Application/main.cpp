@@ -15,6 +15,7 @@
 
 #include "Tasks/MqttPingTask.h"
 #include "Tasks/ApplicationTask.h"
+#include "Tasks/TemperatureTask.h"
 
 // Logging!!! This is only for the poc!!
 ErrorLog Logger;
@@ -25,6 +26,7 @@ int main(void)
 	board.Initialize();
 	MqttPingTask mqttPingTask(board.GetMqttClient(), connectSettings);
 	ApplicationTask applicationTask(board);
+	TemperatureTask temperatureTask(board, publishMessage);
 	
 	//board.GetWifi().Initialize("JK", "472yO58;");	
 	board.GetWifi().Initialize("Stofa67337\0", "gyros54fyh36\0");
@@ -36,6 +38,7 @@ int main(void)
 	unsigned long task1 = board.GetChronos().Time();
 	unsigned long task2 = board.GetChronos().Time();
 	unsigned long task3 = board.GetChronos().Time();
+	unsigned long task4 = board.GetChronos().Time();
 	
 	while (1)
 	{
@@ -50,12 +53,11 @@ int main(void)
 			task1 = board.GetChronos().Time();
 			
 		}
-		// Publich.
-		if(board.GetChronos().Time() - task2 > 5000)
-		{
-			board.GetMqttClient().Publish(&publishMessage);
-			board.GetLedController().ToggleLed(Leds::Online);
-			task2 = board.GetChronos().Time();
+		// Publish. now temperature task.
+		if(board.GetChronos().Time() - task4 > 1000)
+		{			
+			temperatureTask.Service();
+			task4 = board.GetChronos().Time();
 		}
 		// Sub service.
 		if(board.GetChronos().Time() - task3 > 20)

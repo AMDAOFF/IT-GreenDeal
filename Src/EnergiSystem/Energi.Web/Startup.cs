@@ -20,6 +20,7 @@ using Energi.Service.MessageService;
 using Energi.Web.Hubs;
 using Microsoft.AspNetCore.ResponseCompression;
 using Energi.Service.HeatingService;
+using Energi.Service.DatabaseService;
 
 namespace Energi.Web
 {
@@ -36,7 +37,7 @@ namespace Energi.Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            ServiceSettings serviceSettings = Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
+            //ServiceSettings serviceSettings = Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
@@ -54,6 +55,7 @@ namespace Energi.Web
 
             // Add services.
             services.AddTransient<IDeviceService, DeviceService>();
+            services.AddTransient<IDatabaseService, DatabaseService>();
             services.AddSingleton<IMqttService, MqttService>();
             services.AddTransient<IMessageService, MessageService>();
             services.AddHostedService<MessageHostedService>();

@@ -12,10 +12,10 @@ namespace Energi.Service.DeviceService
     {
         Task<List<SlimDeviceDTO>> GetAllDevicesSlimAsync();
         Task<List<StatusDeviceDTO>> GetAllDevicesStatusAsync();
+        Task<StatusDeviceDTO> GetDeviceById(int Id);
         Task<StatusDeviceDTO> GetDeviceByClassNumber(string ClassNr);
         Task UpdateDevice(StatusDeviceDTO device);
-        Task UpdateClasseRoom(ClassInfoDTO classInfo);
-        Task SeedData();
+        Task UpdateClasseRoom(ClassInfoDTO classInfo);        
         Task<StatusDeviceDTO> GetProvider();
     }
 }

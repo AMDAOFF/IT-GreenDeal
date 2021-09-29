@@ -19,6 +19,13 @@ namespace Energi.Service.DeviceService
             _context = context;
         }
 
+        public async Task<StatusDeviceDTO> GetDeviceById(int Id)
+        {
+            Device device = await _context.GetAsync(Id);
+
+            return DeviceAsStatusDevice(device);
+        }
+
         public async Task<StatusDeviceDTO> GetDeviceByClassNumber(string ClassNr)
         {
             Device device = await _context.GetAsync(x => x.Classroom == ClassNr);
@@ -98,29 +105,7 @@ namespace Energi.Service.DeviceService
 
             return deviceDtoList;
         }
-
-        public async Task SeedData()
-        {
-            try
-            {
-                IReadOnlyCollection<Device> holder = await _context.GetAllAsync();
-
-                if (holder.Count() == 0 || holder == null)
-                {
-                    foreach (var device in Energi.DataAccess.SeedingData.Seeding.GetSeedingData())
-                    {
-                        await _context.CreateAsync(device);
-                    }
-                }
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-
-            return;
-        }
+        
 
         public static StatusDeviceDTO DeviceAsStatusDevice(Device device)
         {

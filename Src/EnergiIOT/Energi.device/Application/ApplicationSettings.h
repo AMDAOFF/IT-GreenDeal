@@ -33,13 +33,13 @@ connectSettings_t connectSettings =
 publishMessage_t publishMessage =
 {
 	"Test:: JK is online.",
-	"device/info",
+	"device/update/1",
 	&connectSettings
 };
 
 
 subscribeTopic_t subscribeTopic {
-	"device/settings",
+	"device/settings/1",
 	&connectSettings
 };
 

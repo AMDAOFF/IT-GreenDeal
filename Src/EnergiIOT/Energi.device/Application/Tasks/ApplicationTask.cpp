@@ -62,6 +62,24 @@ void ApplicationTask::Service()
 		{
 			_board.GetLedController().SetLedState(Leds::Working, false);
 		}
+		
+		if (_rxBuffer[2] == '1')
+		{
+			_board.GetLedController().SetLedState(Leds::Fail, true);
+		}
+		else
+		{
+			_board.GetLedController().SetLedState(Leds::Fail, false);
+		}
+		
+		if (_rxBuffer[3] == '1')
+		{
+			_board.GetLedController().SetLedState(Leds::Busy, true);
+		}
+		else
+		{
+			_board.GetLedController().SetLedState(Leds::Busy, false);
+		}
 
 		_board.GetLedController().ToggleLed(Leds::Send);
 		process_data = false;

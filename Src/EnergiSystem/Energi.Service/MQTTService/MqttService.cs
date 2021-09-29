@@ -10,39 +10,51 @@ namespace Energi.Service.MQTTService
 {
     public class MqttService : IMqttService
     {
-
-        private static string name = "WebApplication";
-        private static string Server = "127.0.0.1";
-        private static string Username = "guest";
-        private static string Password = "guest";
-        private static string pubTopic = "device/settings";
-
         private MqttClient client;
+        private IOTSettings _settings;
 
-        public MqttService()
+        Func<double, int, Task> method;
+
+        public async Task Initialize(IOTSettings settings, Func<double, int, Task> callback)
         {
-            client = new MqttClient(Server);
+            _settings = settings;
+            method = callback;
+
+            client = new MqttClient(_settings.Server);
             string clientId = Guid.NewGuid().ToString();
-            client.Connect(clientId, Username, Password);
+            client.Connect(clientId, _settings.UserName, _settings.Password);
         }
 
-        public void Publish(string message)
+        public void Publish(string topic, string message)
         {
-            client.Publish(pubTopic, Encoding.UTF8.GetBytes(message), MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, false);
+            client.Publish(topic, Encoding.UTF8.GetBytes(message), MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, false);
         }
 
-        public bool Subscribe()
+        public void Subscribe(string topic)
         {
-            client.MqttMsgPublishReceived += client_MqttMsgPublishReceived;
+            client.MqttMsgPublishReceived += MessageReceived;
 
-            client.Subscribe(new string[] { pubTopic }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE });
-
-            return true;
+            client.Subscribe(new string[] { topic }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE });
         }
 
-        public void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
+        public void SendConfig(ConfigMessage config)
         {
-            string holder = Encoding.Default.GetString(e.Message);
+            string message = $"#{Convert.ToInt32(config.VentilationFan)}{Convert.ToInt32(config.RecyclingFan)}{Convert.ToInt32(config.VentilationValveStatus)}{Convert.ToInt32(config.Radiator)}00#";
+
+            Publish(_settings.PubTopic + "/" + config.Id.ToString(), message);
+        }
+
+        private async void MessageReceived(object sender, MqttMsgPublishEventArgs e)
+        {
+            int id = int.Parse(e.Topic.Split('/').ToList().Last());
+
+            string rawStr = Encoding.Default.GetString(e.Message).Split('=').ToList().Last();
+            int startindex = 0;
+            int Endindex = rawStr.IndexOf('#');
+
+            double temperature = double.Parse(rawStr.Substring(startindex, Endindex - startindex - 1).Trim());
+
+            await method(temperature, id);
         }
     }
 }

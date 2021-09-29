@@ -13,10 +13,14 @@ namespace Energi.DataAccess.MongoDB
     {
         private readonly IMongoCollection<T> _collection;
         private readonly FilterDefinitionBuilder<T> filterBuilder = Builders<T>.Filter;
+        private readonly IMongoDatabase _database;
+        private readonly string _collectionName;
 
         public MongoContext(IMongoDatabase database, string collectionName)
         {
+            _database = database;            
             _collection = database.GetCollection<T>(collectionName);
+            _collectionName = collectionName;
         }
 
         public async Task<IReadOnlyCollection<T>> GetAllAsync()
@@ -65,6 +69,11 @@ namespace Energi.DataAccess.MongoDB
         {
             FilterDefinition<T> filter = filterBuilder.Eq(entity => entity.Id, id);
             await _collection.DeleteOneAsync(filter);
+        }
+
+        public async Task DropDatabase()
+        {
+            await _database.DropCollectionAsync(_collectionName);
         }
     }
 

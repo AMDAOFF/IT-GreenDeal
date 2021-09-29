@@ -2,6 +2,7 @@
 using Energi.Service.DeviceService.DTO;
 using Energi.Service.HeatingService;
 using Energi.Service.MessageService;
+using Energi.Service.MQTTService;
 using Energi.Web.Hubs;
 using MassTransit;
 using Microsoft.AspNetCore.SignalR;
@@ -22,25 +23,32 @@ namespace Energi.Web.HostedService
         private readonly IMessageService _messageService;
         private readonly IDeviceService _deviceService;
         private readonly IHeatingService _heatingService;
-        private readonly MessageBusSettings _settings;        
+        private readonly IMqttService _mqttService;
+        private readonly MessageBusSettings _busSettings;
+        private readonly IOTSettings _IotSettings;
 
-        public MessageHostedService(IHubContext<DeviceHub> deviceHub, IMessageService messageService, IConfiguration Configuration, IDeviceService deviceService, IHeatingService heatingService)
+        public MessageHostedService(IHubContext<DeviceHub> deviceHub, IMessageService messageService, IConfiguration Configuration, IDeviceService deviceService, IHeatingService heatingService, IMqttService mqttService)
         {
-            _settings = Configuration.GetSection(nameof(MessageBusSettings)).Get<MessageBusSettings>();
+            _busSettings = Configuration.GetSection(nameof(MessageBusSettings)).Get<MessageBusSettings>();
+            _IotSettings = Configuration.GetSection(nameof(IOTSettings)).Get<IOTSettings>();
             _deviceHub = deviceHub;
             _messageService = messageService;
             _deviceService = deviceService;
             _heatingService = heatingService;
+            _mqttService = mqttService;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            await _messageService.Initialize(_settings, Consume);
+            await _messageService.Initialize(_busSettings, Consume);
+            await _mqttService.Initialize(_IotSettings, IOTMessageReceived);
+            _mqttService.Subscribe(_IotSettings.SubTopic);
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             await _messageService.StopListener();
+
         }
         public async Task Consume(ConsumeContext<MessageAsString> context)
         {
@@ -69,8 +77,8 @@ namespace Energi.Web.HostedService
 
                 await _deviceService.UpdateClasseRoom(calssInfo);
 
-                // Heat controll.
-                List<StatusDeviceDTO> deviceList = await _heatingService.HeadControl(device);
+                // Heat control.
+                List<StatusDeviceDTO> deviceList = await _heatingService.HeadControl(device, _mqttService);
 
                 // Send to browser.
                 if (deviceList == null)
@@ -83,14 +91,26 @@ namespace Energi.Web.HostedService
             {
                 return;
             }
-           
-
 
             Console.WriteLine("Classroom update: {0}", context.Message);
+        }
 
+        public async Task IOTMessageReceived(double temperature, int Id)
+        {
 
+            StatusDeviceDTO device = await _deviceService.GetDeviceById(1);
 
-       
+            device.Temperature = temperature;
+
+            _deviceService.UpdateDevice(device);
+
+            List<StatusDeviceDTO> deviceList = new List<StatusDeviceDTO>();
+            deviceList.Add(device);
+
+            _deviceHub.Clients.All.SendAsync("UpdateDevice", deviceList);
+
+            return; 
+
         }
     }
 }

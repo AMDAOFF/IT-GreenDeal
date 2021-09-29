@@ -19,12 +19,12 @@
     private async void TurnOn()
     {
 
-        mqttService.Publish("#1111#");
+        mqttService.Publish("", "#1111#");
     }
 
     private async void TurnOff()
     {
 
-        mqttService.Publish("#0000#");
+        mqttService.Publish("", "#0000#");
     }
 }

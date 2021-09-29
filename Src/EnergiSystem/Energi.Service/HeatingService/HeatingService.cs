@@ -2,6 +2,7 @@
 using Energi.DataAccess.Enums;
 using Energi.Service.DeviceService;
 using Energi.Service.DeviceService.DTO;
+using Energi.Service.MQTTService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,14 +20,20 @@ namespace Energi.Service.HeatingService
             _deviceService = deviceService;
         }
 
-        public async Task<List<StatusDeviceDTO>> HeadControl(StatusDeviceDTO device)
+        public async Task<List<StatusDeviceDTO>> HeadControl(StatusDeviceDTO device, IMqttService mqttService)
         {
             
             List<StatusDeviceDTO> deviceChangeList = new List<StatusDeviceDTO>();
 
             // Find provider.
-            if (device.PeopleCount > 0 && device.Temperature < 15)
+            if (device.PeopleCount == 0 && device.Temperature < 15)
             {
+                // Already consumer.
+                if (device.EnvirementStatus == Enum.GetName(typeof(EnvirementStatus), EnvirementStatus.Consumer))
+                {
+                    return deviceChangeList;
+                }
+
                 deviceChangeList.Add(device);
 
                 StatusDeviceDTO provider = await _deviceService.GetProvider();
@@ -39,15 +46,46 @@ namespace Energi.Service.HeatingService
                     return deviceChangeList;
                 }
 
+
+
                 // Consumer has provider.
-                deviceChangeList.Add(provider);
                 device.EnvirementStatus = Enum.GetName(typeof(EnvirementStatus), EnvirementStatus.Consumer);
+                device.VentilationValveStatus = true;
+                device.RecyclingFan = true;
+                device.HeatingStatus = true;
+                device.RecyclingStatus = true;
+                device.VentilationFan = false;
+
+                deviceChangeList.Add(provider);                
                 provider.EnvirementStatus = Enum.GetName(typeof(EnvirementStatus), EnvirementStatus.Provider);
+                provider.VentilationFan = true;
+                provider.RecyclingFan = true;
+                provider.RecyclingStatus = true;
+                provider.VentilationValveStatus = false;
 
                 await _deviceService.UpdateDevice(device);
                 await _deviceService.UpdateDevice(provider);
 
-                // SEND INSTRUCTION HERE
+                // Device config.                
+                ConfigMessage config = new ConfigMessage();
+
+                // Consumer.
+                config.Id = device.Id;
+                config.VentilationValveStatus = device.VentilationValveStatus;
+                config.RecyclingFan = device.RecyclingFan;
+                config.Radiator = device.Radiator;
+                config.VentilationFan = device.VentilationFan;
+                mqttService.SendConfig(config);
+
+                // Provider.
+                config.Id = provider.Id;
+                config.VentilationValveStatus = provider.VentilationValveStatus;
+                config.RecyclingFan = provider.RecyclingFan;
+                config.Radiator = device.Radiator;
+                config.VentilationFan = provider.VentilationFan;
+                mqttService.SendConfig(config);
+
+                return deviceChangeList;
             }
 
             // Be provider
@@ -71,6 +109,8 @@ namespace Energi.Service.HeatingService
                 provider.EnvirementStatus = Enum.GetName(typeof(EnvirementStatus), EnvirementStatus.Provider);
 
                 // SEND INSTRUCTION HERE
+
+
             }
 
             // Be provider.

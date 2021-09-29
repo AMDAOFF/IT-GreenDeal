@@ -24,6 +24,7 @@ enum Leds : uint8_t
 #define Reset
 #define SerialPortexpanderA 0x04
 #define SerialPortexpanderB 0x08
+#define AdcChannel 0x00
 
 // Extern.
 #define PCF8574_ADDRESS 0x38

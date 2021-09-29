@@ -44,7 +44,8 @@ _serialPortexpanderB(&PORTC, SerialPortexpanderB),
 _serialPortexpander(&_serialPortexpanderA, &_serialPortexpanderB, SerialPorts::Serial1),
 _serialport(&_serialPortexpander, &_chronos),
 _esp(&_serialport, SerialPorts::Serial2, &_espResetPin, &_chronos),
-_mqttClient(&_esp, &_chronos)
+_mqttClient(&_esp, &_chronos),
+_adc(AdcChannel)
 {}
 
 void Board::Initialize()
@@ -53,6 +54,8 @@ void Board::Initialize()
 	Logger.Initialize(&_serialport, SerialPorts::Serial4);
 	_i2c.Initialize();
 	_ledController.ClearAll();
+	_adc.Initialize();
+	
 	
 	_ledController.SetLedState(Leds::Working, true);
 	_chronos.Delay(1000);
@@ -97,6 +100,11 @@ IMqttClient& Board::GetMqttClient()
 IChronos& Board::GetChronos()
 {
 	return _chronos;
+}
+
+IAdc& Board::GetAdc()
+{
+	return _adc;
 }
 
 void Board::DelayInMS(unsigned long ms)

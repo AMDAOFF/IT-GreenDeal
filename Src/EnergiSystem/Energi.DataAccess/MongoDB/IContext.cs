@@ -10,6 +10,7 @@ namespace Energi.DataAccess.MongoDB
     public interface IContext<T> where T : IEntity
     {
         Task CreateAsync(T entity);
+        Task DropDatabase();
         Task<IReadOnlyCollection<T>> GetAllAsync();
         Task<IReadOnlyCollection<T>> GetAllAsync(Expression<Func<T, bool>> filter);
         Task<T> GetAsync(int id);

@@ -6,10 +6,13 @@
 @using Energi.Service.DeviceService.DTO
 @using Energi.Service.MessageService
 @using Energi.Service.MessageService.DTO
+@using Energi.Service.DatabaseService
+
 
 @inject IJSRuntime JsRuntime
 @inject IDeviceService deviceService
-@inject IMessageService messageService;
+@inject IMessageService messageService
+@inject IDatabaseService databaseService
 
 <h3>Settings</h3>
 
@@ -24,11 +27,11 @@
 @code {
 
     //  This is only for the POC applications!!!
-    private async void SeedData()
-    {
-        await deviceService.SeedData();
+    private async void SeedData()    {
+        await databaseService.DeleteDatabase();
+        await databaseService.SeedData();
 
-        await JsRuntime.InvokeVoidAsync("alert", "Database seeded");
+        //await JsRuntime.InvokeVoidAsync("alert", "Database seeded");
     }
 
     private async void SendMessageRabbitMQ()

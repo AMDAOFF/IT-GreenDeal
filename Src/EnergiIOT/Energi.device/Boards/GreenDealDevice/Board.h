@@ -21,6 +21,8 @@
 #include "../Portexpander/CD4052BM96.h"
 #include "../Wifi/EspCommunicator.h"
 #include "../Mqtt/MqttClient.h"
+#include "IAdc.h"
+#include "../Adc/Adc.h"
 
 #include "../Utility/Logging/ErrorLog.h"
 
@@ -40,6 +42,7 @@ class Board
 	IWifi& GetWifi();
 	IMqttClient& GetMqttClient();
 	IChronos& GetChronos();
+	IAdc& GetAdc();
 	
 	void DelayInMS(unsigned long ms);
 
@@ -59,6 +62,7 @@ class Board
 	Serialport _serialport;
 	EspCommunicator _esp;
 	MqttClient _mqttClient;
+	Adc _adc;
 };
 
 #endif //__BOARD_H__

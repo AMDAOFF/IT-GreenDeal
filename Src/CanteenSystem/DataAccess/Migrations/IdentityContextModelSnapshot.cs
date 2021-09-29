@@ -19,6 +19,94 @@ namespace DataAccess.Migrations
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("DataAccess.Models.Allergy", b =>
+                {
+                    b.Property<int>("AllergyId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AllergyName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("IngredientId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AllergyId");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("IngredientId");
+
+                    b.ToTable("Allergies");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.Dish", b =>
+                {
+                    b.Property<int>("DishId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("DishCO2")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DishName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("DishOfTheDay")
+                        .HasColumnType("bit");
+
+                    b.HasKey("DishId");
+
+                    b.ToTable("Dishes");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.Ingredient", b =>
+                {
+                    b.Property<int>("IngredientId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("DishId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IngredientName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IngredientId");
+
+                    b.HasIndex("DishId");
+
+                    b.ToTable("Ingredients");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.UserAllergy", b =>
+                {
+                    b.Property<int>("UserAllergyId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AllergyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserAllergyId");
+
+                    b.HasIndex("AllergyId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserAllergy");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -238,6 +326,45 @@ namespace DataAccess.Migrations
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
+            modelBuilder.Entity("DataAccess.Models.Allergy", b =>
+                {
+                    b.HasOne("DataAccess.Identity.ApplicationUser", null)
+                        .WithMany("allergies")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("DataAccess.Models.Ingredient", "Ingredient")
+                        .WithMany("Allergies")
+                        .HasForeignKey("IngredientId");
+
+                    b.Navigation("Ingredient");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.Ingredient", b =>
+                {
+                    b.HasOne("DataAccess.Models.Dish", "Dish")
+                        .WithMany("Ingredients")
+                        .HasForeignKey("DishId");
+
+                    b.Navigation("Dish");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.UserAllergy", b =>
+                {
+                    b.HasOne("DataAccess.Models.Allergy", "Allergy")
+                        .WithMany("UserAllergies")
+                        .HasForeignKey("AllergyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataAccess.Identity.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Allergy");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -287,6 +414,26 @@ namespace DataAccess.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DataAccess.Models.Allergy", b =>
+                {
+                    b.Navigation("UserAllergies");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.Dish", b =>
+                {
+                    b.Navigation("Ingredients");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.Ingredient", b =>
+                {
+                    b.Navigation("Allergies");
+                });
+
+            modelBuilder.Entity("DataAccess.Identity.ApplicationUser", b =>
+                {
+                    b.Navigation("allergies");
                 });
 #pragma warning restore 612, 618
         }

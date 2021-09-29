@@ -2,25 +2,38 @@
 
 @using Service.DishService
 @using Service.DishService.Dto
+@using Service.IngridentsService
+@using Service.IngridentsService.Dto
+@using Service.AllergyService
+@using Service.AllergyService.Dto
 
-@inject IDishService dishService 
+@inject IDishService dishService
+@inject IIngredientsService ingredientService
+@inject IAllergyService allergyService
 
 @code {
     public List<DishDTO> Dishes { get; set; } = new List<DishDTO>();
+    public List<IngridientDTO> Ingredients { get; set; } = new List<IngridientDTO>();
+    public List<AllergyDTO> Allergies { get; set; } = new List<AllergyDTO>();
+
+
     public DishDTO newDishObject { get; set; } = new DishDTO();
+    public IngridientDTO newIngredientObject { get; set; } = new IngridientDTO();
+    public AllergyDTO newAllergyObject { get; set; } = new AllergyDTO();
+
+
 
     protected override async Task OnInitializedAsync()
     {
         Dishes = await dishService.GetAllDishesAsync();
+        Ingredients = await ingredientService.GetIngredientsAsync();
+        Allergies = await allergyService.GetAllergiesAsync();
         StateHasChanged();
     }
 
-    public void TheStateHasChanged()
-    {
-        StateHasChanged();
-    }
+    #region Create Functions
 
-    public async void OnCreateModalCallback(object createData)
+    public async void OnCreateDishModalCallback(object createData)
     {
         DishDTO newDish = (DishDTO)createData;
         DishDTO createdDish = await dishService.CreateDishAsync(newDish);
@@ -33,12 +46,59 @@
         StateHasChanged();
     }
 
+    public async void OnCreateIngredientModalCallback(object createData)
+    {
+        IngridientDTO newIngredient = (IngridientDTO)createData;
+        IngridientDTO createdIngredient = await ingredientService.CreateIngridientAsync(newIngredient);
+
+        if (createdIngredient != null)
+        {
+            Ingredients.Add(createdIngredient);
+        }
+
+        StateHasChanged();
+    }
+
+    public async void OnCreateAllergyModalCallback(object createData)
+    {
+        AllergyDTO newAllergy = (AllergyDTO)createData;
+        AllergyDTO createdAllergy = await allergyService.CreateAllergyAsync(newAllergy);
+
+        if (createdAllergy != null)
+        {
+            Allergies.Add(createdAllergy);
+        }
+
+        StateHasChanged();
+    }
+
+    #endregion
+
+
+    #region Delete Functions
+
     public async void DeleteDish(int dishId)
     {
         DishDTO deletedDish = await dishService.DeleteDishAsync(dishId);
         Dishes.Remove(Dishes.Where(dish => dish.DishId == deletedDish.DishId).FirstOrDefault());
         StateHasChanged();
     }
+
+    public async void DeleteIngredient(int ingredientId)
+    {
+        IngridientDTO deleteIngredient = await ingredientService.DeleteIngridientAsync(ingredientId);
+        Ingredients.Remove(Ingredients.Where(ingredient => ingredient.IngridientId == deleteIngredient.IngridientId).FirstOrDefault());
+        StateHasChanged();
+    }
+
+    public async void DeleteAllergy(int allergyId)
+    {
+        AllergyDTO deleteAllergy = await allergyService.DeleteAllergyAsync(allergyId);
+        Allergies.Remove(Allergies.Where(allergy => allergy.AllergyId == deleteAllergy.AllergyId).FirstOrDefault());
+        StateHasChanged();
+    }
+
+    #endregion
 }
 
 <div class="col-12 text-center mb-2">
@@ -114,7 +174,7 @@
 
 <div class="col-12">
 
-    <h3>Kantinens Ingreienser</h3>
+    <h3>Kantinens Ingreienser <button type="button" data-toggle="modal" data-target="#modalCreateIngredient" class="btn btn-primary">OPRET</button></h3>
 
     <table class="table table-dark">
         <thead>
@@ -124,66 +184,49 @@
         </thead>
 
         <tbody>
-            <tr>
-                <th>
-                    <div class="row d-flex">
-                        <div class="col-3 d-flex align-items-center">
-                            <h5>Tomatsuppe</h5>
-                        </div>
-
-                        <div class="col-3 d-flex align-items-center">
-                            <h5>200 Gram</h5>
-                        </div>
-
-                        <div class="col-6 d-flex justify-content-end">
-                            <div class="row">
-                                <div class="col-6 justify-content-end">
-                                    <button class="btn btn-primary btn-rounded btn-normal-text">
-                                        <i class="las la-trash"></i>
-                                    </button>
+            @if (Ingredients.Count() > 0)
+            {
+                foreach (IngridientDTO ingredient in Ingredients)
+                {
+                    <tr>
+                        <th>
+                            <div class="row d-flex">
+                                <div class="col-6 d-flex align-items-center">
+                                    <h5>@ingredient.IngridientName</h5>
                                 </div>
 
-                                <div class="col-6">
-                                    <button class="btn btn-primary btn-rounded btn-normal-text">
-                                        <i class="las la-edit"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </th>
-            </tr>
+                                <div class="col-6 d-flex justify-content-end">
+                                    <div class="row">
+                                        <div class="col-6 justify-content-end">
+                                            <button class="btn btn-primary btn-rounded btn-normal-text" @onclick="() => { DeleteIngredient(ingredient.IngridientId); }">
+                                                <i class="las la-trash"></i>
+                                            </button>
+                                        </div>
 
-
-            <tr>
-                <th>
-                    <div class="row d-flex">
-                        <div class="col-3 d-flex align-items-center">
-                            <h5>Tomatsuppe</h5>
-                        </div>
-
-                        <div class="col-3 d-flex align-items-center">
-                            <h5>200 Gram</h5>
-                        </div>
-
-                        <div class="col-6 d-flex justify-content-end">
-                            <div class="row">
-                                <div class="col-6 justify-content-end">
-                                    <button class="btn btn-primary btn-rounded btn-normal-text">
-                                        <i class="las la-trash"></i>
-                                    </button>
-                                </div>
-
-                                <div class="col-6">
-                                    <button class="btn btn-primary btn-rounded btn-normal-text">
-                                        <i class="las la-edit"></i>
-                                    </button>
+                                        <div class="col-6">
+                                            <button class="btn btn-primary btn-rounded btn-normal-text">
+                                                <i class="las la-edit"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                        </th>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <th>
+                        <div class="row d-flex">
+                            <div class="col-12 text-center">
+                                <h5>Ingen ingridienser oprettet</h5>
+                            </div>
                         </div>
-                    </div>
-                </th>
-            </tr>
+                    </th>
+                </tr>
+            }
         </tbody>
     </table>
 </div>
@@ -191,7 +234,7 @@
 
 <div class="col-12">
 
-    <h3>Allergier</h3>
+    <h3>Allergier <button data-toggle="modal" data-target="#modalCreateAllergy" class="btn btn-primary">OPRET</button></h3>
 
     <table class="table table-dark">
         <thead>
@@ -201,69 +244,55 @@
         </thead>
 
         <tbody>
-            <tr>
-                <th>
-                    <div class="row d-flex">
-                        <div class="col-3 d-flex align-items-center">
-                            <h5>Tomatsuppe</h5>
-                        </div>
-
-                        <div class="col-3 d-flex align-items-center">
-                            <h5>200 Gram</h5>
-                        </div>
-
-                        <div class="col-6 d-flex justify-content-end">
-                            <div class="row">
-                                <div class="col-6 justify-content-end">
-                                    <button class="btn btn-primary btn-rounded btn-normal-text">
-                                        <i class="las la-trash"></i>
-                                    </button>
+            @if (Allergies.Count() > 0)
+            {
+                foreach (AllergyDTO allergy in Allergies)
+                {
+                    <tr>
+                        <th>
+                            <div class="row d-flex">
+                                <div class="col-6 d-flex align-items-center">
+                                    <h5>@allergy.AllergyName</h5>
                                 </div>
 
-                                <div class="col-6">
-                                    <button class="btn btn-primary btn-rounded btn-normal-text">
-                                        <i class="las la-edit"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </th>
-            </tr>
+                                <div class="col-6 d-flex justify-content-end">
+                                    <div class="row">
+                                        <div class="col-6 justify-content-end">
+                                            <button class="btn btn-primary btn-rounded btn-normal-text" @onclick="() => DeleteAllergy(allergy.AllergyId)">
+                                                <i class="las la-trash"></i>
+                                            </button>
+                                        </div>
 
-
-            <tr>
-                <th>
-                    <div class="row d-flex">
-                        <div class="col-3 d-flex align-items-center">
-                            <h5>Tomatsuppe</h5>
-                        </div>
-
-                        <div class="col-3 d-flex align-items-center">
-                            <h5>200 Gram</h5>
-                        </div>
-
-                        <div class="col-6 d-flex justify-content-end">
-                            <div class="row">
-                                <div class="col-6 justify-content-end">
-                                    <button class="btn btn-primary btn-rounded btn-normal-text">
-                                        <i class="las la-trash"></i>
-                                    </button>
-                                </div>
-
-                                <div class="col-6">
-                                    <button class="btn btn-primary btn-rounded btn-normal-text">
-                                        <i class="las la-edit"></i>
-                                    </button>
+                                        <div class="col-6">
+                                            <button class="btn btn-primary btn-rounded btn-normal-text">
+                                                <i class="las la-edit"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                        </th>
+                    </tr>
+                }
+            }
+
+            else
+            {
+                <tr>
+                    <th>
+                        <div class="row d-flex">
+                            <div class="col-12 text-center">
+                                <h5>Ingen allergier oprettet</h5>
+                            </div>
                         </div>
-                    </div>
-                </th>
-            </tr>
+                    </th>
+                </tr>
+            }
         </tbody>
     </table>
 </div>
 
 
-<AutomaticObjectEditModal ModalName="modalCreateDish" ModalTitle="Opret ny ret" ModalData="@newDishObject" ModalActionButtonCallback="OnCreateModalCallback"></AutomaticObjectEditModal>
+<AutomaticObjectEditModal ModalName="modalCreateDish" ModalTitle="Opret ny ret" ModalData="@newDishObject" ModalActionButtonCallback="OnCreateDishModalCallback"></AutomaticObjectEditModal>
+<AutomaticObjectEditModal ModalName="modalCreateIngredient" ModalTitle="Opret ny ingridiens" ModalData="@newIngredientObject" ModalActionButtonCallback="OnCreateIngredientModalCallback"></AutomaticObjectEditModal>
+<AutomaticObjectEditModal ModalName="modalCreateAllergy" ModalTitle="Opret ny allergi" ModalData="@newAllergyObject" ModalActionButtonCallback="OnCreateAllergyModalCallback"></AutomaticObjectEditModal>

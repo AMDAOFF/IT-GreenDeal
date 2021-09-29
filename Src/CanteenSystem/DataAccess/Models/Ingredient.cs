@@ -11,7 +11,7 @@ namespace DataAccess.Models
     {
         [Key]
         public int IngredientId { get; set; }
-        public string IngrediendId { get; set; }
+        public string IngredientName { get; set; }
 
         public List<Allergy> Allergies { get; set; }
         public Dish Dish { get; set; }

@@ -36,6 +36,10 @@ namespace Service.DishService
         /// <returns>The updated DishDTO object</returns>
         Task<DishDTO> UpdateDishAsync(DishDTO updatedDish);
 
+        /// <summary>
+        /// Getting all of the dishes in the database
+        /// </summary>
+        /// <returns>List of DishDTO object</returns>
         Task<List<DishDTO>> GetAllDishesAsync();
     }
 }

@@ -6,6 +6,7 @@ import argparse
 import cv2
 import pymssql
 import pika
+import json
 from datetime import datetime
 
 
@@ -49,18 +50,42 @@ cameraIP = args['ip']
 if exists(f"Files/{cameraIP}.txt"):
     with open(f"Files/{cameraIP}.txt", "rb") as file:
         previousPersonCounter = file.readline()
-
+        print("previousPersonCounter changed")
+else:
+    print("file did not exists")
 if personCounter != int(previousPersonCounter):
     print(f"{args['ip']};{personCounter}")
     sys.stdout.flush()
     with open(f'Files/{cameraIP}.txt', "w") as file:
         file.write(f"{personCounter}")
 
-    connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host='localhost', port=5672))
+    credentials = pika.PlainCredentials('python', 'python123')
+    connection = pika.BlockingConnection(pika.ConnectionParameters('127.0.0.1', 5672, '/', credentials))
     channel = connection.channel()
-
-    channel.queue_declare(queue='room update')
+    my_queue = "myJSONBodyQueue_4"
+    channel.queue_declare(queue=my_queue, durable=True)
+    channel.start_consuming()
     
-    channel.basic_publish(exchange='', routing_key='room update', body=f'{"Room ID"};{personCounter};{datetime.now().strftime("%d/%m/%Y %H:%M:%S")}')
+    channel.basic_publish(exchange='', routing_key='RoomUpdate', body=f'Room2;{personCounter};{datetime.now().strftime("%d/%m/%Y %H:%M:%S")}')
+    print(f"Succeded")
     connection.close()
+    # credentials = pika.PlainCredentials('python', 'python123')
+    # parameters = pika.ConnectionParameters('127.0.0.1', 5672, '/', credentials)
+    
+    # connection = pika.BlockingConnection(parameters)
+    
+    # channel = connection.channel()
+
+    # # channel.exchange_declare(exchange='RoomUpdate', exchange_type=, durable=True)
+    # channel.queue_declare(queue='RoomUpdate', durable=True)
+    
+    # # Turn on delivery confirmations
+    # channel.confirm_delivery()
+    
+    # channel.basic_publish(exchange='', routing_key='RoomUpdate', body=f'Room2;{personCounter};{datetime.now().strftime("%d/%m/%Y %H:%M:%S")}')
+    # print(f"Succeded")
+    # connection.close()
+else:
+    print(f"{personCounter} == {int(previousPersonCounter)}")
+
+

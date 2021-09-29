@@ -23,7 +23,6 @@ namespace Absence.DataAccess.EFCore
             #endregion
 
             #region Navigation Properties
-            //modelBuilder.Entity<Camera>().HasOne(o => o.School).WithMany(o => o.Cameras).HasForeignKey(o => o.FKSchoolId);
             modelBuilder.Entity<Camera>().HasOne(o => o.Classroom).WithOne(o => o.Camera).HasForeignKey<Camera>(o => o.FKClassroomId);
             modelBuilder.Entity<Classroom>().HasOne(o => o.School).WithMany(o => o.Classrooms).HasForeignKey(o => o.FKSchoolId);
             #endregion
@@ -35,17 +34,17 @@ namespace Absence.DataAccess.EFCore
                 );
 
             modelBuilder.Entity<Classroom>().HasData(
-                new Classroom { ClassroomId = 1, Name = "Tokyo", FKSchoolId = 1 },
-                new Classroom { ClassroomId = 2, Name = "Oslo", FKSchoolId = 2 },
-                new Classroom { ClassroomId = 3, Name = "Hongkong", FKSchoolId = 1 },
-                new Classroom { ClassroomId = 4, Name = "Paris", FKSchoolId = 2 }
+                new Classroom { ClassroomId = 1, ClassroomNumber = "52.211", Name = "Tokyo", FKSchoolId = 1 },
+                new Classroom { ClassroomId = 2, ClassroomNumber = "52.212", Name = "Oslo", FKSchoolId = 2 },
+                new Classroom { ClassroomId = 3, ClassroomNumber = "51.157", Name = "Hongkong", FKSchoolId = 1 },
+                new Classroom { ClassroomId = 4, ClassroomNumber = "51.131", Name = "Paris", FKSchoolId = 2 }
                 );
 
             modelBuilder.Entity<Camera>().HasData(
-                new Camera { /*FKSchoolId = 1,*/ FKClassroomId = 1, IP = "192.168.0.1" },
-                new Camera { /*FKSchoolId = 1,*/ FKClassroomId = 3, IP = "192.168.0.2" },
-                new Camera { /*FKSchoolId = 2,*/ FKClassroomId = 2, IP = "192.168.1.1" },
-                new Camera { /*FKSchoolId = 2,*/ FKClassroomId = 4, IP = "192.168.1.2" }
+                new Camera { FKClassroomId = 1, IP = "192.168.0.1" },
+                new Camera { FKClassroomId = 3, IP = "192.168.0.2" },
+                new Camera { FKClassroomId = 2, IP = "192.168.1.1" },
+                new Camera { FKClassroomId = 4, IP = "192.168.1.2" }
                 );
 
 

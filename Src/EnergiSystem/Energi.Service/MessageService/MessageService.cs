@@ -40,7 +40,7 @@ namespace Energi.Service.MessageService
 
                 cfg.ReceiveEndpoint(_setting.Queue, e =>
                 {
-                    e.Consumer(() => (IConsumer<RoomUpdate>)callback.Target);
+                    e.Consumer(() => (IConsumer<MessageAsString>)callback.Target);
                 });
             });
 

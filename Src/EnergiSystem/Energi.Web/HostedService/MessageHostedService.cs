@@ -35,7 +35,6 @@ namespace Energi.Web.HostedService
         {
             await _messageService.StopListener();
         }
-
         public async Task Consume(ConsumeContext<MessageAsString> context)
         {
             List<string> stringList = context.Message.ToString().Split(';').ToList();

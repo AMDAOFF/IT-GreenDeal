@@ -5,8 +5,7 @@
 MqttPingTask::MqttPingTask(IMqttClient& mqttClient, connectSettings_t& connectSettings ) :
 _mqttClient { mqttClient },
 _connectionSettings { connectSettings }
-{
-} //MqttPingTask
+{}
 
 
 void MqttPingTask::Service()

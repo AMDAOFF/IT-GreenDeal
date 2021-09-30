@@ -28,21 +28,23 @@ int main(void)
 	ApplicationTask applicationTask(board);
 	TemperatureTask temperatureTask(board, publishMessage);
 	
-	//board.GetWifi().Initialize("JK", "472yO58;");	
-	board.GetWifi().Initialize("Stofa67337\0", "gyros54fyh36\0");
+	board.GetWifi().Initialize("JK", "472yO58;");	
+	//board.GetWifi().Initialize("Stofa67337\0", "gyros54fyh36\0");
 	
 	//// Wifi
 	board.GetMqttClient().Connect(&connectSettings);
 	board.GetMqttClient().Subscribe(&subscribeTopic);
+	board.GetMqttClient().Publish(&publishMessage);
 	
 	unsigned long task1 = board.GetChronos().Time();
 	unsigned long task2 = board.GetChronos().Time();
 	unsigned long task3 = board.GetChronos().Time();
 	unsigned long task4 = board.GetChronos().Time();
 	
+	//board.GetRadiator().SetValue(LogicalState::Active);
+	
 	while (1)
 	{
-
 		// Mqtt Ping.
 		if(board.GetChronos().Time() - task1 > 2500)
 		{
@@ -54,7 +56,7 @@ int main(void)
 			
 		}
 		// Publish. now temperature task.
-		if(board.GetChronos().Time() - task4 > 1000)
+		if(board.GetChronos().Time() - task4 > 700)
 		{			
 			temperatureTask.Service();
 			task4 = board.GetChronos().Time();

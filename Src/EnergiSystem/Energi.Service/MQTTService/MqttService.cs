@@ -13,12 +13,14 @@ namespace Energi.Service.MQTTService
         private MqttClient client;
         private IOTSettings _settings;
 
-        Func<double, int, Task> method;
+        Func<double, int, Task> methodAsDouble;
+        Func<string, int, Task> methodAsString;
 
-        public async Task Initialize(IOTSettings settings, Func<double, int, Task> callback)
+        public async Task Initialize(IOTSettings settings, Func<double, int, Task> callbackDouble, Func<string, int, Task> callbackStr)
         {
             _settings = settings;
-            method = callback;
+            methodAsDouble = callbackDouble;
+            methodAsString = callbackStr;
 
             client = new MqttClient(_settings.Server);
             string clientId = Guid.NewGuid().ToString();
@@ -45,16 +47,26 @@ namespace Energi.Service.MQTTService
         }
 
         private async void MessageReceived(object sender, MqttMsgPublishEventArgs e)
-        {
+        {           
             int id = int.Parse(e.Topic.Split('/').ToList().Last());
 
-            string rawStr = Encoding.Default.GetString(e.Message).Split('=').ToList().Last();
-            int startindex = 0;
-            int Endindex = rawStr.IndexOf('#');
+            string rawStr = Encoding.Default.GetString(e.Message); 
 
-            double temperature = double.Parse(rawStr.Substring(startindex, Endindex - startindex - 1).Trim());
+            if (rawStr.Contains("Temp"))
+            {
+                string message = rawStr.Split('=').ToList().Last();
 
-            await method(temperature, id);
+                int startindex = 0;
+                int Endindex = message.IndexOf('#');
+
+                double temperature = Convert.ToDouble(message.Substring(startindex, Endindex).Replace(".", ","));
+
+                await methodAsDouble(temperature, id);
+            }
+            else if(rawStr.Contains("Online"))
+            {
+                await methodAsString(Encoding.Default.GetString(e.Message), id);
+            }
         }
     }
 }

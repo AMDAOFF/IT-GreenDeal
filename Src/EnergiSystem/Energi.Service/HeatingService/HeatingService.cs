@@ -26,7 +26,7 @@ namespace Energi.Service.HeatingService
             List<StatusDeviceDTO> deviceChangeList = new List<StatusDeviceDTO>();
 
             // Find provider.
-            if (device.PeopleCount == 0 && device.Temperature < 15)
+            if (device.PeopleCount > 0 && device.Temperature < (double)30.0)
             {
                 // Already consumer.
                 if (device.EnvirementStatus == Enum.GetName(typeof(EnvirementStatus), EnvirementStatus.Consumer))
@@ -120,6 +120,21 @@ namespace Energi.Service.HeatingService
             // Provider has consumer.
 
             return default; // deviceChangeList;
+        }
+
+        public async Task SendLastConfig(IMqttService mqttService, int id)
+        {
+            StatusDeviceDTO device = await _deviceService.GetDeviceById(id);
+
+            ConfigMessage config = new ConfigMessage();
+
+            // Consumer.
+            config.Id = device.Id;
+            config.VentilationValveStatus = device.VentilationValveStatus;
+            config.RecyclingFan = device.RecyclingFan;
+            config.Radiator = device.Radiator;
+            config.VentilationFan = device.VentilationFan;
+            mqttService.SendConfig(config);
         }
 
     }

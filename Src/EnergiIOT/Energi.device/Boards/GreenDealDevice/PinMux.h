@@ -22,6 +22,7 @@ enum Leds : uint8_t
 // Microcontroller pins.
 #define Button1 0x04
 #define Reset
+#define EspReset 0x80
 #define SerialPortexpanderA 0x04
 #define SerialPortexpanderB 0x08
 #define AdcChannel 0x00

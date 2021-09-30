@@ -37,8 +37,9 @@ class Board
 	ISerialport& GetSerialport();
 	ILedController& GetLedController();
 	II2C& GetI2C();
-	IDigitalOutput& GetFan1();
-	IDigitalOutput& GetFan2();
+	IDigitalOutput& GetVentilationFan();
+	IDigitalOutput& GetRecyclingFan();
+	//IDigitalOutput& GetRadiator();
 	IWifi& GetWifi();
 	IMqttClient& GetMqttClient();
 	IChronos& GetChronos();
@@ -53,8 +54,9 @@ class Board
 	Chronos _chronos;
 	I2C _i2c;
 	PCF8574 _ledController;
-	DigitalOutput _fan1;
-	DigitalOutput _fan2;
+	DigitalOutput _ventilationFan;
+	DigitalOutput _recyclingFan;
+	//DigitalOutput _radiator;
 	DigitalOutput _serialPortexpanderA;
 	DigitalOutput _serialPortexpanderB;
 	DigitalOutput _espResetPin;

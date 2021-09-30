@@ -41,7 +41,7 @@ namespace Energi.Web.HostedService
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             await _messageService.Initialize(_busSettings, Consume);
-            await _mqttService.Initialize(_IotSettings, IOTMessageReceived);
+            await _mqttService.Initialize(_IotSettings, IOTMessageReceived, IOTMessageReceived);
             _mqttService.Subscribe(_IotSettings.SubTopic);
         }
 
@@ -111,6 +111,25 @@ namespace Energi.Web.HostedService
 
             return; 
 
+        }
+
+        public async Task IOTMessageReceived(string Message, int Id)
+        {
+
+            StatusDeviceDTO device = await _deviceService.GetDeviceById(1);
+
+            // Update device.
+            device.OnlineStatus = true;
+            _deviceService.UpdateDevice(device);
+
+            _heatingService.SendLastConfig(_mqttService, device.Id);
+
+            // Update browser
+            List<StatusDeviceDTO> deviceList = new List<StatusDeviceDTO>();
+            deviceList.Add(device);
+            _deviceHub.Clients.All.SendAsync("UpdateDevice", deviceList);
+
+            return;
         }
     }
 }

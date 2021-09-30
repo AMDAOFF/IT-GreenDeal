@@ -6,7 +6,7 @@ namespace Energi.Service.MQTTService
 {
     public interface IMqttService
     {
-        Task Initialize(IOTSettings settings, Func<double, int, Task> callback);
+        Task Initialize(IOTSettings settings, Func<double, int, Task> callbackDouble, Func<string, int, Task> callbackStr);
         void Publish(string topic, string message);
         void Subscribe(string topic);
         void SendConfig(ConfigMessage config);        

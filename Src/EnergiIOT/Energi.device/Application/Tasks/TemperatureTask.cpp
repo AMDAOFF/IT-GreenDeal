@@ -35,8 +35,6 @@ void TemperatureTask::Service()
 	strcat(str, buffer);
 	strcat(str, "#");
 
-
-
 	_publishMessage.message = str;	
 	_board.GetMqttClient().Publish(&_publishMessage);
 

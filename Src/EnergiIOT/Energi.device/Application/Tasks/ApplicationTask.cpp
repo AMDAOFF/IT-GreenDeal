@@ -48,24 +48,28 @@ void ApplicationTask::Service()
 		if (_rxBuffer[0] == '1')
 		{
 			_board.GetLedController().SetLedState(Leds::Error, true);
+			_board.GetVentilationFan().SetValue(LogicalState::Active); // Ventilation
 		}
 		else
 		{
-			_board.GetLedController().SetLedState(Leds::Error, false);
+			_board.GetLedController().SetLedState(Leds::Error, false);			
 		}
 		
 		if (_rxBuffer[1] == '1')
 		{
 			_board.GetLedController().SetLedState(Leds::Working, true);
+			_board.GetRecyclingFan().SetValue(LogicalState::Active); // Recycling			
 		}
 		else
 		{
 			_board.GetLedController().SetLedState(Leds::Working, false);
+			
 		}
 		
 		if (_rxBuffer[2] == '1')
 		{
 			_board.GetLedController().SetLedState(Leds::Fail, true);
+			// Ventilation valve.
 		}
 		else
 		{
@@ -75,6 +79,7 @@ void ApplicationTask::Service()
 		if (_rxBuffer[3] == '1')
 		{
 			_board.GetLedController().SetLedState(Leds::Busy, true);
+			// Radiator			
 		}
 		else
 		{

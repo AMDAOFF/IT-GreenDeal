@@ -8,5 +8,7 @@ namespace Energi.Service.HeatingService
     public interface IHeatingService
     {
         Task<List<StatusDeviceDTO>> HeadControl(StatusDeviceDTO device, IMqttService mqttService);
+
+        Task SendLastConfig(IMqttService mqttService, int deviceId);
     }
 }

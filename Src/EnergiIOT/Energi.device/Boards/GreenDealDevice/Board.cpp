@@ -14,14 +14,12 @@
 void* operator new(size_t n)
 {
 	void* const p = malloc(n);
-	// handle p == 0
 	return p;
 }
 
 void* operator new[](unsigned int n)
 {
 	void* const p = malloc(n);
-	// handle p == 0
 	return p;
 }
 
@@ -36,9 +34,10 @@ Board::Board() :
 _chronos(F_CPU),
 _i2c(),
 _ledController(&_i2c, PCF8574_ADDRESS),
-_fan1(&PORTB, PORTB1),
-_fan2(&PORTB, PORTB2),
+_ventilationFan(&PORTB, PORTB1),
+_recyclingFan(&PORTB, PORTB2),
 _espResetPin(&PORTD, 0x80),
+//_radiator(&PORTD, 0x05),
 _serialPortexpanderA(&PORTC, SerialPortexpanderA),
 _serialPortexpanderB(&PORTC, SerialPortexpanderB),
 _serialPortexpander(&_serialPortexpanderA, &_serialPortexpanderB, SerialPorts::Serial1),
@@ -77,20 +76,25 @@ II2C& Board::GetI2C()
 	return _i2c;
 }
 
-IDigitalOutput& Board::GetFan1()
+IDigitalOutput& Board::GetVentilationFan()
 {
-	return _fan1;
+	return _ventilationFan;
 }
 
-IDigitalOutput& Board::GetFan2()
+IDigitalOutput& Board::GetRecyclingFan()
 {
-	return _fan2;
+	return _recyclingFan;
 }
 
 IWifi& Board::GetWifi()
 {
 	return _esp;
 }
+
+//IDigitalOutput& Board::GetRadiator()
+//{
+	////return _radiator;
+//}
 
 IMqttClient& Board::GetMqttClient()
 {

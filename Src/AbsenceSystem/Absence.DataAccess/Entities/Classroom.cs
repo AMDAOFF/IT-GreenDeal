@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Absence.DataAccess.Entities
 {
@@ -12,7 +8,10 @@ namespace Absence.DataAccess.Entities
         public string ClassroomNumber { get; set; }
         public string Name { get; set; }
         public int FKSchoolId { get; set; }
+        public int FKWeekScheduleId { get; set; }
+        //public int FKCameraIP { get; set; }
         public School School { get; set; }
+        public List<WeekSchedule> WeekSchedules { get; set; }
         public Camera Camera { get; set; }
     }
 }

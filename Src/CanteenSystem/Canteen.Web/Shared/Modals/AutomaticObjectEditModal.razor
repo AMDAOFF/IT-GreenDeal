@@ -80,7 +80,7 @@
                                 {
                                     <div class="form-group">
                                         <label>@string.Concat(name.Select(x => Char.IsUpper(x) ? " " + x : x.ToString())).TrimStart(' ')</label>
-                                        <input type="@fieldType" disabled="@disableField" @onchange="@((ChangeEventArgs e) => prop.SetValue(ModalData, Convert.ChangeType(e.Value.ToString(), prop.PropertyType)))" class="form-control" />
+                                        <input type="@fieldType" disabled="@disableField" value="@value" @onchange="@((ChangeEventArgs e) => prop.SetValue(ModalData, Convert.ChangeType(e.Value.ToString(), prop.PropertyType)))" class="form-control" />
                                     </div>
                                 }
 

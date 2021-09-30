@@ -1,16 +1,23 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Absence.DataAccess.EFCore;
+using Absence.DataAccess.Interfaces;
+using Absence.DataAccess.Repositories;
+using Absence.Service.AbsenceReportService;
+using Absence.Service.CameraService;
+using Absence.Service.ClassroomService;
+using Absence.Service.DayScheduleService;
+using Absence.Service.SchoolService;
+using Absence.Service.HourScheduleService;
+using Absence.Service.StudentService;
+using Absence.Service.SubjectService;
+using Absence.Service.TeacherService;
+using Absence.Service.WeekScheduleService;
+using Absence.Service.AutoMappingService;
 
 namespace Absence.Web
 {
@@ -30,6 +37,29 @@ namespace Absence.Web
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddDbContext<AbsenceContext>(options => options.UseSqlServer(Configuration.GetConnectionString("local")));
+
+            services.AddScoped<IAbsenceReportRepository, AbsenceReportRepository>();
+            services.AddScoped<ICameraRepository, CameraRepository>();
+            services.AddScoped<IClassroomRepository, ClassroomRepository>();
+            services.AddScoped<IDayScheduleRepository, DayScheduleRepository>();
+            services.AddScoped<IHourScheduleRepository, HourScheduleRepository>();
+            services.AddScoped<ISchoolRepository, SchoolRepository>();
+            services.AddScoped<IStudentRepository, StudentRepository>();
+            services.AddScoped<ISubjectRepository, SubjectRepository>();
+            services.AddScoped<ITeacherRepository, TeacherRepository>();
+            services.AddScoped<IWeekScheduleRepository, WeekScheduleRepository>();
+
+            services.AddScoped<IAbsenceReportService, AbsenceReportService>();
+            services.AddScoped<ICameraService, CameraService>();
+            services.AddScoped<IClassroomService, ClassroomService>();
+            services.AddScoped<IDayScheduleService, DayScheduleService>();
+            services.AddScoped<IHourScheduleService, HourScheduleService>();
+            services.AddScoped<ISchoolService, SchoolService>();
+            services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<ISubjectService, SubjectService>();
+            services.AddScoped<ITeacherService, TeacherService>();
+            services.AddScoped<IWeekScheduleService, WeekScheduleService>();
+            services.AddScoped<MappingService, MappingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,7 +78,6 @@ namespace Absence.Web
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

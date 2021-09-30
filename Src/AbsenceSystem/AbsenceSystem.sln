@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Absence.Web", "Absence.Web\Absence.Web.csproj", "{E498F894-2D53-4377-A159-D930B2DF217C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Absence.DataAccess", "Absence.DataAccess\Absence.DataAccess.csproj", "{F07CACC3-EFC6-47FA-8F46-B98F0B8A2544}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Absence.DataAccess", "Absence.DataAccess\Absence.DataAccess.csproj", "{F07CACC3-EFC6-47FA-8F46-B98F0B8A2544}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Absence.Service", "Absence.Service\Absence.Service.csproj", "{2682F79E-7AE8-4D1D-BD70-7CE079FC41F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Absence.Service", "Absence.Service\Absence.Service.csproj", "{2682F79E-7AE8-4D1D-BD70-7CE079FC41F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

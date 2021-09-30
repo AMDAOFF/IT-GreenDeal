@@ -10,6 +10,7 @@ namespace Absence.DataAccess.EFCore
 
         }
 
+        #region DbSets
         public DbSet<AbsenceReport> AbsenceReports { get; set; }
         public DbSet<Camera> Cameras { get; set; }
         public DbSet<Classroom> Classrooms { get; set; }
@@ -20,6 +21,7 @@ namespace Absence.DataAccess.EFCore
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<WeekSchedule> WeekSchedules { get; set; }
+        #endregion
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

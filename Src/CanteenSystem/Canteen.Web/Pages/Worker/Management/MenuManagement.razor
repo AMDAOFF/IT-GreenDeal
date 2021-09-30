@@ -13,16 +13,16 @@
 
 @code {
     public List<FullDishDTO> Dishes { get; set; } = new List<FullDishDTO>();
-    public List<IngridientDTO> Ingredients { get; set; } = new List<IngridientDTO>();
+    public List<FullIngridientDTO> Ingredients { get; set; } = new List<FullIngridientDTO>();
     public List<FullAllergyDTO> Allergies { get; set; } = new List<FullAllergyDTO>();
 
 
     public FullDishDTO newDishObject { get; set; } = new FullDishDTO();
-    public IngridientDTO newIngredientObject { get; set; } = new IngridientDTO();
+    public FullIngridientDTO newIngredientObject { get; set; } = new FullIngridientDTO();
     public FullAllergyDTO newAllergyObject { get; set; } = new FullAllergyDTO();
 
     public FullDishDTO selectedUpdateDish { get; set; }
-    public IngridientDTO selectedUpdateIngredient { get; set; }
+    public FullIngridientDTO selectedUpdateIngredient { get; set; }
     public FullAllergyDTO selectedUpdateAllergy { get; set; }
 
 
@@ -52,8 +52,8 @@
 
     public async void OnCreateIngredientModalCallback(object createData)
     {
-        IngridientDTO newIngredient = (IngridientDTO)createData;
-        IngridientDTO createdIngredient = await ingredientService.CreateIngridientAsync(newIngredient);
+        FullIngridientDTO newIngredient = (FullIngridientDTO)createData;
+        FullIngridientDTO createdIngredient = await ingredientService.CreateIngridientAsync(newIngredient);
 
         if (createdIngredient != null)
         {
@@ -96,8 +96,8 @@
 
     public async void OnUpdateIngredientModalCallback(object updateData)
     {
-        IngridientDTO updateIngredient = (IngridientDTO)updateData;
-        IngridientDTO updatedIngredient = await ingredientService.UpdateIngridientAsync(updateIngredient);
+        FullIngridientDTO updateIngredient = (FullIngridientDTO)updateData;
+        FullIngridientDTO updatedIngredient = await ingredientService.UpdateIngridientAsync(updateIngredient);
 
         if (updatedIngredient != null)
         {
@@ -156,7 +156,7 @@
 
     public async void DeleteIngredient(int ingredientId)
     {
-        IngridientDTO deleteIngredient = await ingredientService.DeleteIngridientAsync(ingredientId);
+        FullIngridientDTO deleteIngredient = await ingredientService.DeleteIngridientAsync(ingredientId);
         Ingredients.Remove(Ingredients.Where(ingredient => ingredient.IngridientId == deleteIngredient.IngridientId).FirstOrDefault());
         StateHasChanged();
     }
@@ -256,7 +256,7 @@
         <tbody>
             @if (Ingredients.Count() > 0)
             {
-                foreach (IngridientDTO ingredient in Ingredients)
+                foreach (FullIngridientDTO ingredient in Ingredients)
                 {
                     <tr>
                         <th>

@@ -14,40 +14,40 @@ namespace Service.IngridentsService
         /// </summary>
         /// <param name="dishId"></param>
         /// <returns></returns>
-        Task<List<IngridientDTO>> GetDishIngridientsAsync(int dishId);
+        Task<List<FullIngridientDTO>> GetDishIngridientsAsync(int dishId);
 
         /// <summary>
         /// Get a specified ingridient based on its id
         /// </summary>
         /// <param name="ingredientId"></param>
         /// <returns></returns>
-        Task<IngridientDTO> GetIngridientAsync(int ingredientId);
+        Task<FullIngridientDTO> GetIngridientAsync(int ingredientId);
 
         /// <summary>
         /// Get all ingredients in the database
         /// </summary>
         /// <returns></returns>
-        Task<List<IngridientDTO>> GetIngredientsAsync();
+        Task<List<FullIngridientDTO>> GetIngredientsAsync();
 
         /// <summary>
         /// Create a new ingridient
         /// </summary>
         /// <param name="ingritiendObject"></param>
         /// <returns></returns>
-        Task<IngridientDTO> CreateIngridientAsync(IngridientDTO ingritiendObject);
+        Task<FullIngridientDTO> CreateIngridientAsync(FullIngridientDTO ingritiendObject);
 
         /// <summary>
         /// Update specific ingridient by parsing in the DTO
         /// </summary>
         /// <param name="ingridientObject"></param>
         /// <returns></returns>
-        Task<IngridientDTO> UpdateIngridientAsync(IngridientDTO ingridientObject);
+        Task<FullIngridientDTO> UpdateIngridientAsync(FullIngridientDTO ingridientObject);
 
         /// <summary>
         /// Delete a specific ingridient based on its id
         /// </summary>
         /// <param name="ingridientObject"></param>
         /// <returns></returns>
-        Task<IngridientDTO> DeleteIngridientAsync(int ingridientId);
+        Task<FullIngridientDTO> DeleteIngridientAsync(int ingridientId);
     }
 }

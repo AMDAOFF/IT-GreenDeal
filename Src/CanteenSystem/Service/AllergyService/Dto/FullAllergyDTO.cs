@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Service.AllergyService.Dto
 {
-    public class AllergyDTO
+    public class FullAllergyDTO
     {
         [ModalHideField]
         public int AllergyId { get; set; }

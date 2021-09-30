@@ -13,33 +13,33 @@ namespace Service.DishService
         /// Create a dish in the database
         /// </summary>
         /// <returns>DishDTO with the data that has been entered in the database</returns>
-        Task<DishDTO> CreateDishAsync(DishDTO dish);
+        Task<FullDishDTO> CreateDishAsync(FullDishDTO dish);
         
         /// <summary>
         /// Get a dish by its id
         /// </summary>
         /// <param name="dishID"></param>
         /// <returns>DishDTO with the data that has been fetched from the database</returns>
-        Task<DishDTO> GetDishAsync(int dishID);
+        Task<FullDishDTO> GetDishAsync(int dishID);
 
         /// <summary>
         /// Delete a dish defined by its id
         /// </summary>
         /// <param name="dishID"></param>
         /// <returns>DishDTO if the dish were deleted</returns>
-        Task<DishDTO> DeleteDishAsync(int dishID);
+        Task<FullDishDTO> DeleteDishAsync(int dishID);
 
         /// <summary>
         /// Updates a dish based on the DishDTO object parsed in
         /// </summary>
         /// <param name="updatedDish"></param>
         /// <returns>The updated DishDTO object</returns>
-        Task<DishDTO> UpdateDishAsync(DishDTO updatedDish);
+        Task<FullDishDTO> UpdateDishAsync(FullDishDTO updatedDish);
 
         /// <summary>
         /// Getting all of the dishes in the database
         /// </summary>
         /// <returns>List of DishDTO object</returns>
-        Task<List<DishDTO>> GetAllDishesAsync();
+        Task<List<FullDishDTO>> GetAllDishesAsync();
     }
 }

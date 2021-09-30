@@ -12,16 +12,18 @@
 @inject IAllergyService allergyService
 
 @code {
-    public List<DishDTO> Dishes { get; set; } = new List<DishDTO>();
+    public List<FullDishDTO> Dishes { get; set; } = new List<FullDishDTO>();
     public List<IngridientDTO> Ingredients { get; set; } = new List<IngridientDTO>();
-    public List<AllergyDTO> Allergies { get; set; } = new List<AllergyDTO>();
+    public List<FullAllergyDTO> Allergies { get; set; } = new List<FullAllergyDTO>();
 
 
-    public DishDTO newDishObject { get; set; } = new DishDTO();
+    public FullDishDTO newDishObject { get; set; } = new FullDishDTO();
     public IngridientDTO newIngredientObject { get; set; } = new IngridientDTO();
-    public AllergyDTO newAllergyObject { get; set; } = new AllergyDTO();
+    public FullAllergyDTO newAllergyObject { get; set; } = new FullAllergyDTO();
 
-    public DishDTO selectedUpdateDish { get; set; }
+    public FullDishDTO selectedUpdateDish { get; set; }
+    public IngridientDTO selectedUpdateIngredient { get; set; }
+    public FullAllergyDTO selectedUpdateAllergy { get; set; }
 
 
 
@@ -37,8 +39,8 @@
 
     public async void OnCreateDishModalCallback(object createData)
     {
-        DishDTO newDish = (DishDTO)createData;
-        DishDTO createdDish = await dishService.CreateDishAsync(newDish);
+        FullDishDTO newDish = (FullDishDTO)createData;
+        FullDishDTO createdDish = await dishService.CreateDishAsync(newDish);
 
         if (createdDish != null)
         {
@@ -63,8 +65,8 @@
 
     public async void OnCreateAllergyModalCallback(object createData)
     {
-        AllergyDTO newAllergy = (AllergyDTO)createData;
-        AllergyDTO createdAllergy = await allergyService.CreateAllergyAsync(newAllergy);
+        FullAllergyDTO newAllergy = (FullAllergyDTO)createData;
+        FullAllergyDTO createdAllergy = await allergyService.CreateAllergyAsync(newAllergy);
 
         if (createdAllergy != null)
         {
@@ -80,12 +82,39 @@
 
     public async void OnUpdateDishModalCallback(object updateData)
     {
-        DishDTO updateDish = (DishDTO)updateData;
-        DishDTO updatedDish = await dishService.UpdateDishAsync(updateDish);
+        FullDishDTO updateDish = (FullDishDTO)updateData;
+        FullDishDTO updatedDish = await dishService.UpdateDishAsync(updateDish);
 
         if (updatedDish != null)
         {
             Dishes.Where(dish => dish.DishId == updateDish.DishId).FirstOrDefault().DishName = updatedDish.DishName;
+        }
+
+        StateHasChanged();
+    }
+
+
+    public async void OnUpdateIngredientModalCallback(object updateData)
+    {
+        IngridientDTO updateIngredient = (IngridientDTO)updateData;
+        IngridientDTO updatedIngredient = await ingredientService.UpdateIngridientAsync(updateIngredient);
+
+        if (updatedIngredient != null)
+        {
+            Ingredients.Where(ingredient => ingredient.IngridientId == updatedIngredient.IngridientId).FirstOrDefault().IngridientName = updateIngredient.IngridientName;
+        }
+
+        StateHasChanged();
+    }
+
+    public async void OnUpdateAllergyModalCallback(object updateData)
+    {
+        FullAllergyDTO updadteAllergy = (FullAllergyDTO)updateData;
+        FullAllergyDTO updatedAllergy = await allergyService.UpdateAllergyAsync(updadteAllergy);
+
+        if (updatedAllergy != null)
+        {
+            Allergies.Where(allergy => allergy.AllergyId == updatedAllergy.AllergyId).FirstOrDefault().AllergyName = updatedAllergy.AllergyName;
         }
 
         StateHasChanged();
@@ -101,6 +130,18 @@
         StateHasChanged();
     }
 
+    public void SelectUpdateIngredient(int ingredientId)
+    {
+        selectedUpdateIngredient = Ingredients.Where(ingredient => ingredient.IngridientId == ingredientId).FirstOrDefault();
+        StateHasChanged();
+    }
+
+    public void SelectUpdateAllergy(int allergyId)
+    {
+        selectedUpdateAllergy = Allergies.Where(allergy => allergy.AllergyId == allergyId).FirstOrDefault();
+        StateHasChanged();
+    }
+
     #endregion
 
 
@@ -108,7 +149,7 @@
 
     public async void DeleteDish(int dishId)
     {
-        DishDTO deletedDish = await dishService.DeleteDishAsync(dishId);
+        FullDishDTO deletedDish = await dishService.DeleteDishAsync(dishId);
         Dishes.Remove(Dishes.Where(dish => dish.DishId == deletedDish.DishId).FirstOrDefault());
         StateHasChanged();
     }
@@ -122,7 +163,7 @@
 
     public async void DeleteAllergy(int allergyId)
     {
-        AllergyDTO deleteAllergy = await allergyService.DeleteAllergyAsync(allergyId);
+        FullAllergyDTO deleteAllergy = await allergyService.DeleteAllergyAsync(allergyId);
         Allergies.Remove(Allergies.Where(allergy => allergy.AllergyId == deleteAllergy.AllergyId).FirstOrDefault());
         StateHasChanged();
     }
@@ -149,7 +190,7 @@
         <tbody>
             @if (Dishes.Count > 0)
             {
-                @foreach (DishDTO dish in Dishes)
+                @foreach (FullDishDTO dish in Dishes)
                 {
                     <tr>
                         <th>
@@ -233,7 +274,7 @@
                                         </div>
 
                                         <div class="col-6">
-                                            <button class="btn btn-primary btn-rounded btn-normal-text">
+                                            <button class="btn btn-primary btn-rounded btn-normal-text" data-toggle="modal" data-target="#modalUpdateIngreddient" @onclick="() => { SelectUpdateIngredient(ingredient.IngridientId); }">
                                                 <i class="las la-edit"></i>
                                             </button>
                                         </div>
@@ -275,7 +316,7 @@
         <tbody>
             @if (Allergies.Count() > 0)
             {
-                foreach (AllergyDTO allergy in Allergies)
+                foreach (FullAllergyDTO allergy in Allergies)
                 {
                     <tr>
                         <th>
@@ -293,7 +334,7 @@
                                         </div>
 
                                         <div class="col-6">
-                                            <button class="btn btn-primary btn-rounded btn-normal-text">
+                                            <button class="btn btn-primary btn-rounded btn-normal-text" data-toggle="modal" data-target="#modalUpdateAllergy" @onclick="() => { SelectUpdateAllergy(allergy.AllergyId); }">
                                                 <i class="las la-edit"></i>
                                             </button>
                                         </div>
@@ -327,3 +368,5 @@
 <AutomaticObjectEditModal ModalName="modalCreateAllergy" ModalTitle="Opret ny allergi" ModalData="@newAllergyObject" ModalActionButtonCallback="OnCreateAllergyModalCallback"></AutomaticObjectEditModal>
 
 <AutomaticObjectEditModal ModalName="modalUpdateDish" ModalTitle="Rediger ret" ModalData="@selectedUpdateDish" ModalActionButtonCallback="OnUpdateDishModalCallback"></AutomaticObjectEditModal>
+<AutomaticObjectEditModal ModalName="modalUpdateIngreddient" ModalTitle="Rediger ingridiens" ModalData="@selectedUpdateIngredient" ModalActionButtonCallback="OnUpdateIngredientModalCallback"></AutomaticObjectEditModal>
+<AutomaticObjectEditModal ModalName="modalUpdateAllergy" ModalTitle="Rediger allergi" ModalData="@selectedUpdateAllergy" ModalActionButtonCallback="OnUpdateAllergyModalCallback"></AutomaticObjectEditModal>

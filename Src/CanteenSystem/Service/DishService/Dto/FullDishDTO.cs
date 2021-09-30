@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Service.DishService.Dto
 {
-    public class DishDTO
+    public class FullDishDTO
     {
         [ModalHideField]
         public int DishId { get; set; }

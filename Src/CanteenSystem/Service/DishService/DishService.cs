@@ -19,7 +19,7 @@ namespace Service.DishService
             _identityContext = identityContext;
         }
 
-        public async Task<DishDTO> CreateDishAsync(DishDTO dish)
+        public async Task<FullDishDTO> CreateDishAsync(FullDishDTO dish)
         {
             Dish newDish = new Dish
             {
@@ -32,7 +32,7 @@ namespace Service.DishService
 
             if (await _identityContext.SaveChangesAsync() > 0)
             {
-                return new DishDTO
+                return new FullDishDTO
                 {
                     DishId = newDish.DishId,
                     DishName = newDish.DishName,
@@ -46,14 +46,14 @@ namespace Service.DishService
             }
         }
 
-        public async Task<DishDTO> DeleteDishAsync(int dishID)
+        public async Task<FullDishDTO> DeleteDishAsync(int dishID)
         {
             Dish deleteDish = _identityContext.Dishes.Where(dish => dish.DishId == dishID).FirstOrDefault();
             _identityContext.Remove(deleteDish);
 
             if (await _identityContext.SaveChangesAsync() > 0)
             {
-                return new DishDTO
+                return new FullDishDTO
                 {
                     DishId = deleteDish.DishId,
                     DishName = deleteDish.DishName,
@@ -68,7 +68,7 @@ namespace Service.DishService
             }
         }
 
-        public async Task<DishDTO> GetDishAsync(int dishID)
+        public async Task<FullDishDTO> GetDishAsync(int dishID)
         {
             Dish returnDish = null;
 
@@ -78,7 +78,7 @@ namespace Service.DishService
 
             if (returnDish != null)
             {
-                return new DishDTO { 
+                return new FullDishDTO { 
                     DishId = returnDish.DishId,
                     DishName = returnDish.DishName,
                     DishCo2 = returnDish.DishCO2,
@@ -92,15 +92,15 @@ namespace Service.DishService
             }
         }
 
-        public async Task<List<DishDTO>> GetAllDishesAsync()
+        public async Task<List<FullDishDTO>> GetAllDishesAsync()
         {
-            List<DishDTO> dishes = new List<DishDTO>();
+            List<FullDishDTO> dishes = new List<FullDishDTO>();
 
             await Task.Run(() =>
             {
                 foreach (Dish dish in _identityContext.Dishes)
                 {
-                    dishes.Add(new DishDTO
+                    dishes.Add(new FullDishDTO
                     {
                         DishId = dish.DishId,
                         DishName = dish.DishName,
@@ -113,7 +113,7 @@ namespace Service.DishService
             return dishes;
         }
 
-        public async Task<DishDTO> UpdateDishAsync(DishDTO updatedDish)
+        public async Task<FullDishDTO> UpdateDishAsync(FullDishDTO updatedDish)
         {
             Dish updateDishObject = _identityContext.Dishes.Where(dish => dish.DishId == updatedDish.DishId).FirstOrDefault();
 
@@ -125,7 +125,7 @@ namespace Service.DishService
 
             if (await _identityContext.SaveChangesAsync() > 0)
             {
-                return new DishDTO
+                return new FullDishDTO
                 {
                     DishId = updateDishObject.DishId,
                     DishName = updateDishObject.DishName,

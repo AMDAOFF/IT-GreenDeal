@@ -14,47 +14,47 @@ namespace Service.AllergyService
         /// </summary>
         /// <param name="allergyObject"></param>
         /// <returns></returns>
-        Task<AllergyDTO> CreateAllergyAsync(AllergyDTO allergyObject);
+        Task<FullAllergyDTO> CreateAllergyAsync(FullAllergyDTO allergyObject);
 
         /// <summary>
         /// Get allergy by parsing in a specific allergy id
         /// </summary>
         /// <param name="ingredientId"></param>
         /// <returns></returns>
-        Task<AllergyDTO> GetAllergyAsync(int allergyId);
+        Task<FullAllergyDTO> GetAllergyAsync(int allergyId);
 
         /// <summary>
         /// Get all allergies stored in the database
         /// </summary>
         /// <returns></returns>
-        Task<List<AllergyDTO>> GetAllergiesAsync();
+        Task<List<FullAllergyDTO>> GetAllergiesAsync();
 
         /// <summary>
         /// Get all allergies that a dish contains
         /// </summary>
         /// <returns></returns>
-        Task<List<AllergyDTO>> GetDishAllergiesAsync(int dishId);
+        Task<List<FullAllergyDTO>> GetDishAllergiesAsync(int dishId);
 
         /// <summary>
         /// Getting all of the allergies that an ingredient contains
         /// </summary>
         /// <param name="ingredientId"></param>
         /// <returns></returns>
-        Task<List<AllergyDTO>> GetIngredientAllergiesAsync(int ingredientId);
+        Task<List<FullAllergyDTO>> GetIngredientAllergiesAsync(int ingredientId);
 
         /// <summary>
         /// Update an allergy based on the DTO parsed in
         /// </summary>
         /// <param name="allergyObject"></param>
         /// <returns></returns>
-        Task<AllergyDTO> UpdateAllergyAsync(AllergyDTO allergyObject);
+        Task<FullAllergyDTO> UpdateAllergyAsync(FullAllergyDTO allergyObject);
 
         /// <summary>
         /// Delete the specified allergy in the database base on its id
         /// </summary>
         /// <param name="allergyObject"></param>
         /// <returns></returns>
-        Task<AllergyDTO> DeleteAllergyAsync(int allergyId);
+        Task<FullAllergyDTO> DeleteAllergyAsync(int allergyId);
 
     }
 }

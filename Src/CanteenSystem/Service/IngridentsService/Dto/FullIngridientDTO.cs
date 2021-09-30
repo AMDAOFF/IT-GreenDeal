@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Service.IngridentsService.Dto
 {
-    public class IngridientDTO
+    public class FullIngridientDTO
     {
         [ModalHideField]
         public int IngridientId { get; set; }

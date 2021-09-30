@@ -20,7 +20,7 @@ namespace Service.AllergyService
             _identityContext = identityContext;
         }
 
-        public async Task<AllergyDTO> CreateAllergyAsync(AllergyDTO allergyObject)
+        public async Task<FullAllergyDTO> CreateAllergyAsync(FullAllergyDTO allergyObject)
         {
             Allergy newAllergy = new Allergy
             {
@@ -31,7 +31,7 @@ namespace Service.AllergyService
 
             if (await _identityContext.SaveChangesAsync() > 0)
             {
-                return new AllergyDTO
+                return new FullAllergyDTO
                 {
                     AllergyId = newAllergy.AllergyId,
                     AllergyName = newAllergy.AllergyName
@@ -44,7 +44,7 @@ namespace Service.AllergyService
             }
         }
 
-        public async Task<AllergyDTO> DeleteAllergyAsync(int allergyId)
+        public async Task<FullAllergyDTO> DeleteAllergyAsync(int allergyId)
         {
             Allergy deleteAllergy = _identityContext.Allergies.Where(allergy => allergy.AllergyId == allergyId).FirstOrDefault();
 
@@ -52,7 +52,7 @@ namespace Service.AllergyService
 
             if (await _identityContext.SaveChangesAsync() > 0)
             {
-                return new AllergyDTO
+                return new FullAllergyDTO
                 {
                     AllergyId = deleteAllergy.AllergyId,
                     AllergyName = deleteAllergy.AllergyName
@@ -65,14 +65,14 @@ namespace Service.AllergyService
             }
         }
 
-        public async Task<List<AllergyDTO>> GetAllergiesAsync()
+        public async Task<List<FullAllergyDTO>> GetAllergiesAsync()
         {
-            List<AllergyDTO> returnAllergies = new List<AllergyDTO>();
+            List<FullAllergyDTO> returnAllergies = new List<FullAllergyDTO>();
 
             await Task.Run(() => {
                 foreach (Allergy allergy in _identityContext.Allergies)
                 {
-                    returnAllergies.Add(new AllergyDTO { 
+                    returnAllergies.Add(new FullAllergyDTO { 
                         AllergyId = allergy.AllergyId,
                         AllergyName = allergy.AllergyName
                     });
@@ -82,7 +82,7 @@ namespace Service.AllergyService
             return returnAllergies;
         }
 
-        public async Task<AllergyDTO> GetAllergyAsync(int allergyId)
+        public async Task<FullAllergyDTO> GetAllergyAsync(int allergyId)
         {
             Allergy returnAllergy = null;
 
@@ -92,7 +92,7 @@ namespace Service.AllergyService
 
             if (returnAllergy != null)
             {
-                return new AllergyDTO
+                return new FullAllergyDTO
                 {
                     AllergyId = returnAllergy.AllergyId,
                     AllergyName = returnAllergy.AllergyName
@@ -105,9 +105,9 @@ namespace Service.AllergyService
             }
         }
 
-        public async Task<List<AllergyDTO>> GetDishAllergiesAsync(int dishId)
+        public async Task<List<FullAllergyDTO>> GetDishAllergiesAsync(int dishId)
         {
-            List<AllergyDTO> returnDishAllergies = new List<AllergyDTO>();
+            List<FullAllergyDTO> returnDishAllergies = new List<FullAllergyDTO>();
 
 
             await Task.Run(() =>
@@ -116,7 +116,7 @@ namespace Service.AllergyService
                 {
                     foreach (Allergy allergy in ingredient.Allergies)
                     {
-                        returnDishAllergies.Add(new AllergyDTO
+                        returnDishAllergies.Add(new FullAllergyDTO
                         {
                             AllergyId = allergy.AllergyId,
                             AllergyName = allergy.AllergyName
@@ -128,15 +128,15 @@ namespace Service.AllergyService
             return returnDishAllergies;
         }
 
-        public async Task<List<AllergyDTO>> GetIngredientAllergiesAsync(int ingredientId)
+        public async Task<List<FullAllergyDTO>> GetIngredientAllergiesAsync(int ingredientId)
         {
-            List<AllergyDTO> returnIngredientAllergies = new List<AllergyDTO>();
+            List<FullAllergyDTO> returnIngredientAllergies = new List<FullAllergyDTO>();
 
             await Task.Run(() =>
             {
                 foreach (Allergy allergy in _identityContext.Allergies.Where(allergy => allergy.Ingredient.IngredientId == ingredientId).ToList())
                 {
-                    returnIngredientAllergies.Add(new AllergyDTO
+                    returnIngredientAllergies.Add(new FullAllergyDTO
                     {
                         AllergyId = allergy.AllergyId,
                         AllergyName = allergy.AllergyName
@@ -147,7 +147,7 @@ namespace Service.AllergyService
             return returnIngredientAllergies;
         }
 
-        public async Task<AllergyDTO> UpdateAllergyAsync(AllergyDTO allergyObject)
+        public async Task<FullAllergyDTO> UpdateAllergyAsync(FullAllergyDTO allergyObject)
         {
             Allergy updateAllergy = _identityContext.Allergies.Where(allergy => allergy.AllergyId == allergyObject.AllergyId).FirstOrDefault();
 
@@ -157,7 +157,7 @@ namespace Service.AllergyService
 
             if (await _identityContext.SaveChangesAsync() > 0)
             {
-                return new AllergyDTO
+                return new FullAllergyDTO
                 {
                     AllergyId = updateAllergy.AllergyId,
                     AllergyName = updateAllergy.AllergyName

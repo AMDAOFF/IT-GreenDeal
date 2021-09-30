@@ -24,8 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
-    <ProjectReference Include="..\Service\Service.csproj" />
+    <ProjectReference Include="..\DataAccess\Canteen.DataAccess.csproj" />
+    <ProjectReference Include="..\Service\Canteen.Service.csproj" />
   </ItemGroup>
 
 </Project>

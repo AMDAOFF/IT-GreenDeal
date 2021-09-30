@@ -15,5 +15,6 @@ namespace Service.UserService
 		Task<List<SimpleApplicationUserDTO>> GetUsersAsync();
 		Task<SimpleApplicationUserDTO> GetUserAsync();
 		Task<string> ChangeUserAsync(ModelStateDictionary modelState);
+		Task DeleteUser(SimpleApplicationUserDTO userDTO);
 	}
 }

@@ -21,18 +21,21 @@ namespace Service.UserService
 		private readonly IHttpContextAccessor _httpContextAccessor;
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly SignInManager<ApplicationUser> _signInManager;
+		private readonly RoleManager<IdentityRole> _roleManager;
 
 		public UserService(IdentityContext identityContext,
 			IEncryptionService encryptionService,
 			IHttpContextAccessor httpContextAccessor,
 			UserManager<ApplicationUser> userManager,
-			SignInManager<ApplicationUser> signInManager)
+			SignInManager<ApplicationUser> signInManager,
+			RoleManager<IdentityRole> roleManager)
 		{
 			_identityContext = identityContext;
 			_encryptionService = encryptionService;
 			_httpContextAccessor = httpContextAccessor;
 			_userManager = userManager;
 			_signInManager = signInManager;
+			_roleManager = roleManager;
 		}
 
 		public async Task<List<SimpleApplicationUserDTO>> GetUsersAsync()
@@ -102,6 +105,22 @@ namespace Service.UserService
 
 			return "Not Valid";
 
+		}
+
+		public async Task EditUser(SimpleApplicationUserDTO userDTO, string role)
+		{
+			List<ApplicationUser> users = await _identityContext.Users.OfType<ApplicationUser>().ToListAsync();
+			ApplicationUser user = users.Find(x => x.UserName == userDTO.Email);
+
+			await _userManager.AddToRoleAsync(user, role);
+		}
+
+		public async Task DeleteUser(SimpleApplicationUserDTO userDTO)
+		{
+			List<ApplicationUser> users = await _identityContext.Users.OfType<ApplicationUser>().ToListAsync();
+
+			ApplicationUser user = users.Find(x => x.UserName == userDTO.Email);
+			await _userManager.DeleteAsync(user);
 		}
 	}
 }

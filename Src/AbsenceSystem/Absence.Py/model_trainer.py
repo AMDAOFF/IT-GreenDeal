@@ -28,7 +28,7 @@ for (i, imagePath) in enumerate(imagePaths):
 	# "hog" = LESS accuracy MORE speed.
 	# "cnn" = MORE accuracy LESS speed.
 	# Detect the (x, y)-coordinates for the face.
-	boxes = face_recognition.face_locations(imageRGB, model="cnn")
+	boxes = face_recognition.face_locations(imageRGB, model="hog")
 	
 	# Get the facial encodings for the face.
 	encodings = face_recognition.face_encodings(imageRGB, boxes)
@@ -38,9 +38,9 @@ for (i, imagePath) in enumerate(imagePaths):
 		knownEncodings.append(encoding)
 		knownNames.append(name)
 
-data = {"encodings": knownEncodings, "names": knownNames}
+data = {"encodings": knownEncodings, "ids": knownNames}
 
-with open("model.pickle", "wb") as file:
+with open("model2.pickle", "wb") as file:
 	file.write(pickle.dumps(data))
 
 print("Sucessfully created the new model")

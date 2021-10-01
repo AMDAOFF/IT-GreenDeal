@@ -4,19 +4,22 @@ import face_recognition
 import pickle
 import time
 import cv2
+import pika
 
 print("Loading model.")
 
 # Load the data from the model.
-data = pickle.loads(open("model.pickle", "rb").read())
+data = pickle.loads(open("model2.pickle", "rb").read())
 
 print("Starting the webcam.")
 
 # Initialize the webcam.
-vs = VideoStream().start()
+vs = VideoStream(1).start()
 
 # Allow the webcam to warm up.
 time.sleep(2)
+
+alreadyMatchedIds = []
 
 # Loop over frames from the webcam.
 while True:
@@ -36,19 +39,19 @@ while True:
 	# "hog" = LESS accuracy MORE speed.
 	# "cnn" = MORE accuracy LESS speed.
 	# Detect the (x, y)-coordinates for the faces.
-	boxes = face_recognition.face_locations(imageRGB, model="cnn")
+	boxes = face_recognition.face_locations(imageRGB, model="hog")
 	
 	# Get the facial encodings for the faces.
 	encodings = face_recognition.face_encodings(imageRGB, boxes)
 
-	names = []
+	ids = []
 
     # Loop over the facial encodings.
 	for encoding in encodings:
 
 		# Attempt to match each face from the webcam stream to our known encodings. (Adjust tolerance for stricter matching.)
-		matches = face_recognition.compare_faces(data["encodings"],	encoding, tolerance=0.4)
-		name = "Unknown"
+		matches = face_recognition.compare_faces(data["encodings"],	encoding, tolerance=0.5)
+		id = None
 
 		# Check to see if we have found a match.
 		if True in matches:
@@ -61,19 +64,28 @@ while True:
 
 			# Loop over the matched indexes and maintain a count for each recognized face.
 			for i in matchedIds:
-				name = data["names"][i]
-				counts[name] = counts.get(name, 0) + 1
+				id = data["ids"][i]
+				counts[id] = counts.get(id, 0) + 1
 
 			# Determine the recognized face with the largest number of votes.
 			# E.g. If the person in the webcam frame gets matched with 2 different persons from the model then
-			# select the name that matched with most of the trained images.
-			name = max(counts, key=counts.get)
+			# select the id that matched with most of the trained images.
+			id = max(counts, key=counts.get)
 		
-		# Update the list of names.
-		names.append(name)
+		# Update the list of ids.
+		ids.append(id)
+		if not id in alreadyMatchedIds:
+			alreadyMatchedIds.append(id)
+			credentials = pika.PlainCredentials('guest', 'guest')
+			connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port=5672, virtual_host='/', credentials=credentials))
+			channel = connection.channel()
+			channel.queue_declare(queue="Absence", durable=True)
+			channel.start_consuming()
+			channel.basic_publish(exchange='', routing_key='Absence', body=f'test')
+			print(f"Succeded")
 
     # Loop over the recognized faces.
-	for ((top, right, bottom, left), name) in zip(boxes, names):
+	for ((top, right, bottom, left), id) in zip(boxes, ids):
 
 		# Rescale the face coordinates.
 		top = int(top * ratio)
@@ -84,11 +96,11 @@ while True:
 		# Draw a box around the detected face.
 		cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
 
-		# If the face is at the top of the screen, put the name label inside the drawn box.
+		# If the face is at the top of the screen, put the id label inside the drawn box.
 		y = top - 15 if top - 15 > 15 else top + 15
 
-		# Put the name below the box.
-		cv2.putText(frame, name, (left, y), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
+		# Put the id below the box.
+		cv2.putText(frame, id, (left, y), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
 
 	# Display the webcam frame.
 	cv2.imshow("Attendance", frame)

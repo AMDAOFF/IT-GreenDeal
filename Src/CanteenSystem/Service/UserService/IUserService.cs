@@ -12,9 +12,11 @@ namespace Service.UserService
 {
 	public interface IUserService
 	{
-		Task<List<SimpleApplicationUserDTO>> GetUsersAsync();
-		Task<SimpleApplicationUserDTO> GetUserAsync();
+		Task<List<SlimApplicationUserDTO>> GetUsersAsync();
+		Task<SlimApplicationUserDTO> GetUserAsync();
 		Task<string> ChangeUserAsync(ModelStateDictionary modelState);
-		Task DeleteUser(SimpleApplicationUserDTO userDTO);
+		Task EditUser(SlimApplicationUserDTO userDTO);
+		Task DeleteUser(SlimApplicationUserDTO userDTO);
+		Task<IEnumerable<string>> GetRoles();
 	}
 }

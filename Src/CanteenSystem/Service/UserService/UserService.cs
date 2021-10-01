@@ -38,9 +38,9 @@ namespace Service.UserService
 			_roleManager = roleManager;
 		}
 
-		public async Task<List<SimpleApplicationUserDTO>> GetUsersAsync()
+		public async Task<List<SlimApplicationUserDTO>> GetUsersAsync()
 		{
-			List<SimpleApplicationUserDTO> applicationUsers = new();
+			List<SlimApplicationUserDTO> applicationUsers = new();
 			List<ApplicationUser> users = await _identityContext.Users.OfType<ApplicationUser>().ToListAsync();
 
 			foreach (var user in users)
@@ -58,19 +58,20 @@ namespace Service.UserService
 				string decryptedName = _encryptionService.Decrypt(Convert.FromBase64String(user.Name));
 				string decryptedSurname = _encryptionService.Decrypt(Convert.FromBase64String(user.Surname));
 
-				applicationUsers.Add(new SimpleApplicationUserDTO()
+				applicationUsers.Add(new SlimApplicationUserDTO()
 				{
+					Id = user.Id,
 					Name = decryptedName.Trim(),
 					Surname = decryptedSurname.Trim(),
 					Email = user.Email,
-					Roles = userRoles
+					Role = userRoles.FirstOrDefault()
 				});
 			}
 
 			return applicationUsers;
 		}
 
-		public async Task<SimpleApplicationUserDTO> GetUserAsync()
+		public async Task<SlimApplicationUserDTO> GetUserAsync()
 		{
 			var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
 			if (user != null)
@@ -78,8 +79,9 @@ namespace Service.UserService
 				string decryptedName = _encryptionService.Decrypt(Convert.FromBase64String(user.Name));
 				string decryptedSurname = _encryptionService.Decrypt(Convert.FromBase64String(user.Surname));
 
-				SimpleApplicationUserDTO simpleUser = new()
+				SlimApplicationUserDTO simpleUser = new()
 				{
+					Id = user.Id,
 					Name = decryptedName,
 					Surname = decryptedSurname,
 					Email = user.Email
@@ -107,20 +109,39 @@ namespace Service.UserService
 
 		}
 
-		public async Task EditUser(SimpleApplicationUserDTO userDTO, string role)
+		public async Task EditUser(SlimApplicationUserDTO userDTO)
 		{
-			List<ApplicationUser> users = await _identityContext.Users.OfType<ApplicationUser>().ToListAsync();
-			ApplicationUser user = users.Find(x => x.UserName == userDTO.Email);
+			//List<ApplicationUser> users = await _identityContext.Users.OfType<ApplicationUser>().ToListAsync();
+			//ApplicationUser user = users.Find(x => x.Id == userDTO.Id);
 
-			await _userManager.AddToRoleAsync(user, role);
+			ApplicationUser user = await _userManager.FindByIdAsync(userDTO.Id);
+
+			if (userDTO != null)
+			{
+				await _userManager.RemoveFromRolesAsync(user, await GetRoles());
+				await _userManager.AddToRoleAsync(user, userDTO.Role);
+			}
+
+			await _userManager.UpdateAsync(user);
 		}
 
-		public async Task DeleteUser(SimpleApplicationUserDTO userDTO)
+		public async Task DeleteUser(SlimApplicationUserDTO userDTO)
 		{
 			List<ApplicationUser> users = await _identityContext.Users.OfType<ApplicationUser>().ToListAsync();
 
 			ApplicationUser user = users.Find(x => x.UserName == userDTO.Email);
 			await _userManager.DeleteAsync(user);
+		}
+
+		public async Task<IEnumerable<string>> GetRoles()
+		{
+			List<string> roles = new();
+			var identityRoles = await _identityContext.Roles.ToListAsync();
+			foreach (var role in identityRoles)
+			{
+				roles.Add(role.Name);
+			}
+			return roles;
 		}
 	}
 }

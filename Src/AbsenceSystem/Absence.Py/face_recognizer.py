@@ -14,7 +14,7 @@ data = pickle.loads(open("model2.pickle", "rb").read())
 print("Starting the webcam.")
 
 # Initialize the webcam.
-vs = VideoStream(1).start()
+vs = VideoStream(0).start()
 
 # Allow the webcam to warm up.
 time.sleep(2)
@@ -81,7 +81,7 @@ while True:
 			channel = connection.channel()
 			channel.queue_declare(queue="Absence", durable=True)
 			channel.start_consuming()
-			channel.basic_publish(exchange='', routing_key='Absence', body=f'test')
+			channel.basic_publish(exchange='', routing_key='Absence', body=f'{id}')
 			print(f"Succeded")
 
     # Loop over the recognized faces.

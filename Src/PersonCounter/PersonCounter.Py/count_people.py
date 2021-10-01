@@ -7,7 +7,6 @@ import cv2
 import pika
 import pyodbc
 import os
-import json
 
 try:
     SQLServer = "(LocalDb)\MSSQLLocalDB"
@@ -72,8 +71,7 @@ try:
             channel = connection.channel()
             channel.queue_declare(queue="RoomUpdate", durable=True)
             channel.start_consuming()
-            jsonBody =  '{ "RoomId":"'+ classroomNumber + '", "Persons":'+personCounter+', "Time":"'+ datetime.now().strftime("%d/%m/%Y %H:%M:%S") + '"}'
-            channel.basic_publish(exchange='', routing_key='RoomUpdate', body= jsonBody) #f'{classroomNumber};{personCounter};{datetime.now().strftime("%d/%m/%Y %H:%M:%S")}')
+            channel.basic_publish(exchange='', routing_key='RoomUpdate', body=f'{classroomNumber};{personCounter};{datetime.now().strftime("%d/%m/%Y %H:%M:%S")}')
             print(f"Succeded")
             connection.close()
         else:

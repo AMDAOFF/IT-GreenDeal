@@ -6,6 +6,7 @@ import sys
 import cv2
 import pika
 import pyodbc
+import os
 
 try:
     SQLServer = "(LocalDb)\MSSQLLocalDB"
@@ -13,10 +14,8 @@ try:
     SQLUsername = "Absence"
     SQLPassword = "Absence123"
     SQLConnectionString = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER='+SQLServer+';DATABASE='+SQLDatabase+';UID='+SQLUsername+';PWD='+ SQLPassword
-
     conn = pyodbc.connect(SQLConnectionString)
     cursor = conn.cursor()
-
     cursor.execute("SELECT * FROM Cameras")
     IPs = []
     classrooms = []
@@ -25,20 +24,19 @@ try:
         classrooms.append(row[1])
     cursor.close()
     conn.close()
-
     index = 0
+
+    if not os.path.exists("Files/"):
+            os.makedirs("Files/")
+
     while index < len(IPs):
         cameraIP = IPs[index]
-
         ######## Real implementation: ########
         # vs = cv2.VideoCapture(f"http://{IP}/video")
-
         ######## POC: ########
         vs = cv2.VideoCapture(0)
-
         # Allow the webcam to warm up.
         time.sleep(2)
-
         personsInRoom = []
         iteration = 0
         # Counts people 10 times
@@ -49,32 +47,26 @@ try:
             totalFaces = len(faces)
             personsInRoom.append(totalFaces)
             time.sleep(0.5)
-
         # Set personCounter to the number with most entries / votes
         personCounter = max(set(personsInRoom), key=personsInRoom.count)
         previousPersonCounter = None
-
+        
         if exists(f"Files/{cameraIP}.txt"):
             with open(f"Files/{cameraIP}.txt", "rb") as file:
                 previousPersonCounter = file.readline()
         else:
             print("file did not exists")
-
         if  previousPersonCounter is None or personCounter != int(previousPersonCounter):
             with open(f'Files/{cameraIP}.txt', "w") as file:
                 file.write(f"{personCounter}")
-
             conn = pyodbc.connect(SQLConnectionString)
             cursor = conn.cursor()
             cursor.execute(f"SELECT ClassroomNumber FROM Classrooms where ClassroomId = {classrooms[index]}")
-
             classroomNumber = cursor.fetchval()
             cursor.close()
             conn.close()
-
             print(classroomNumber)
-
-            credentials = pika.PlainCredentials('python', 'python123')
+            credentials = pika.PlainCredentials('guest', 'guest')
             connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port=5672, virtual_host='/', credentials=credentials))
             channel = connection.channel()
             channel.queue_declare(queue="RoomUpdate", durable=True)

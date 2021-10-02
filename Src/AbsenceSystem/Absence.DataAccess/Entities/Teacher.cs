@@ -1,4 +1,6 @@
-﻿namespace Absence.DataAccess.Entities
+﻿using System.Collections.Generic;
+
+namespace Absence.DataAccess.Entities
 {
     public class Teacher
     {
@@ -8,5 +10,6 @@
         public int FKSubjectId { get; set; }
         public School School { get; set; }
         public Subject Subject { get; set; }
+        public List<StudentClass> StudentClasses { get; set; }
     }
 }

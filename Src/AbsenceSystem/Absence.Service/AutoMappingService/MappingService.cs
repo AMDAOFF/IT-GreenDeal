@@ -5,6 +5,7 @@ using Absence.Service.ClassroomService.DataTransferObjects;
 using Absence.Service.DayScheduleService.DataTransferObjects;
 using Absence.Service.HourScheduleService.DataTransferObjects;
 using Absence.Service.SchoolService.DataTransferObjects;
+using Absence.Service.StudentClassService.DataTransferObjects;
 using Absence.Service.StudentService.DataTransferObjects;
 using Absence.Service.SubjectService.DataTransferObjects;
 using Absence.Service.TeacherService.DataTransferObjects;
@@ -69,13 +70,15 @@ namespace Absence.Service.AutoMappingService
                 cfg.CreateMap<WeekSchedule, FullWeekScheduleDTO>();
                 cfg.CreateMap<FullWeekScheduleDTO, WeekSchedule>();
 
+                //StudentClass
+                cfg.CreateMap<StudentClass, FullStudentClassDTO>();
+                cfg.CreateMap<FullStudentClassDTO, StudentClass>();
 
             });
 
             try
             {
                 _mapper = mapperConfig.CreateMapper();
-                LogInformation("Successfully created mappings");
             }
             catch (Exception ex)
             {

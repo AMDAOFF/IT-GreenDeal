@@ -1,0 +1,101 @@
+﻿@page "/Absence"
+
+@using System.Collections.Generic;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using RabbitMQ.Client;
+@using RabbitMQ.Client.Events;
+@using System;
+@using System.Text;
+@using System.Threading.Tasks;
+@using Absence.Service.StudentClassService;
+@inject IStudentClassService StudentClassService
+@*@inject WeatherForecastService ForecastService*@
+
+<h1>Absence</h1>
+<form>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>StudentId</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in Students)
+            {
+                <tr>
+                    <td>@student</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @if (Students.Count == 0)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>StudentId</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var student in Students)
+                {
+                    <tr>
+                        <td>@student</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+    }
+    <input type="submit" />
+</form>
+@code {
+    public List<string> Students { get; set; }
+
+    public int SelectedSubjectId { get; set; }
+
+
+
+    // TODO: Get the subject based on the date
+
+    protected override async Task OnInitializedAsync()
+    {
+        Students = new List<string>();
+
+        _ = Task.Run(() => RunRabbitMQ());
+
+
+    }
+
+    private Task RunRabbitMQ()
+    {
+        ConnectionFactory factory = new ConnectionFactory() { HostName = "localhost", UserName = "guest", Password = "guest", VirtualHost = "/" };
+
+
+        using (IConnection connection = factory.CreateConnection())
+        using (IModel channel = connection.CreateModel())
+        {
+            EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
+            consumer.Received += ConsumerReceived;
+
+            channel.BasicConsume(queue: "Absence", autoAck: true, consumer: consumer);
+            while (true) { }
+        }
+    }
+
+    private void ConsumerReceived(object sender, BasicDeliverEventArgs ea)
+    {
+
+        byte[] body = ea.Body.ToArray();
+        string message = Encoding.UTF8.GetString(body);
+        Students.Add(message);
+        InvokeAsync(StateHasChanged);
+
+    }
+}

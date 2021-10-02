@@ -1,5 +1,6 @@
 ﻿using Absence.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Absence.DataAccess.EFCore
 {
@@ -21,6 +22,7 @@ namespace Absence.DataAccess.EFCore
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<WeekSchedule> WeekSchedules { get; set; }
+        public DbSet<StudentClass> StudentClasses { get; set; }
         #endregion
 
 
@@ -37,6 +39,7 @@ namespace Absence.DataAccess.EFCore
             modelBuilder.Entity<Subject>().HasKey(o => o.SubjectId);
             modelBuilder.Entity<Teacher>().HasKey(o => o.TeacherId);
             modelBuilder.Entity<WeekSchedule>().HasKey(o => o.WeekScheduleId);
+            modelBuilder.Entity<StudentClass>().HasKey(o => o.StudentClassId);
             #endregion
 
             #region Navigation Properties
@@ -45,10 +48,8 @@ namespace Absence.DataAccess.EFCore
 
             modelBuilder.Entity<Camera>().HasOne(o => o.Classroom).WithOne(o => o.Camera).HasForeignKey<Camera>(o => o.FKClassroomId);
 
-            //modelBuilder.Entity<Classroom>().HasOne(o => o.Camera).WithOne(o => o.Classroom).HasForeignKey<Classroom>(o => o.FKCameraIP);
-
             modelBuilder.Entity<Classroom>().HasOne(o => o.School).WithMany(o => o.Classrooms).HasForeignKey(o => o.FKSchoolId);
-            
+
             modelBuilder.Entity<DaySchedule>().HasOne(o => o.WeekSchedule).WithMany(o => o.DaySchedules).HasForeignKey(o => o.FKWeekScheduleId);
 
             modelBuilder.Entity<HourSchedule>().HasOne(o => o.DaySchedule).WithMany(o => o.HourSchedules).HasForeignKey(o => o.FKDayScheduleId);
@@ -59,6 +60,11 @@ namespace Absence.DataAccess.EFCore
             modelBuilder.Entity<Teacher>().HasOne(o => o.School).WithMany(o => o.Teachers).HasForeignKey(o => o.FKSchoolId);
 
             modelBuilder.Entity<Teacher>().HasOne(o => o.Subject).WithMany(o => o.Teachers).HasForeignKey(o => o.FKSubjectId);
+
+            modelBuilder.Entity<StudentClass>().HasOne(o => o.Teacher).WithMany(o => o.StudentClasses).HasForeignKey(o => o.FKTeacherId);
+
+            modelBuilder.Entity<Student>().HasOne(o => o.StudentClass).WithMany(o => o.Students).HasForeignKey(o => o.FKStudentClassId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<HourSchedule>().HasOne(o => o.StudentClass).WithMany(o => o.HourSchedules).HasForeignKey(o => o.FKStudentClassId).OnDelete(DeleteBehavior.Restrict);
             #endregion
 
             #region Data Seeding
@@ -79,6 +85,35 @@ namespace Absence.DataAccess.EFCore
                 new Camera { FKClassroomId = 3, IP = "192.168.0.2" },
                 new Camera { FKClassroomId = 2, IP = "192.168.1.1" },
                 new Camera { FKClassroomId = 4, IP = "192.168.1.2" }
+                );
+
+            modelBuilder.Entity<Subject>().HasData(
+                new Subject { SubjectId = 1, Name = "¨Programmering" },
+                new Subject { SubjectId = 2, Name = "Netværk" },
+                new Subject { SubjectId = 3, Name = "Engelsk" },
+                new Subject { SubjectId = 4, Name = "Dansk" },
+                new Subject { SubjectId = 5, Name = "Idræt" },
+                new Subject { SubjectId = 6, Name = "Matematik" }
+                );
+
+            modelBuilder.Entity<Teacher>().HasData(
+                new Teacher { TeacherId = 1, Name = "Egon Christian Rasmussen", FKSchoolId = 1, FKSubjectId = 1 },
+                new Teacher { TeacherId = 2, Name = "Tina Hansen", FKSchoolId = 1, FKSubjectId = 2 },
+                new Teacher { TeacherId = 3, Name = "Hans Jørgen Petersen", FKSchoolId = 2, FKSubjectId = 4 },
+                new Teacher { TeacherId = 4, Name = "Flemming Nielsen", FKSchoolId = 2, FKSubjectId = 6 }
+                );
+
+            modelBuilder.Entity<Student>().HasData(
+              new Student { StudentId = "jimm1576", Name = "Jimmy Elkjer", FKStudentClassId = 1 },
+              new Student { StudentId = "jona153m", Name = "Jonas Peter Fuhlendorff Jørgensen", FKStudentClassId = 1 },
+              new Student { StudentId = "kenn8174", Name = "Kenneth Jessen", FKStudentClassId = 1 },
+              new Student { StudentId = "kris593d", Name = "Kristian Biehl Kuhrt", FKStudentClassId = 1 }
+              );
+
+            modelBuilder.Entity<StudentClass>().HasData(
+                new StudentClass { StudentClassId = 1, Name = "H6 Programmører", FKTeacherId = 1 },
+                new StudentClass { StudentClassId = 2, Name = "H2 Infrastruktur", FKTeacherId = 2 },
+                new StudentClass { StudentClassId = 3, Name = "8 Klasse", FKTeacherId = 3 }
                 );
 
 

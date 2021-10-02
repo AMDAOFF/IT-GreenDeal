@@ -9,7 +9,7 @@ import pika
 print("Loading model.")
 
 # Load the data from the model.
-data = pickle.loads(open("model2.pickle", "rb").read())
+data = pickle.loads(open("model.pickle", "rb").read())
 
 print("Starting the webcam.")
 
@@ -20,7 +20,7 @@ vs = VideoStream(0).start()
 time.sleep(2)
 
 alreadyMatchedIds = []
-
+alreadyMatchedIds.append(None)
 # Loop over frames from the webcam.
 while True:
 
@@ -39,7 +39,7 @@ while True:
 	# "hog" = LESS accuracy MORE speed.
 	# "cnn" = MORE accuracy LESS speed.
 	# Detect the (x, y)-coordinates for the faces.
-	boxes = face_recognition.face_locations(imageRGB, model="hog")
+	boxes = face_recognition.face_locations(imageRGB, model="cnn")
 	
 	# Get the facial encodings for the faces.
 	encodings = face_recognition.face_encodings(imageRGB, boxes)
@@ -50,7 +50,7 @@ while True:
 	for encoding in encodings:
 
 		# Attempt to match each face from the webcam stream to our known encodings. (Adjust tolerance for stricter matching.)
-		matches = face_recognition.compare_faces(data["encodings"],	encoding, tolerance=0.5)
+		matches = face_recognition.compare_faces(data["encodings"],	encoding, tolerance=0.4)
 		id = None
 
 		# Check to see if we have found a match.

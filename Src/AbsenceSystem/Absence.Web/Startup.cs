@@ -18,6 +18,8 @@ using Absence.Service.SubjectService;
 using Absence.Service.TeacherService;
 using Absence.Service.WeekScheduleService;
 using Absence.Service.AutoMappingService;
+using Absence.Service.StudentClassService;
+//using Absence.Service.RabbitMQ;
 
 namespace Absence.Web
 {
@@ -48,7 +50,8 @@ namespace Absence.Web
             services.AddScoped<ISubjectRepository, SubjectRepository>();
             services.AddScoped<ITeacherRepository, TeacherRepository>();
             services.AddScoped<IWeekScheduleRepository, WeekScheduleRepository>();
-
+            services.AddScoped<IStudentClassRepository, StudentClassRepository>();
+            
             services.AddScoped<IAbsenceReportService, AbsenceReportService>();
             services.AddScoped<ICameraService, CameraService>();
             services.AddScoped<IClassroomService, ClassroomService>();
@@ -59,7 +62,9 @@ namespace Absence.Web
             services.AddScoped<ISubjectService, SubjectService>();
             services.AddScoped<ITeacherService, TeacherService>();
             services.AddScoped<IWeekScheduleService, WeekScheduleService>();
+            services.AddScoped<IStudentClassService, StudentClassService>();
             services.AddScoped<MappingService, MappingService>();
+            //services.AddHostedService<RabbitMQService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

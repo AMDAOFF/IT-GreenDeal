@@ -4,6 +4,7 @@
 @using QRCoder 
 @using System.Drawing
 @using System.IO
+@using Service.DishService.Dto;
 
 @{ 
     byte[] ConvertBitmapToBytes(Bitmap bitmap)
@@ -37,71 +38,38 @@
 
     <div class="m-5">
         <div class="row mr-auto">
-            <div class="col-4">
-                <div class="infoscreen-dish-item">
-                    <div class="infoscreen-dish-item-header">
-                        <h2>RETTENS NAVN</h2>
-                        <p>RETTENS BESKRIVELSE</p>
-                    </div>
-
-                    <div class="infoscreen-dish-item-footer">
-
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-4">
-                <div class="infoscreen-dish-item">
-                    <div class="infoscreen-dish-item-header">
-                        <h2>RETTENS NAVN</h2>
-                        <p>RETTENS BESKRIVELSE</p>
-                    </div>
-
-                    <div class="infoscreen-dish-item-footer">
-
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-4">
-                <div class="infoscreen-dish-item">
-                    <div class="infoscreen-dish-item-header">
-                        <h2>RETTENS NAVN</h2>
-                        <p>RETTENS BESKRIVELSE</p>
-                    </div>
-
-                    <div class="infoscreen-dish-item-footer">
-                        <div class="row">
-                            <div class="col-8">
-                                <h5>Scan koden for mere information</h5>
-                            </div>
-
-                            <div class="col-4">
-
-                                @{ 
-                                    QRCodeGenerator qrCodeGenerator = new QRCodeGenerator();
-                                    QRCodeData qrCodeData = qrCodeGenerator.CreateQrCode("https://google.com", QRCodeGenerator.ECCLevel.Q);
-                                    QRCode qrCode = new QRCode(qrCodeData);
-                                    Bitmap bitmap = qrCode.GetGraphic(30);
-                                    var bitmapBytes = ConvertBitmapToBytes(bitmap); //Convert bitmap into a byte array
-                                    
-                                }
-
-                                <img width="100px" src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(File(bitmapBytes, "image/jpeg").FileContents))" />
-                            </div>
+            @foreach (FullDishDTO dish in Model.DishesToday)
+            {
+                <div class="col-4">
+                    <div class="infoscreen-dish-item">
+                        <div class="infoscreen-dish-item-header">
+                            <h2>@dish.DishName</h2>
                         </div>
 
+                        <div class="infoscreen-dish-item-footer">
+                            <div class="row">
+                                <div class="col-8">
+                                    <h5>Scan koden for mere information</h5>
+                                </div>
 
+                                <div class="col-4">
+                                    @{
+                                        string dishUrl = Model.BaseUrl + "dishinfo/" + dish.DishId;
+                                        QRCodeGenerator qrCodeGenerator = new QRCodeGenerator();
+                                        QRCodeData qrCodeData = qrCodeGenerator.CreateQrCode(dishUrl, QRCodeGenerator.ECCLevel.Q);
+                                        QRCode qrCode = new QRCode(qrCodeData);
+                                        Bitmap bitmap = qrCode.GetGraphic(30);
+                                        var bitmapBytes = ConvertBitmapToBytes(bitmap); //Convert bitmap into a byte array
 
+                                    }
 
-
-
-
-
-
+                                    <img width="100px" src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(File(bitmapBytes, "image/jpeg").FileContents))" />
+                                </div>
+                            </div
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
     </div>
 </div>

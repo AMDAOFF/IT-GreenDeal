@@ -18,7 +18,7 @@ namespace Service.DishService.Dto
         [ModalFieldType(ModalFieldTypes.Number)]
         public int DishCo2 { get; set; }
 
-        [ModalHideField, ModalFieldType(ModalFieldTypes.Checkbox)]
+        [ModalFieldType(ModalFieldTypes.Checkbox)]
         public bool DishOfTheDay { get; set; }
     }
 }

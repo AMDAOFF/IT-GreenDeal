@@ -20,6 +20,7 @@ using Service.RegisterService;
 using Service.DishService;
 using Service.IngridentsService;
 using Service.AllergyService;
+using Microsoft.AspNetCore.Http;
 
 namespace Canteen.Web
 {
@@ -50,6 +51,7 @@ namespace Canteen.Web
             services.AddScoped<IDishService, DishService>();
             services.AddScoped<IIngredientsService, IngredientsService>();
             services.AddScoped<IAllergyService, AllergyService>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

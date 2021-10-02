@@ -92,6 +92,28 @@ namespace Service.DishService
             }
         }
 
+        public async Task<List<FullDishDTO>> GetDishesOfTheDay()
+        {
+            List<Dish> dbDishes = _identityContext.Dishes.Where(dish => dish.DishOfTheDay == true).ToList();
+            List<FullDishDTO> returnDishes = new List<FullDishDTO>();
+
+            await Task.Run(() =>
+            {
+                foreach (Dish item in dbDishes)
+                {
+                    returnDishes.Add(new FullDishDTO
+                    {
+                        DishId = item.DishId,
+                        DishCo2 = item.DishCO2,
+                        DishName = item.DishName,
+                        DishOfTheDay = item.DishOfTheDay
+                    });
+                }
+            });
+
+            return returnDishes;
+        }
+
         public async Task<List<FullDishDTO>> GetAllDishesAsync()
         {
             List<FullDishDTO> dishes = new List<FullDishDTO>();

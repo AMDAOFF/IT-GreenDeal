@@ -23,6 +23,12 @@ namespace Service.DishService
         Task<FullDishDTO> GetDishAsync(int dishID);
 
         /// <summary>
+        /// Get all of the dishes that are one the menu today
+        /// </summary>
+        /// <returns></returns>
+        Task<List<FullDishDTO>> GetDishesOfTheDay();
+
+        /// <summary>
         /// Delete a dish defined by its id
         /// </summary>
         /// <param name="dishID"></param>

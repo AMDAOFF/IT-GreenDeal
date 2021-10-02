@@ -185,6 +185,12 @@
     <Compile Include="Application\Tasks\TemperatureTask.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Application\Tasks\WatchdogTask.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Application\Tasks\WatchdogTask.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Boards\GreenDealDevice\Board.cpp">
       <SubType>compile</SubType>
     </Compile>
@@ -222,6 +228,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="HAL\ISerialport.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="HAL\IWatchdog.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="HAL\IWifi.h">
@@ -281,6 +290,12 @@
     <Compile Include="Utility\Types.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Watchdog\Watchdog.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Watchdog\Watchdog.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Wifi\EspCommunicator.cpp">
       <SubType>compile</SubType>
     </Compile>
@@ -300,6 +315,7 @@
     <Folder Include="Application" />
     <Folder Include="Mqtt" />
     <Folder Include="Adc" />
+    <Folder Include="Watchdog" />
     <Folder Include="Wifi" />
     <Folder Include="Serialport" />
     <Folder Include="Osal" />

@@ -2,9 +2,14 @@
 
 #include "ApplicationTask.h"
 
-ApplicationTask::ApplicationTask(Board& board) :
-_board { board }
-{}
+ApplicationTask::ApplicationTask(Board& board, publishMessage_t& publishMessage, connectSettings_t& connectSettings, subscribeTopic_t& subscribeTopic) :
+_board { board },
+_publishMessage { publishMessage },
+_connectionSettings { connectSettings },
+_subscribeTopic { subscribeTopic }
+{
+	//_gotConfig = false;	
+}
 
 // WARNING!
 // The implementation of the serial interrupt! This will only get the payload, of the MQTT message, everything else will be lost!
@@ -17,13 +22,11 @@ volatile char temp;
 uint8_t hashCount;
 
 ISR(USART_RX_vect)
-{
-	
-	
+{	
 	temp = UDR0;
 	
 	if(temp == '#')
-	{
+	{		
 		++hashCount;
 		
 		if(hashCount >= 2)
@@ -45,6 +48,8 @@ void ApplicationTask::Service()
 {
 	if (process_data)
 	{
+		//_gotConfig = true;
+		_board.SetReadyState(true);
 		if (_rxBuffer[0] == '1')
 		{
 			_board.GetLedController().SetLedState(Leds::Error, true);
@@ -88,6 +93,18 @@ void ApplicationTask::Service()
 
 		_board.GetLedController().ToggleLed(Leds::Send);
 		process_data = false;
+	}
+	
+	if (_board.GetReadyState() == false)
+	{
+		_publishMessage.message =  "#Online#";		
+		_board.GetLedController().SetLedState(Leds::Send, true);
+		_board.GetMqttClient().Connect(&_connectionSettings);
+		_board.GetChronos().Delay(200);
+		_board.GetMqttClient().Subscribe(&_subscribeTopic);
+		_board.GetChronos().Delay(200);
+		_board.GetMqttClient().Publish(&_publishMessage);		
+		_board.GetLedController().SetLedState(Leds::Send, false);		
 	}
 	
 	return;

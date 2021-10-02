@@ -8,13 +8,14 @@
 #include "IWifi.h"
 
 // Wifi.
-//wifiSettings_t wifiSettings
-//{
-//
-//};
+wifiSettings_t wifiSettings
+{
+	"JK",
+	"472yO58;"
+};
 
 // Mqtt.
-ServerInfo_t serverInfo
+serverInfo_t serverInfo
 {
 	//"192.168.87.120", // Home
 	"192.168.137.1", // EUC
@@ -22,8 +23,8 @@ ServerInfo_t serverInfo
 };
 
 connectSettings_t connectSettings =
-{
-	"JKClient",
+{	
+	"JKClient2",
 	"guest",
 	"guest",
 	QoS0,
@@ -33,13 +34,13 @@ connectSettings_t connectSettings =
 publishMessage_t publishMessage =
 {
 	"#Online#",
-	"device/update/1",
+	"device/update/2",
 	&connectSettings
 };
 
 
 subscribeTopic_t subscribeTopic {
-	"device/settings/1",
+	"device/settings/2",
 	&connectSettings
 };
 

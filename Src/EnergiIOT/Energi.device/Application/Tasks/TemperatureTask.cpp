@@ -15,8 +15,7 @@ ISR(ADC_vect)
 	float tempK = 1/(0.001129148+(0.000234125+(0.0000000876741*temp*temp))*temp);
 	_value = tempK - 273.15;
 	
-	//ADCSRA = | (1<<ADSC)
-	ADCSRA &= ~(1<<ADSC); ////clear PC3	
+	ADCSRA &= ~(1<<ADSC); //clear PC3	
 }
 
 TemperatureTask::TemperatureTask(Board& board, publishMessage_t& publishMessage) :

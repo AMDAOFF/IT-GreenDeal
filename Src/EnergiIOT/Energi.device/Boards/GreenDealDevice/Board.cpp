@@ -44,7 +44,9 @@ _serialPortexpander(&_serialPortexpanderA, &_serialPortexpanderB, SerialPorts::S
 _serialport(&_serialPortexpander, &_chronos),
 _esp(&_serialport, SerialPorts::Serial2, &_espResetPin, &_chronos),
 _mqttClient(&_esp, &_chronos),
-_adc(AdcChannel)
+_adc(AdcChannel),
+_watchdog(),
+_readyState { false }
 {}
 
 void Board::Initialize()
@@ -57,7 +59,7 @@ void Board::Initialize()
 	
 	
 	_ledController.SetLedState(Leds::Working, true);
-	_chronos.Delay(1000);
+	_chronos.Delay(1500);
 	_ledController.SetLedState(Leds::Working, false);
 }
 
@@ -115,4 +117,19 @@ void Board::DelayInMS(unsigned long ms)
 {
 	_chronos.Delay(ms);
 	return;
+}
+
+IWatchdog& Board::GetWatchdog()
+{
+	return _watchdog;
+}
+
+bool Board::GetReadyState()
+{
+	return _readyState;
+}
+
+void Board::SetReadyState(bool state)
+{
+	_readyState = state;
 }

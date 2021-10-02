@@ -16,62 +16,67 @@
 #include "Tasks/MqttPingTask.h"
 #include "Tasks/ApplicationTask.h"
 #include "Tasks/TemperatureTask.h"
+#include "Tasks/WatchdogTask.h"
 
 // Logging!!! This is only for the poc!!
 ErrorLog Logger;
 
 int main(void)
 {
-	Board board;
-	board.Initialize();
-	MqttPingTask mqttPingTask(board.GetMqttClient(), connectSettings);
-	ApplicationTask applicationTask(board);
-	TemperatureTask temperatureTask(board, publishMessage);
+	Board _board;
+	_board.Initialize();
+	MqttPingTask mqttPingTask(_board.GetMqttClient(), connectSettings);
+	ApplicationTask applicationTask(_board, publishMessage, connectSettings, subscribeTopic);
+	TemperatureTask temperatureTask(_board, publishMessage);
+	WatchdogTask watchdogTask(_board.GetWatchdog());
 	
-	board.GetWifi().Initialize("JK", "472yO58;");	
-	//board.GetWifi().Initialize("Stofa67337\0", "gyros54fyh36\0");
+	_board.GetWifi().Initialize(&wifiSettings);
 	
-	//// Wifi
-	board.GetMqttClient().Connect(&connectSettings);
-	board.GetMqttClient().Subscribe(&subscribeTopic);
-	board.GetMqttClient().Publish(&publishMessage);
+	// Start watchdog.
+	_board.GetWatchdog().Enable(WdtTime::S8);
 	
-	unsigned long task1 = board.GetChronos().Time();
-	unsigned long task2 = board.GetChronos().Time();
-	unsigned long task3 = board.GetChronos().Time();
-	unsigned long task4 = board.GetChronos().Time();
-	
-	//board.GetRadiator().SetValue(LogicalState::Active);
+	unsigned long task1 = _board.GetChronos().Time();
+	unsigned long task2 = _board.GetChronos().Time();
+	unsigned long task3 = _board.GetChronos().Time();
+	unsigned long task4 = _board.GetChronos().Time();
 	
 	while (1)
 	{
 		// Mqtt Ping.
-		if(board.GetChronos().Time() - task1 > 2500)
+		if(_board.GetChronos().Time() - task1 > 5000)
 		{
-			//board.GetMqttClient().PingReq(&connectSettings);
-			
-			mqttPingTask.Service();
-			board.GetLedController().ToggleLed(Leds::Ready);
-			task1 = board.GetChronos().Time();
-			
+			if (_board.GetReadyState())
+			{
+				mqttPingTask.Service();
+			}
+
+			_board.GetLedController().ToggleLed(Leds::Ready);
+			task1 = _board.GetChronos().Time();
 		}
 		// Publish. now temperature task.
-		if(board.GetChronos().Time() - task4 > 700)
-		{			
-			temperatureTask.Service();
-			task4 = board.GetChronos().Time();
-		}
-		// Sub service.
-		if(board.GetChronos().Time() - task3 > 20)
+		if(_board.GetChronos().Time() - task4 > 900)
 		{
-			
-			applicationTask.Service();
+			if (_board.GetReadyState())
+			{
+				temperatureTask.Service();
+			}
 
-			task3 = board.GetChronos().Time();
+			task4 = _board.GetChronos().Time();
 		}
-				
-		
+		// Application service.
+		if(_board.GetChronos().Time() - task3 > 500)
+		{
+			applicationTask.Service();
+			task3 = _board.GetChronos().Time();
+		}
+		// Watchdog.
+		if(_board.GetChronos().Time() - task2 > 4000)
+		{
+			watchdogTask.Service();
+			_board.GetLedController().ToggleLed(Leds::Busy);
+			task2 = _board.GetChronos().Time();
+		}
 	}
 	// ERROR...
-	board.GetLedController().SetLedState(Leds::Error, true);
+	_board.GetLedController().SetLedState(Leds::Error, true);
 }

@@ -19,7 +19,7 @@ typedef struct connectSettings_t
 	char* userName;
 	char* userPassword;
 	QoS qoS;
-	ServerInfo_t* serverInfo;
+	serverInfo_t* serverInfo;
 } connectSettings_t;
 
 typedef struct publishMessage_t

@@ -24,7 +24,7 @@ _isConnected { false }
 	_resetPin->ChangePinDirection(LogicalDirection::Input);
 }
 
-bool EspCommunicator::Initialize(char* ssid, char* password)
+bool EspCommunicator::Initialize(wifiSettings_t* settings)
 {
 	if (!IsPresented())
 	{
@@ -33,8 +33,8 @@ bool EspCommunicator::Initialize(char* ssid, char* password)
 	}
 	
 	// Save network info.
-	_ssid = ssid;
-	_password = password;
+	_ssid = settings->ssid;
+	_password = settings->password;
 	
 	// Reset esp
 	HardwareReset();
@@ -165,7 +165,7 @@ uint8_t EspCommunicator::Start(char* domain, char* port)
 	return WriteCMD(str, 5000, "\r\nOK\r\n");
 }
 
-void EspCommunicator::SendData(ServerInfo_t* serverInfo, char data[], uint8_t dataLength)
+void EspCommunicator::SendData(serverInfo_t* serverInfo, char data[], uint8_t dataLength)
 {
 	// Make the ESP ready for transmit.
 	const uint8_t bufferSize = 16;
@@ -268,7 +268,7 @@ void EspCommunicator::CheckEspVersion()
 	return;
 }
 
-char* EspCommunicator::GetPort(ServerInfo_t* info)
+char* EspCommunicator::GetPort(serverInfo_t* info)
 {
 	if (info->port == TCP)
 	{

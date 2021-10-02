@@ -13,13 +13,17 @@ class ApplicationTask : public IRunnable
 {
 
 public:
-	ApplicationTask(Board& board);
+	ApplicationTask(Board& board, publishMessage_t& publishMessage, connectSettings_t& connectSettings, subscribeTopic_t& subscribeTopic);
 	~ApplicationTask() = default;
 
-	void Service() final override;	
+	void Service() final override;
+		
 	private:
 	Board& _board;
+	publishMessage_t& _publishMessage;
+	connectSettings_t& _connectionSettings;
+	subscribeTopic_t& _subscribeTopic;
+	//bool _gotConfig;
+}; 
 
-}; //ApplicationTask
-
-#endif //__APPLICATIONTASK_H__
+#endif

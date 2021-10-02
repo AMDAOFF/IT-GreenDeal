@@ -8,7 +8,6 @@
 
 #include "PinMux.h"
 #include "../Utility/Types.h"
-
 #include "../Utility/Time/Chronos.h"
 #include "../Serialport/Serialport.h"
 #include "ISerialport.h"
@@ -23,7 +22,8 @@
 #include "../Mqtt/MqttClient.h"
 #include "IAdc.h"
 #include "../Adc/Adc.h"
-
+#include "IWatchdog.h"
+#include "../Watchdog/Watchdog.h"
 #include "../Utility/Logging/ErrorLog.h"
 
 class Board
@@ -44,7 +44,10 @@ class Board
 	IMqttClient& GetMqttClient();
 	IChronos& GetChronos();
 	IAdc& GetAdc();
-	
+	IWatchdog& GetWatchdog();
+	bool GetReadyState();
+	void SetReadyState(bool state);	
+
 	void DelayInMS(unsigned long ms);
 
 	private:
@@ -65,6 +68,8 @@ class Board
 	EspCommunicator _esp;
 	MqttClient _mqttClient;
 	Adc _adc;
+	Watchdog _watchdog;
+	bool _readyState;
 };
 
 #endif //__BOARD_H__

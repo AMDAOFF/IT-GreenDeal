@@ -4,7 +4,7 @@
 
 #include "IChronos.h"
 
-class Chronos : public IChronos
+class Chronos final : public IChronos
 {
 	public:
 	Chronos(unsigned long f_cpu);

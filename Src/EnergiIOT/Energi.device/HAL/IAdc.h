@@ -7,9 +7,9 @@
 
 class IAdc
 {
-public:
+	public:
 	virtual ~IAdc() = default;
 	virtual void Initialize() = 0;
-}; 
+};
 
 #endif //__IADC_H__

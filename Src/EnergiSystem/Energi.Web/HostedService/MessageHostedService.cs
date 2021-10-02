@@ -74,7 +74,7 @@ namespace Energi.Web.HostedService
                 }
 
                 calssInfo.Id = device.Id;
-
+                device.PeopleCount = calssInfo.PeopleCount;
                 await _deviceService.UpdateClasseRoom(calssInfo);
 
                 // Heat control.
@@ -95,10 +95,10 @@ namespace Energi.Web.HostedService
             Console.WriteLine("Classroom update: {0}", context.Message);
         }
 
-        public async Task IOTMessageReceived(double temperature, int Id)
+        public async Task IOTMessageReceived(double temperature, int id)
         {
 
-            StatusDeviceDTO device = await _deviceService.GetDeviceById(1);
+            StatusDeviceDTO device = await _deviceService.GetDeviceById(id);
 
             device.Temperature = temperature;
 
@@ -113,10 +113,10 @@ namespace Energi.Web.HostedService
 
         }
 
-        public async Task IOTMessageReceived(string Message, int Id)
+        public async Task IOTMessageReceived(string Message, int id)
         {
 
-            StatusDeviceDTO device = await _deviceService.GetDeviceById(1);
+            StatusDeviceDTO device = await _deviceService.GetDeviceById(id);
 
             // Update device.
             device.OnlineStatus = true;

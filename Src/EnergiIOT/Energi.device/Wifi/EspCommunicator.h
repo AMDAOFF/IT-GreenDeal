@@ -19,10 +19,10 @@ class EspCommunicator : public IWifi
 	EspCommunicator(Serialport* serial, SerialPorts defaultPort, DigitalOutput* resetPin, Chronos* stopwatch );
 	~EspCommunicator() = default;
 	
-	bool Initialize(char* ssid, char* password) final override;
+	bool Initialize(wifiSettings_t* settings) final override;
 	bool IsPresented() final override;
 	uint8_t Start(char* domain, char* port) final override;
-	void SendData(ServerInfo_t* serverInfo, char data[], uint8_t dataLength) final override;
+	void SendData(serverInfo_t* serverInfo, char data[], uint8_t dataLength) final override;
 	void HardwareReset();
 	void SoftwareReset();
 	void Ping(const char *host) final override;
@@ -37,7 +37,7 @@ class EspCommunicator : public IWifi
 	bool NetworkStatus();
 	void CheckEspVersion();
 	void DisconnectAP();	
-	char* GetPort(ServerInfo_t* info);
+	char* GetPort(serverInfo_t* info);
 
 	char _msgBuffer[32];
 	Serialport* _serial;

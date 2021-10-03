@@ -5,13 +5,21 @@ import pickle
 import time
 import cv2
 import pika
+import argparse
+
+# construct the argument parser and parse the arguments
+ap = argparse.ArgumentParser()
+ap.add_argument("-ip", "--ip", type=str, required=True, help="The camera's IP Address")
+args = vars(ap.parse_args())
+
+cameraIP = args['ip']
 
 print("Loading model.")
 
 # Load the data from the model.
 data = pickle.loads(open("model.pickle", "rb").read())
 
-print("Starting the webcam.")
+print(f"Starting the webcam with the IP: {cameraIP}")
 
 # Initialize the webcam.
 vs = VideoStream(0).start()
@@ -79,7 +87,7 @@ while True:
 			credentials = pika.PlainCredentials('guest', 'guest')
 			connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port=5672, virtual_host='/', credentials=credentials))
 			channel = connection.channel()
-			channel.queue_declare(queue="Absence", durable=True)
+			channel.queue_declare(queue=f"Absence-{cameraIP}", durable=True)
 			channel.start_consuming()
 			channel.basic_publish(exchange='', routing_key='Absence', body=f'{id}')
 			print(f"Succeded")

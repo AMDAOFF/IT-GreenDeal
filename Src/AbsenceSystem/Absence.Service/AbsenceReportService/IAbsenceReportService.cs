@@ -1,4 +1,4 @@
-﻿using Absence.Service.AbsenceReportService.DataTransferObjects;
+﻿using Absence.Service.AbsenceReportService;
 using Absence.Service.GenericService;
 using System.Threading.Tasks;
 
@@ -7,8 +7,8 @@ namespace Absence.Service.AbsenceReportService
     public interface IAbsenceReportService : IGenericService<FullAbsenceReportDTO>
     {
         /// <summary>
-        /// Gets a <see cref="FullAbsenceReportDTO"/> by <paramref name="studentId"/> and if not null by <paramref name="hourScheduleId"/>
+        /// Gets a <see cref="FullAbsenceReportDTO"/> by <paramref name="studentId"/> and if not null by <paramref name="scheduleId"/>
         /// </summary>
-        Task<FullAbsenceReportDTO> GetById(string studentId, int? hourScheduleId);
+        Task<FullAbsenceReportDTO> GetById(string studentId, int? scheduleId);
     }
 }

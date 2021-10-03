@@ -16,6 +16,6 @@ namespace Absence.DataAccess.Entities
         public int FKTeacherId { get; set; }
         public Teacher Teacher { get; set; }
         public List<Student> Students { get; set; }
-        public List<HourSchedule> HourSchedules { get; set; }
+        public List<Schedule> Schedules { get; set; }
     }
 }

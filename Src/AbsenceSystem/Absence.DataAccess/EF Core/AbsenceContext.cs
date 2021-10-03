@@ -15,13 +15,11 @@ namespace Absence.DataAccess.EFCore
         public DbSet<AbsenceReport> AbsenceReports { get; set; }
         public DbSet<Camera> Cameras { get; set; }
         public DbSet<Classroom> Classrooms { get; set; }
-        public DbSet<DaySchedule> DaySchedules { get; set; }
-        public DbSet<HourSchedule> HourSchedules { get; set; }
+        public DbSet<Schedule> Schedules { get; set; }
         public DbSet<School> Schools { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
-        public DbSet<WeekSchedule> WeekSchedules { get; set; }
         public DbSet<StudentClass> StudentClasses { get; set; }
         #endregion
 
@@ -29,33 +27,28 @@ namespace Absence.DataAccess.EFCore
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             #region Primary Keys
-            modelBuilder.Entity<AbsenceReport>().HasKey(o => new { o.FKStudentId, o.FKHourScheduleId });
+            modelBuilder.Entity<AbsenceReport>().HasKey(o => new { o.FKStudentId, o.FKScheduleId });
             modelBuilder.Entity<Camera>().HasKey(o => o.IP);
             modelBuilder.Entity<Classroom>().HasKey(o => o.ClassroomId);
-            modelBuilder.Entity<DaySchedule>().HasKey(o => o.DayScheduleId);
-            modelBuilder.Entity<HourSchedule>().HasKey(o => o.HourScheduleId);
+            modelBuilder.Entity<Schedule>().HasKey(o => o.ScheduleId);
             modelBuilder.Entity<School>().HasKey(o => o.SchoolId);
             modelBuilder.Entity<Student>().HasKey(o => o.StudentId);
             modelBuilder.Entity<Subject>().HasKey(o => o.SubjectId);
             modelBuilder.Entity<Teacher>().HasKey(o => o.TeacherId);
-            modelBuilder.Entity<WeekSchedule>().HasKey(o => o.WeekScheduleId);
             modelBuilder.Entity<StudentClass>().HasKey(o => o.StudentClassId);
             #endregion
 
             #region Navigation Properties
-            modelBuilder.Entity<AbsenceReport>().HasOne(o => o.HourSchedule).WithMany(o => o.AbsenceReports).HasForeignKey(o => o.FKHourScheduleId);
+            modelBuilder.Entity<AbsenceReport>().HasOne(o => o.Schedule).WithMany(o => o.AbsenceReports).HasForeignKey(o => o.FKScheduleId);
             modelBuilder.Entity<AbsenceReport>().HasOne(o => o.Student).WithMany(o => o.AbsenceReports).HasForeignKey(o => o.FKStudentId);
 
             modelBuilder.Entity<Camera>().HasOne(o => o.Classroom).WithOne(o => o.Camera).HasForeignKey<Camera>(o => o.FKClassroomId);
 
             modelBuilder.Entity<Classroom>().HasOne(o => o.School).WithMany(o => o.Classrooms).HasForeignKey(o => o.FKSchoolId);
 
-            modelBuilder.Entity<DaySchedule>().HasOne(o => o.WeekSchedule).WithMany(o => o.DaySchedules).HasForeignKey(o => o.FKWeekScheduleId);
-
-            modelBuilder.Entity<HourSchedule>().HasOne(o => o.DaySchedule).WithMany(o => o.HourSchedules).HasForeignKey(o => o.FKDayScheduleId);
-            modelBuilder.Entity<HourSchedule>().HasOne(o => o.Subject).WithMany(o => o.HourSchedules).HasForeignKey(o => o.FKSubjectId);
-
-            modelBuilder.Entity<WeekSchedule>().HasOne(o => o.Classroom).WithMany(o => o.WeekSchedules).HasForeignKey(o => o.FKClassroomId);
+            modelBuilder.Entity<Schedule>().HasOne(o => o.Subject).WithMany(o => o.Schedules).HasForeignKey(o => o.FKSubjectId);
+            modelBuilder.Entity<Schedule>().HasOne(o => o.StudentClass).WithMany(o => o.Schedules).HasForeignKey(o => o.FKStudentClassId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Schedule>().HasOne(o => o.Classroom).WithMany(o => o.Schedules).HasForeignKey(o => o.FKClassroomId);
 
             modelBuilder.Entity<Teacher>().HasOne(o => o.School).WithMany(o => o.Teachers).HasForeignKey(o => o.FKSchoolId);
 
@@ -64,7 +57,6 @@ namespace Absence.DataAccess.EFCore
             modelBuilder.Entity<StudentClass>().HasOne(o => o.Teacher).WithMany(o => o.StudentClasses).HasForeignKey(o => o.FKTeacherId);
 
             modelBuilder.Entity<Student>().HasOne(o => o.StudentClass).WithMany(o => o.Students).HasForeignKey(o => o.FKStudentClassId).OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<HourSchedule>().HasOne(o => o.StudentClass).WithMany(o => o.HourSchedules).HasForeignKey(o => o.FKStudentClassId).OnDelete(DeleteBehavior.Restrict);
             #endregion
 
             #region Data Seeding
@@ -88,7 +80,7 @@ namespace Absence.DataAccess.EFCore
                 );
 
             modelBuilder.Entity<Subject>().HasData(
-                new Subject { SubjectId = 1, Name = "¨Programmering" },
+                new Subject { SubjectId = 1, Name = "Programmering" },
                 new Subject { SubjectId = 2, Name = "Netværk" },
                 new Subject { SubjectId = 3, Name = "Engelsk" },
                 new Subject { SubjectId = 4, Name = "Dansk" },

@@ -1,5 +1,5 @@
 ﻿using Absence.Service.GenericService;
-using Absence.Service.StudentClassService.DataTransferObjects;
+using Absence.Service.StudentClassService;
 using System.Threading.Tasks;
 
 namespace Absence.Service.StudentClassService

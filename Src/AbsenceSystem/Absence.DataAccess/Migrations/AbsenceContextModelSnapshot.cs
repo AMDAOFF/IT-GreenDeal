@@ -24,15 +24,15 @@ namespace Absence.DataAccess.Migrations
                     b.Property<string>("FKStudentId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("FKHourScheduleId")
+                    b.Property<int>("FKScheduleId")
                         .HasColumnType("int");
 
                     b.Property<string>("Attended")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("FKStudentId", "FKHourScheduleId");
+                    b.HasKey("FKStudentId", "FKScheduleId");
 
-                    b.HasIndex("FKHourScheduleId");
+                    b.HasIndex("FKScheduleId");
 
                     b.ToTable("AbsenceReports");
                 });
@@ -135,34 +135,17 @@ namespace Absence.DataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Absence.DataAccess.Entities.DaySchedule", b =>
+            modelBuilder.Entity("Absence.DataAccess.Entities.Schedule", b =>
                 {
-                    b.Property<int>("DayScheduleId")
+                    b.Property<int>("ScheduleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("FKWeekScheduleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DayScheduleId");
-
-                    b.HasIndex("FKWeekScheduleId");
-
-                    b.ToTable("DaySchedules");
-                });
-
-            modelBuilder.Entity("Absence.DataAccess.Entities.HourSchedule", b =>
-                {
-                    b.Property<int>("HourScheduleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("FKDayScheduleId")
+                    b.Property<int>("FKClassroomId")
                         .HasColumnType("int");
 
                     b.Property<int>("FKStudentClassId")
@@ -171,15 +154,18 @@ namespace Absence.DataAccess.Migrations
                     b.Property<int>("FKSubjectId")
                         .HasColumnType("int");
 
-                    b.HasKey("HourScheduleId");
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
 
-                    b.HasIndex("FKDayScheduleId");
+                    b.HasKey("ScheduleId");
+
+                    b.HasIndex("FKClassroomId");
 
                     b.HasIndex("FKStudentClassId");
 
                     b.HasIndex("FKSubjectId");
 
-                    b.ToTable("HourSchedules");
+                    b.ToTable("Schedules");
                 });
 
             modelBuilder.Entity("Absence.DataAccess.Entities.School", b =>
@@ -316,7 +302,7 @@ namespace Absence.DataAccess.Migrations
                         new
                         {
                             SubjectId = 1,
-                            Name = "¨Programmering"
+                            Name = "Programmering"
                         },
                         new
                         {
@@ -400,37 +386,11 @@ namespace Absence.DataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Absence.DataAccess.Entities.WeekSchedule", b =>
-                {
-                    b.Property<int>("WeekScheduleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("FKClassroomId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("WeekNumber")
-                        .HasColumnType("int");
-
-                    b.HasKey("WeekScheduleId");
-
-                    b.HasIndex("FKClassroomId");
-
-                    b.ToTable("WeekSchedules");
-                });
-
             modelBuilder.Entity("Absence.DataAccess.Entities.AbsenceReport", b =>
                 {
-                    b.HasOne("Absence.DataAccess.Entities.HourSchedule", "HourSchedule")
+                    b.HasOne("Absence.DataAccess.Entities.Schedule", "Schedule")
                         .WithMany("AbsenceReports")
-                        .HasForeignKey("FKHourScheduleId")
+                        .HasForeignKey("FKScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -440,7 +400,7 @@ namespace Absence.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("HourSchedule");
+                    b.Navigation("Schedule");
 
                     b.Navigation("Student");
                 });
@@ -467,38 +427,27 @@ namespace Absence.DataAccess.Migrations
                     b.Navigation("School");
                 });
 
-            modelBuilder.Entity("Absence.DataAccess.Entities.DaySchedule", b =>
+            modelBuilder.Entity("Absence.DataAccess.Entities.Schedule", b =>
                 {
-                    b.HasOne("Absence.DataAccess.Entities.WeekSchedule", "WeekSchedule")
-                        .WithMany("DaySchedules")
-                        .HasForeignKey("FKWeekScheduleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("WeekSchedule");
-                });
-
-            modelBuilder.Entity("Absence.DataAccess.Entities.HourSchedule", b =>
-                {
-                    b.HasOne("Absence.DataAccess.Entities.DaySchedule", "DaySchedule")
-                        .WithMany("HourSchedules")
-                        .HasForeignKey("FKDayScheduleId")
+                    b.HasOne("Absence.DataAccess.Entities.Classroom", "Classroom")
+                        .WithMany("Schedules")
+                        .HasForeignKey("FKClassroomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Absence.DataAccess.Entities.StudentClass", "StudentClass")
-                        .WithMany("HourSchedules")
+                        .WithMany("Schedules")
                         .HasForeignKey("FKStudentClassId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Absence.DataAccess.Entities.Subject", "Subject")
-                        .WithMany("HourSchedules")
+                        .WithMany("Schedules")
                         .HasForeignKey("FKSubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("DaySchedule");
+                    b.Navigation("Classroom");
 
                     b.Navigation("StudentClass");
 
@@ -546,30 +495,14 @@ namespace Absence.DataAccess.Migrations
                     b.Navigation("Subject");
                 });
 
-            modelBuilder.Entity("Absence.DataAccess.Entities.WeekSchedule", b =>
-                {
-                    b.HasOne("Absence.DataAccess.Entities.Classroom", "Classroom")
-                        .WithMany("WeekSchedules")
-                        .HasForeignKey("FKClassroomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Classroom");
-                });
-
             modelBuilder.Entity("Absence.DataAccess.Entities.Classroom", b =>
                 {
                     b.Navigation("Camera");
 
-                    b.Navigation("WeekSchedules");
+                    b.Navigation("Schedules");
                 });
 
-            modelBuilder.Entity("Absence.DataAccess.Entities.DaySchedule", b =>
-                {
-                    b.Navigation("HourSchedules");
-                });
-
-            modelBuilder.Entity("Absence.DataAccess.Entities.HourSchedule", b =>
+            modelBuilder.Entity("Absence.DataAccess.Entities.Schedule", b =>
                 {
                     b.Navigation("AbsenceReports");
                 });
@@ -588,14 +521,14 @@ namespace Absence.DataAccess.Migrations
 
             modelBuilder.Entity("Absence.DataAccess.Entities.StudentClass", b =>
                 {
-                    b.Navigation("HourSchedules");
+                    b.Navigation("Schedules");
 
                     b.Navigation("Students");
                 });
 
             modelBuilder.Entity("Absence.DataAccess.Entities.Subject", b =>
                 {
-                    b.Navigation("HourSchedules");
+                    b.Navigation("Schedules");
 
                     b.Navigation("Teachers");
                 });
@@ -603,11 +536,6 @@ namespace Absence.DataAccess.Migrations
             modelBuilder.Entity("Absence.DataAccess.Entities.Teacher", b =>
                 {
                     b.Navigation("StudentClasses");
-                });
-
-            modelBuilder.Entity("Absence.DataAccess.Entities.WeekSchedule", b =>
-                {
-                    b.Navigation("DaySchedules");
                 });
 #pragma warning restore 612, 618
         }

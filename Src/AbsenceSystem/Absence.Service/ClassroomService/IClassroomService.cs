@@ -1,4 +1,4 @@
-﻿using Absence.Service.ClassroomService.DataTransferObjects;
+﻿using Absence.Service.ClassroomService;
 using Absence.Service.GenericService;
 using System.Threading.Tasks;
 

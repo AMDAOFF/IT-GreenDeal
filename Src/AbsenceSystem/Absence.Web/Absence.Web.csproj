@@ -27,4 +27,8 @@
     <ProjectReference Include="..\Absence.Service\Absence.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\Camera\" />
+  </ItemGroup>
+
 </Project>

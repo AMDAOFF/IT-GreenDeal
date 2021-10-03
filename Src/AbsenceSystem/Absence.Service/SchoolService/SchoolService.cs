@@ -1,6 +1,6 @@
 ﻿using Absence.DataAccess.Entities;
 using Absence.DataAccess.Interfaces;
-using Absence.Service.SchoolService.DataTransferObjects;
+using Absence.Service.SchoolService;
 using Absence.Service.GenericService;
 using Absence.Service.AutoMappingService;
 using System.Threading.Tasks;

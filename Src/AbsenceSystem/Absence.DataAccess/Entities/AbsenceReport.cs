@@ -3,9 +3,9 @@
     public class AbsenceReport
     {
         public string FKStudentId { get; set; }
-        public int FKHourScheduleId { get; set; }
+        public int FKScheduleId { get; set; }
         public string Attended { get; set; }
         public Student Student { get; set; }
-        public HourSchedule HourSchedule { get; set; }
+        public Schedule Schedule { get; set; }
     }
 }

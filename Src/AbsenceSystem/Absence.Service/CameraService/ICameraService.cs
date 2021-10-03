@@ -1,4 +1,4 @@
-﻿using Absence.Service.CameraService.DataTransferObjects;
+﻿using Absence.Service.CameraService;
 using Absence.Service.GenericService;
 using System.Threading.Tasks;
 

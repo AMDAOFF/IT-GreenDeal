@@ -14,9 +14,9 @@ namespace Absence.DataAccess.Repositories
             _dbContext = absenceContext;
         }
 
-        public Task<AbsenceReport> GetById(string studentId, int? hourScheduleId)
+        public async Task<AbsenceReport> GetById(string studentId, int? scheduleId)
         {
-            throw new System.NotImplementedException();
+            return scheduleId.HasValue ? await _dbContext.AbsenceReports.SingleAsync(o => o.FKStudentId == studentId && o.FKScheduleId == scheduleId) : await _dbContext.AbsenceReports.SingleAsync(o => o.FKStudentId == studentId);
         }
     }
 }

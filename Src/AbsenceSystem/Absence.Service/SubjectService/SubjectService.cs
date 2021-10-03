@@ -1,6 +1,6 @@
 ﻿using Absence.DataAccess.Entities;
 using Absence.DataAccess.Interfaces;
-using Absence.Service.SubjectService.DataTransferObjects;
+using Absence.Service.SubjectService;
 using Absence.Service.GenericService;
 using Absence.Service.AutoMappingService;
 using System.Threading.Tasks;

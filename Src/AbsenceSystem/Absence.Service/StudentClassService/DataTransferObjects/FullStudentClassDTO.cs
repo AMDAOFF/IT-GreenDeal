@@ -1,9 +1,9 @@
-﻿using Absence.Service.HourScheduleService.DataTransferObjects;
-using Absence.Service.StudentService.DataTransferObjects;
-using Absence.Service.TeacherService.DataTransferObjects;
+﻿using Absence.Service.ScheduleService;
+using Absence.Service.StudentService;
+using Absence.Service.TeacherService;
 using System.Collections.Generic;
 
-namespace Absence.Service.StudentClassService.DataTransferObjects
+namespace Absence.Service.StudentClassService
 {
     public class FullStudentClassDTO
     {
@@ -15,6 +15,6 @@ namespace Absence.Service.StudentClassService.DataTransferObjects
         public int FKTeacherId { get; set; }
         public FullTeacherDTO Teacher { get; set; }
         public List<FullStudentDTO> Students { get; set; }
-        public List<FullHourScheduleDTO> HourSchedules { get; set; }
+        public List<FullScheduleDTO> Schedules { get; set; }
     }
 }

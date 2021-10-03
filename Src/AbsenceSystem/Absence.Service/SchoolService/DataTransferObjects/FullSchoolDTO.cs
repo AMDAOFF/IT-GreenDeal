@@ -1,8 +1,8 @@
-﻿using Absence.Service.ClassroomService.DataTransferObjects;
-using Absence.Service.TeacherService.DataTransferObjects;
+﻿using Absence.Service.ClassroomService;
+using Absence.Service.TeacherService;
 using System.Collections.Generic;
 
-namespace Absence.Service.SchoolService.DataTransferObjects
+namespace Absence.Service.SchoolService
 {
     public class FullSchoolDTO
     {

@@ -1,6 +1,6 @@
 ﻿using Absence.DataAccess.Entities;
 using Absence.DataAccess.Interfaces;
-using Absence.Service.AbsenceReportService.DataTransferObjects;
+using Absence.Service.AbsenceReportService;
 using Absence.Service.GenericService;
 using Absence.Service.AutoMappingService;
 using System.Threading.Tasks;
@@ -18,7 +18,7 @@ namespace Absence.Service.AbsenceReportService
             _mappingService = mappingService;
         }
 
-        public async Task<FullAbsenceReportDTO> GetById(string studentId, int? hourScheduleId)
+        public async Task<FullAbsenceReportDTO> GetById(string studentId, int? scheduleId)
         {
             if (string.IsNullOrWhiteSpace(studentId))
             {
@@ -27,7 +27,7 @@ namespace Absence.Service.AbsenceReportService
             }
             try
             {
-                FullAbsenceReportDTO absenceReport = _mappingService._mapper.Map<FullAbsenceReportDTO>(await _absenceReportRepository.GetById(studentId, hourScheduleId));
+                FullAbsenceReportDTO absenceReport = _mappingService._mapper.Map<FullAbsenceReportDTO>(await _absenceReportRepository.GetById(studentId, scheduleId));
                 LogInformation($"Successfully fetched the Item with the Id: " + studentId);
                 return absenceReport;
             }

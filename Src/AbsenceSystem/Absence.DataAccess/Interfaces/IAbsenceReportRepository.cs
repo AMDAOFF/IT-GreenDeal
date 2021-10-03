@@ -6,8 +6,8 @@ namespace Absence.DataAccess.Interfaces
     public interface IAbsenceReportRepository : IGenericRepository<AbsenceReport>
     {
         /// <summary>
-        /// Gets a <see cref="AbsenceReport"/> by <paramref name="studentId"/> and if not null by <paramref name="hourScheduleId"/>
+        /// Gets a <see cref="AbsenceReport"/> by <paramref name="studentId"/> and if not null by <paramref name="scheduleId"/>
         /// </summary>
-        Task<AbsenceReport> GetById(string studentId, int? hourScheduleId);
+        Task<AbsenceReport> GetById(string studentId, int? scheduleId);
     }
 }

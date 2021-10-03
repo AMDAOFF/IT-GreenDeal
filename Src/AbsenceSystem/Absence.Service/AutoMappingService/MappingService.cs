@@ -1,15 +1,13 @@
 ﻿using Absence.DataAccess.Entities;
-using Absence.Service.AbsenceReportService.DataTransferObjects;
-using Absence.Service.CameraService.DataTransferObjects;
-using Absence.Service.ClassroomService.DataTransferObjects;
-using Absence.Service.DayScheduleService.DataTransferObjects;
-using Absence.Service.HourScheduleService.DataTransferObjects;
-using Absence.Service.SchoolService.DataTransferObjects;
-using Absence.Service.StudentClassService.DataTransferObjects;
-using Absence.Service.StudentService.DataTransferObjects;
-using Absence.Service.SubjectService.DataTransferObjects;
-using Absence.Service.TeacherService.DataTransferObjects;
-using Absence.Service.WeekScheduleService.DataTransferObjects;
+using Absence.Service.AbsenceReportService;
+using Absence.Service.CameraService;
+using Absence.Service.ClassroomService;
+using Absence.Service.ScheduleService;
+using Absence.Service.SchoolService;
+using Absence.Service.StudentClassService;
+using Absence.Service.StudentService;
+using Absence.Service.SubjectService;
+using Absence.Service.TeacherService;
 using System;
 
 namespace Absence.Service.AutoMappingService
@@ -41,13 +39,10 @@ namespace Absence.Service.AutoMappingService
                 cfg.CreateMap<Classroom, FullClassroomDTO>();
                 cfg.CreateMap<FullClassroomDTO, Classroom>();
 
-                //DaySchedule
-                cfg.CreateMap<DaySchedule, FullDayScheduleDTO>();
-                cfg.CreateMap<FullDayScheduleDTO, DaySchedule>();
 
-                //HourSchedule
-                cfg.CreateMap<HourSchedule, FullHourScheduleDTO>();
-                cfg.CreateMap<FullHourScheduleDTO, HourSchedule>();
+                //Schedule
+                cfg.CreateMap<Schedule, FullScheduleDTO>();
+                cfg.CreateMap<FullScheduleDTO, Schedule>();
 
                 //School
                 cfg.CreateMap<School, FullSchoolDTO>();
@@ -65,10 +60,6 @@ namespace Absence.Service.AutoMappingService
                 //Teacher
                 cfg.CreateMap<Teacher, FullTeacherDTO>();
                 cfg.CreateMap<FullTeacherDTO, Teacher>();
-
-                //WeekSchedule
-                cfg.CreateMap<WeekSchedule, FullWeekScheduleDTO>();
-                cfg.CreateMap<FullWeekScheduleDTO, WeekSchedule>();
 
                 //StudentClass
                 cfg.CreateMap<StudentClass, FullStudentClassDTO>();

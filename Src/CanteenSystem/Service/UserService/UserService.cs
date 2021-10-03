@@ -83,8 +83,8 @@ namespace Service.UserService
 				SlimApplicationUserDTO simpleUser = new()
 				{
 					Id = currentUser.Id,
-					Name = decryptedName.Trim(),
-					Surname = decryptedSurname.Trim(),
+					Name = decryptedName,
+					Surname = decryptedSurname,
 					Email = currentUser.Email
 				};
 
@@ -103,17 +103,32 @@ namespace Service.UserService
 		//	return userRoles.FirstOrDefault();
 		//}
 
-		public async Task<string> ChangeUserAsync(ModelStateDictionary modelState)
+		public async Task<string> ChangeUserAsync(ModelStateDictionary modelState, SlimApplicationUserDTO userDTO)
 		{
 			var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
-
-			if (modelState.IsValid && user != null)
+			if (modelState.IsValid && userDTO != null)
 			{
+
+				byte[] encryptedName = _encryptionService.Encrypt(userDTO.Name);
+				byte[] encryptedSurname = _encryptionService.Encrypt(userDTO.Surname);
+
+				user.Name = Convert.ToBase64String(encryptedName);
+				user.Surname = Convert.ToBase64String(encryptedSurname);
+				await _userManager.UpdateAsync(user);
 				await _signInManager.RefreshSignInAsync(user);
 				return "Success";
 			}
-
 			return "Not Valid";
+
+			//var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+
+			//if (modelState.IsValid && user != null)
+			//{
+			//	await _signInManager.RefreshSignInAsync(user);
+			//	return "Success";
+			//}
+
+			//return "Not Valid";
 
 		}
 

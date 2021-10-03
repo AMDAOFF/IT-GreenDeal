@@ -15,7 +15,7 @@ namespace Service.UserService
 		Task<List<SlimApplicationUserDTO>> GetUsersAsync();
 		Task<SlimApplicationUserDTO> GetUserAsync();
 		//Task<string> GetCurrentUserRole(string currentUserId);
-		Task<string> ChangeUserAsync(ModelStateDictionary modelState);
+		Task<string> ChangeUserAsync(ModelStateDictionary modelState, SlimApplicationUserDTO userDTO);
 		Task EditUser(SlimApplicationUserDTO userDTO);
 		Task DeleteUser(SlimApplicationUserDTO userDTO);
 		Task<IEnumerable<string>> GetRoles();

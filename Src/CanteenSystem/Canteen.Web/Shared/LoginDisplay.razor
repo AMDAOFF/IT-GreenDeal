@@ -1,7 +1,6 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
-﻿@using Microsoft.AspNetCore.Identity
-@using Microsoft.AspNetCore.Http
-@using DataAccess.Identity
+﻿@using System.Security.Claims
+@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navigation
 
 @inject IUserService _userService
 @inject NavigationManager Navigation
@@ -11,6 +10,14 @@
 	<Authorized>
 		@if (IdentityUser != null)
 		{
+			@if (claimUser.IsInRole("Admin"))
+			{
+				<a href="Admin/User/UserList">Admin</a>
+			}
+			@if (claimUser.IsInRole("Admin") || claimUser.IsInRole("Canteen"))
+			{
+				<a href="Worker/Dashboard">Kantine</a>
+			}
 			<a href="Identity/Account/Manage/Index">
 				@IdentityUser?.Name @IdentityUser.Surname
 			</a>
@@ -29,6 +36,7 @@
 	public SlimApplicationUserDTO IdentityUser { get; set; }
 
 	private string returnUrl;
+	private ClaimsPrincipal claimUser;
 
 	public string ReturnUrl
 	{
@@ -50,6 +58,16 @@
 
 	protected override async Task OnInitializedAsync()
 	{
+		try
+		{
+			var authState = await authStateProvider.GetAuthenticationStateAsync();
+			claimUser = authState.User;
+		}
+		catch (Exception)
+		{
+
+			throw;
+		}
 		IdentityUser = await _userService.GetUserAsync();
 		StateHasChanged();
 	}

@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.EncryptionService
+namespace Canteen.Service.EncryptionService
 {
 	public class EncryptionService : IEncryptionService
 	{

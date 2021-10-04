@@ -8,7 +8,7 @@
     List<Allergy> allergies { get; set; } = new List<Allergy>();
     string modalTitle { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         allergies.Add(new Allergy
         {

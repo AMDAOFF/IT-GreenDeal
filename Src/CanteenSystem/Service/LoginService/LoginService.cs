@@ -1,14 +1,8 @@
-﻿using DataAccess.Identity;
+﻿using Canteen.DataAccess.Identity;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.LoginService
+namespace Canteen.Service.LoginService
 {
 	public class LoginService : ILoginService
 	{

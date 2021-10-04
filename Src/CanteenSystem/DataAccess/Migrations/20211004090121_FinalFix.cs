@@ -2,7 +2,7 @@
 
 namespace DataAccess.Migrations
 {
-    public partial class Lel : Migration
+    public partial class FinalFix : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,12 +11,11 @@ namespace DataAccess.Migrations
                 table: "Allergies");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Ingredient_Dishes_DishId",
-                table: "Ingredient");
-
-            migrationBuilder.DropForeignKey(
                 name: "FK_UserAllergy_Allergies_AllergyId1",
                 table: "UserAllergy");
+
+            migrationBuilder.DropTable(
+                name: "Ingredient");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_UserAllergy",
@@ -26,27 +25,9 @@ namespace DataAccess.Migrations
                 name: "IX_UserAllergy_AllergyId1",
                 table: "UserAllergy");
 
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Ingredient",
-                table: "Ingredient");
-
             migrationBuilder.DropColumn(
                 name: "AllergyId1",
                 table: "UserAllergy");
-
-            migrationBuilder.RenameTable(
-                name: "Ingredient",
-                newName: "Ingredients");
-
-            migrationBuilder.RenameColumn(
-                name: "IngrediendId",
-                table: "Ingredients",
-                newName: "IngredientName");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_Ingredient_DishId",
-                table: "Ingredients",
-                newName: "IX_Ingredients_DishId");
 
             migrationBuilder.AlterColumn<string>(
                 name: "UserId",
@@ -60,7 +41,7 @@ namespace DataAccess.Migrations
                 name: "AllergyId",
                 table: "UserAllergy",
                 type: "int",
-                nullable: false,
+                nullable: true,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(450)");
 
@@ -103,10 +84,25 @@ namespace DataAccess.Migrations
                 table: "UserAllergy",
                 column: "UserAllergyId");
 
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Ingredients",
-                table: "Ingredients",
-                column: "IngredientId");
+            migrationBuilder.CreateTable(
+                name: "Ingredients",
+                columns: table => new
+                {
+                    IngredientId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IngredientName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DishId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ingredients", x => x.IngredientId);
+                    table.ForeignKey(
+                        name: "FK_Ingredients_Dishes_DishId",
+                        column: x => x.DishId,
+                        principalTable: "Dishes",
+                        principalColumn: "DishId",
+                        onDelete: ReferentialAction.Restrict);
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserAllergy_AllergyId",
@@ -122,6 +118,11 @@ namespace DataAccess.Migrations
                 name: "IX_Allergies_ApplicationUserId",
                 table: "Allergies",
                 column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ingredients_DishId",
+                table: "Ingredients",
+                column: "DishId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Allergies_AspNetUsers_ApplicationUserId",
@@ -140,20 +141,12 @@ namespace DataAccess.Migrations
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Ingredients_Dishes_DishId",
-                table: "Ingredients",
-                column: "DishId",
-                principalTable: "Dishes",
-                principalColumn: "DishId",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
                 name: "FK_UserAllergy_Allergies_AllergyId",
                 table: "UserAllergy",
                 column: "AllergyId",
                 principalTable: "Allergies",
                 principalColumn: "AllergyId",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_UserAllergy_AspNetUsers_UserId",
@@ -175,16 +168,15 @@ namespace DataAccess.Migrations
                 table: "Allergies");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Ingredients_Dishes_DishId",
-                table: "Ingredients");
-
-            migrationBuilder.DropForeignKey(
                 name: "FK_UserAllergy_Allergies_AllergyId",
                 table: "UserAllergy");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_UserAllergy_AspNetUsers_UserId",
                 table: "UserAllergy");
+
+            migrationBuilder.DropTable(
+                name: "Ingredients");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_UserAllergy",
@@ -202,10 +194,6 @@ namespace DataAccess.Migrations
                 name: "IX_Allergies_ApplicationUserId",
                 table: "Allergies");
 
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Ingredients",
-                table: "Ingredients");
-
             migrationBuilder.DropColumn(
                 name: "UserAllergyId",
                 table: "UserAllergy");
@@ -213,20 +201,6 @@ namespace DataAccess.Migrations
             migrationBuilder.DropColumn(
                 name: "ApplicationUserId",
                 table: "Allergies");
-
-            migrationBuilder.RenameTable(
-                name: "Ingredients",
-                newName: "Ingredient");
-
-            migrationBuilder.RenameColumn(
-                name: "IngredientName",
-                table: "Ingredient",
-                newName: "IngrediendId");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_Ingredients_DishId",
-                table: "Ingredient",
-                newName: "IX_Ingredient_DishId");
 
             migrationBuilder.AlterColumn<int>(
                 name: "UserId",
@@ -243,8 +217,10 @@ namespace DataAccess.Migrations
                 table: "UserAllergy",
                 type: "nvarchar(450)",
                 nullable: false,
+                defaultValue: "",
                 oldClrType: typeof(int),
-                oldType: "int");
+                oldType: "int",
+                oldNullable: true);
 
             migrationBuilder.AddColumn<int>(
                 name: "AllergyId1",
@@ -277,15 +253,35 @@ namespace DataAccess.Migrations
                 table: "UserAllergy",
                 columns: new[] { "AllergyId", "UserId" });
 
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Ingredient",
-                table: "Ingredient",
-                column: "IngredientId");
+            migrationBuilder.CreateTable(
+                name: "Ingredient",
+                columns: table => new
+                {
+                    IngredientId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DishId = table.Column<int>(type: "int", nullable: true),
+                    IngrediendId = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ingredient", x => x.IngredientId);
+                    table.ForeignKey(
+                        name: "FK_Ingredient_Dishes_DishId",
+                        column: x => x.DishId,
+                        principalTable: "Dishes",
+                        principalColumn: "DishId",
+                        onDelete: ReferentialAction.Restrict);
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserAllergy_AllergyId1",
                 table: "UserAllergy",
                 column: "AllergyId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ingredient_DishId",
+                table: "Ingredient",
+                column: "DishId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Allergies_Ingredient_IngredientId",
@@ -293,14 +289,6 @@ namespace DataAccess.Migrations
                 column: "IngredientId",
                 principalTable: "Ingredient",
                 principalColumn: "IngredientId",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Ingredient_Dishes_DishId",
-                table: "Ingredient",
-                column: "DishId",
-                principalTable: "Dishes",
-                principalColumn: "DishId",
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(

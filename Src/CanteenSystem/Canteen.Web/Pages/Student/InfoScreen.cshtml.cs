@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using QRCoder;
-using Service.DishService;
-using Service.DishService.Dto;
+using Canteen.Service.DishService;
+using Canteen.Service.DishService.Dto;
 
 namespace Canteen.Web.Pages.Student
 {
@@ -17,7 +17,6 @@ namespace Canteen.Web.Pages.Student
     {
 
         public string BaseUrl { get; set; }
-
         public List<FullDishDTO> DishesToday { get; set; }
 
         private IDishService _dishService { get; set; }
@@ -27,12 +26,12 @@ namespace Canteen.Web.Pages.Student
             var request = httpContextAccessor.HttpContext.Request;
             BaseUrl = $"{request.Scheme}://{request.Host}/";
 
-            _dishService = dishService;
+            this._dishService = dishService;
         }
 
-        public async void OnGetAsync()
+        public void OnGet()
         {
-            DishesToday = await _dishService.GetDishesOfTheDay();
+            DishesToday = _dishService.GetDishesOfTheDay();
         }
     }
 }

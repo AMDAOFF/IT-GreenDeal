@@ -1,18 +1,13 @@
-﻿using Service.AttributeService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Canteen.Service.AttributeService;
 
-namespace Service.IngridentsService.Dto
+namespace Canteen.Service.IngridentsService.Dto
 {
     public class FullIngridientDTO
     {
         [ModalHideField]
         public int IngridientId { get; set; }
 
-        [ModalFieldType(ModalFieldTypes.Text)]
+        [ModalFieldType(ModalFieldTypes.Text), ModalFieldName("Ingridiens Navn")]
         public string IngridientName { get; set; }
     }
 }

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
-namespace DataAccess.Models
+namespace Canteen.DataAccess.Models
 {
     public class Allergy
     {
@@ -12,6 +9,7 @@ namespace DataAccess.Models
         public string AllergyName { get; set; }
 
         public Ingredient Ingredient { get; set; }
-        public List<UserAllergy> UserAllergies { get; set; }
+        public ICollection<UserAllergy> UserAllergies { get; set; }
     }
 }
+ 

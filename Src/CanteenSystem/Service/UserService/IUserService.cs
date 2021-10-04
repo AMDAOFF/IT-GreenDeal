@@ -1,20 +1,18 @@
-﻿using DataAccess.Identity;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Service.UserService.Dto;
-using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Canteen.Service.UserService.Dto;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.UserService
+namespace Canteen.Service.UserService
 {
 	public interface IUserService
 	{
-		Task<List<SimpleApplicationUserDTO>> GetUsersAsync();
-		Task<SimpleApplicationUserDTO> GetUserAsync();
-		Task<string> ChangeUserAsync(ModelStateDictionary modelState);
-		Task DeleteUser(SimpleApplicationUserDTO userDTO);
+		Task<List<SlimApplicationUserDTO>> GetUsersAsync();
+		Task<SlimApplicationUserDTO> GetUserAsync();
+		//Task<string> GetCurrentUserRole(string currentUserId);
+		Task<string> ChangeUserAsync(ModelStateDictionary modelState, SlimApplicationUserDTO userDTO);
+		Task EditUser(SlimApplicationUserDTO userDTO);
+		Task DeleteUser(SlimApplicationUserDTO userDTO);
+		Task<IEnumerable<string>> GetRoles();
 	}
 }

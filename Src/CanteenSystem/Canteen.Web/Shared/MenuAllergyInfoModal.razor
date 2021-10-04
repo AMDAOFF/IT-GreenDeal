@@ -2,33 +2,32 @@
 @using Canteen.Web.Models;
 
 @code {
-        [Parameter]
-        public string ModalName { get; set; }
+	[Parameter]
+	public string ModalName { get; set; }
 
-        [Parameter]
-        public string ModalTitle { get; set; }
+	[Parameter]
+	public string ModalTitle { get; set; }
 
-        [Parameter]
-        public object Data { get; set; }
+	[Parameter]
+	public object Data { get; set; }
 
-    private string ModalLabelName
-    {
-        get
-        {
-            return ModalName + "Label";
-        }
+	private string ModalLabelName
+	{
+		get
+		{
+			return ModalName + "Label";
+		}
 
-        set
-        {
-            ModalLabelName = value;
-        }
-    }
+		set
+		{
+			ModalLabelName = value;
+		}
+	}
 
+	//protected override async Task OnInitializedAsync()
+	//{
 
-    protected override async Task OnInitializedAsync()
-    {
-        
-    }
+	//}
 }
 
 

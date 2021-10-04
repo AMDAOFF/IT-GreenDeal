@@ -44,6 +44,7 @@ namespace Canteen.Service.RegisterService
 						await _userManager.AddToRoleAsync(user, "User");
 					}
 					// ---------------------------------------
+
 					await _signInManager.SignInAsync(user, isPersistent: false);
 					return;
 				}

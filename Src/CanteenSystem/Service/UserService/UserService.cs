@@ -38,9 +38,9 @@ namespace Canteen.Service.UserService
 			_roleManager = roleManager;
 		}
 
-		public async Task<List<SimpleApplicationUserDTO>> GetUsersAsync()
+		public async Task<List<SlimApplicationUserDTO>> GetUsersAsync()
 		{
-			List<SimpleApplicationUserDTO> applicationUsers = new();
+			List<SlimApplicationUserDTO> applicationUsers = new();
 			List<ApplicationUser> users = await _identityContext.Users.OfType<ApplicationUser>().ToListAsync();
 
 			foreach (var user in users)
@@ -52,37 +52,40 @@ namespace Canteen.Service.UserService
 				}
 				catch (Exception)
 				{
-					userRoles.Add("Brugere");
+					userRoles.Add("User");
 				}
 
 				string decryptedName = _encryptionService.Decrypt(Convert.FromBase64String(user.Name));
 				string decryptedSurname = _encryptionService.Decrypt(Convert.FromBase64String(user.Surname));
 
-				applicationUsers.Add(new SimpleApplicationUserDTO()
+				applicationUsers.Add(new SlimApplicationUserDTO()
 				{
+					Id = user.Id,
 					Name = decryptedName.Trim(),
 					Surname = decryptedSurname.Trim(),
 					Email = user.Email,
-					Roles = userRoles
+					Role = userRoles.FirstOrDefault()
 				});
 			}
 
 			return applicationUsers;
 		}
 
-		public async Task<SimpleApplicationUserDTO> GetUserAsync()
+		public async Task<SlimApplicationUserDTO> GetUserAsync()
 		{
-			var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
-			if (user != null)
-			{
-				string decryptedName = _encryptionService.Decrypt(Convert.FromBase64String(user.Name));
-				string decryptedSurname = _encryptionService.Decrypt(Convert.FromBase64String(user.Surname));
+			var currentUser = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
 
-				SimpleApplicationUserDTO simpleUser = new()
+			if (currentUser != null)
+			{
+				string decryptedName = _encryptionService.Decrypt(Convert.FromBase64String(currentUser.Name));
+				string decryptedSurname = _encryptionService.Decrypt(Convert.FromBase64String(currentUser.Surname));
+
+				SlimApplicationUserDTO simpleUser = new()
 				{
+					Id = currentUser.Id,
 					Name = decryptedName,
 					Surname = decryptedSurname,
-					Email = user.Email
+					Email = currentUser.Email
 				};
 
 				return simpleUser;
@@ -93,34 +96,85 @@ namespace Canteen.Service.UserService
 			}
 		}
 
-		public async Task<string> ChangeUserAsync(ModelStateDictionary modelState)
+		//public async Task<string> GetCurrentUserRole(string currentUserId)
+		//{
+		//	ApplicationUser user = _identityContext.Users.OfType<ApplicationUser>().FirstOrDefault(x => x.Id == currentUserId);
+		//	List<string> userRoles = (List<string>)await _userManager.GetRolesAsync(user);
+		//	return userRoles.FirstOrDefault();
+		//}
+
+		public async Task<string> ChangeUserAsync(ModelStateDictionary modelState, SlimApplicationUserDTO userDTO)
 		{
 			var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
-
-			if (modelState.IsValid && user != null)
+			if (modelState.IsValid && userDTO != null)
 			{
+
+				byte[] encryptedName = _encryptionService.Encrypt(userDTO.Name);
+				byte[] encryptedSurname = _encryptionService.Encrypt(userDTO.Surname);
+
+				user.Name = Convert.ToBase64String(encryptedName);
+				user.Surname = Convert.ToBase64String(encryptedSurname);
+				await _userManager.UpdateAsync(user);
 				await _signInManager.RefreshSignInAsync(user);
 				return "Success";
 			}
-
 			return "Not Valid";
 
+			//var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+
+			//if (modelState.IsValid && user != null)
+			//{
+			//	await _signInManager.RefreshSignInAsync(user);
+			//	return "Success";
+			//}
+
+			//return "Not Valid";
+
 		}
 
-		public async Task EditUser(SimpleApplicationUserDTO userDTO, string role)
+		public async Task EditUser(SlimApplicationUserDTO userDTO)
 		{
-			List<ApplicationUser> users = await _identityContext.Users.OfType<ApplicationUser>().ToListAsync();
-			ApplicationUser user = users.Find(x => x.UserName == userDTO.Email);
+			//List<ApplicationUser> users = await _identityContext.Users.OfType<ApplicationUser>().ToListAsync();
+			//ApplicationUser user = users.Find(x => x.Id == userDTO.Id);
 
-			await _userManager.AddToRoleAsync(user, role);
+			byte[] encryptedName = _encryptionService.Encrypt(userDTO.Name);
+			byte[] encryptedSurname = _encryptionService.Encrypt(userDTO.Surname);
+
+			ApplicationUser user = await _userManager.FindByIdAsync(userDTO.Id);
+
+			user.Name = Convert.ToBase64String(encryptedName);
+			user.Surname = Convert.ToBase64String(encryptedSurname);
+			user.Email = userDTO.Email;
+
+			if (user != null)
+			{
+				foreach (var role in await GetRoles())
+				{
+					await _userManager.RemoveFromRoleAsync(user, role);
+				}
+				await _userManager.AddToRoleAsync(user, userDTO.Role);
+			}
+
+			await _userManager.UpdateAsync(user);
 		}
 
-		public async Task DeleteUser(SimpleApplicationUserDTO userDTO)
+		public async Task DeleteUser(SlimApplicationUserDTO userDTO)
 		{
 			List<ApplicationUser> users = await _identityContext.Users.OfType<ApplicationUser>().ToListAsync();
 
 			ApplicationUser user = users.Find(x => x.UserName == userDTO.Email);
 			await _userManager.DeleteAsync(user);
+		}
+
+		public async Task<IEnumerable<string>> GetRoles()
+		{
+			List<string> roles = new();
+			var identityRoles = await _identityContext.Roles.ToListAsync();
+			foreach (var role in identityRoles)
+			{
+				roles.Add(role.Name);
+			}
+			return roles.ToList();
 		}
 	}
 }

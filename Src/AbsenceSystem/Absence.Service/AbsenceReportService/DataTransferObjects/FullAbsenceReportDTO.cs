@@ -1,14 +1,14 @@
-﻿using Absence.Service.HourScheduleService.DataTransferObjects;
-using Absence.Service.StudentService.DataTransferObjects;
+﻿using Absence.Service.ScheduleService;
+using Absence.Service.StudentService;
 
-namespace Absence.Service.AbsenceReportService.DataTransferObjects
+namespace Absence.Service.AbsenceReportService
 {
     public class FullAbsenceReportDTO
     {
         public int FKStudentId { get; set; }
-        public int FKHourScheduleId { get; set; }
+        public int FKScheduleId { get; set; }
         public string Attended { get; set; }
         public FullStudentDTO Student { get; set; }
-        public FullHourScheduleDTO HourSchedule { get; set; }
+        public FullScheduleDTO Schedule { get; set; }
     }
 }

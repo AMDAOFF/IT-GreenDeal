@@ -9,9 +9,8 @@ namespace Absence.DataAccess.Entities
         public string Name { get; set; }
         public int FKSchoolId { get; set; }
         public int FKWeekScheduleId { get; set; }
-        //public int FKCameraIP { get; set; }
         public School School { get; set; }
-        public List<WeekSchedule> WeekSchedules { get; set; }
+        public List<Schedule> Schedules { get; set; }
         public Camera Camera { get; set; }
     }
 }

@@ -1,9 +1,8 @@
-﻿using Absence.Service.CameraService.DataTransferObjects;
-using Absence.Service.SchoolService.DataTransferObjects;
-using Absence.Service.WeekScheduleService.DataTransferObjects;
+﻿using Absence.Service.CameraService;
+using Absence.Service.SchoolService;
 using System.Collections.Generic;
 
-namespace Absence.Service.ClassroomService.DataTransferObjects
+namespace Absence.Service.ClassroomService
 {
     public class FullClassroomDTO
     {
@@ -13,7 +12,6 @@ namespace Absence.Service.ClassroomService.DataTransferObjects
         public int FKSchoolId { get; set; }
         public int FKWeekScheduleId { get; set; }
         public FullSchoolDTO School { get; set; }
-        public List<FullWeekScheduleDTO> WeekSchedules { get; set; }
         public FullCameraDTO Camera { get; set; }
     }
 }

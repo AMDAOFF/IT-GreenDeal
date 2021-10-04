@@ -21,18 +21,18 @@ namespace Absence.DataAccess.Migrations
 
             modelBuilder.Entity("Absence.DataAccess.Entities.AbsenceReport", b =>
                 {
-                    b.Property<int>("FKStudentId")
-                        .HasColumnType("int");
+                    b.Property<string>("FKStudentId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("FKHourScheduleId")
+                    b.Property<int>("FKScheduleId")
                         .HasColumnType("int");
 
                     b.Property<string>("Attended")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("FKStudentId", "FKHourScheduleId");
+                    b.HasKey("FKStudentId", "FKScheduleId");
 
-                    b.HasIndex("FKHourScheduleId");
+                    b.HasIndex("FKScheduleId");
 
                     b.ToTable("AbsenceReports");
                 });
@@ -135,46 +135,37 @@ namespace Absence.DataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Absence.DataAccess.Entities.DaySchedule", b =>
+            modelBuilder.Entity("Absence.DataAccess.Entities.Schedule", b =>
                 {
-                    b.Property<int>("DayScheduleId")
+                    b.Property<int>("ScheduleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("FKWeekScheduleId")
+                    b.Property<int>("FKClassroomId")
                         .HasColumnType("int");
 
-                    b.HasKey("DayScheduleId");
-
-                    b.HasIndex("FKWeekScheduleId");
-
-                    b.ToTable("DaySchedules");
-                });
-
-            modelBuilder.Entity("Absence.DataAccess.Entities.HourSchedule", b =>
-                {
-                    b.Property<int>("HourScheduleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("FKDayScheduleId")
+                    b.Property<int>("FKStudentClassId")
                         .HasColumnType("int");
 
                     b.Property<int>("FKSubjectId")
                         .HasColumnType("int");
 
-                    b.HasKey("HourScheduleId");
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
 
-                    b.HasIndex("FKDayScheduleId");
+                    b.HasKey("ScheduleId");
+
+                    b.HasIndex("FKClassroomId");
+
+                    b.HasIndex("FKStudentClassId");
 
                     b.HasIndex("FKSubjectId");
 
-                    b.ToTable("HourSchedules");
+                    b.ToTable("Schedules");
                 });
 
             modelBuilder.Entity("Absence.DataAccess.Entities.School", b =>
@@ -211,17 +202,86 @@ namespace Absence.DataAccess.Migrations
 
             modelBuilder.Entity("Absence.DataAccess.Entities.Student", b =>
                 {
-                    b.Property<int>("StudentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("StudentId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("FKStudentClassId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("StudentId");
 
+                    b.HasIndex("FKStudentClassId");
+
                     b.ToTable("Students");
+
+                    b.HasData(
+                        new
+                        {
+                            StudentId = "jimm1576",
+                            FKStudentClassId = 1,
+                            Name = "Jimmy Elkjer"
+                        },
+                        new
+                        {
+                            StudentId = "jona153m",
+                            FKStudentClassId = 1,
+                            Name = "Jonas Peter Fuhlendorff Jørgensen"
+                        },
+                        new
+                        {
+                            StudentId = "kenn8174",
+                            FKStudentClassId = 1,
+                            Name = "Kenneth Jessen"
+                        },
+                        new
+                        {
+                            StudentId = "kris593d",
+                            FKStudentClassId = 1,
+                            Name = "Kristian Biehl Kuhrt"
+                        });
+                });
+
+            modelBuilder.Entity("Absence.DataAccess.Entities.StudentClass", b =>
+                {
+                    b.Property<int>("StudentClassId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("FKTeacherId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("StudentClassId");
+
+                    b.HasIndex("FKTeacherId");
+
+                    b.ToTable("StudentClasses");
+
+                    b.HasData(
+                        new
+                        {
+                            StudentClassId = 1,
+                            FKTeacherId = 1,
+                            Name = "H6 Programmører"
+                        },
+                        new
+                        {
+                            StudentClassId = 2,
+                            FKTeacherId = 2,
+                            Name = "H2 Infrastruktur"
+                        },
+                        new
+                        {
+                            StudentClassId = 3,
+                            FKTeacherId = 3,
+                            Name = "8 Klasse"
+                        });
                 });
 
             modelBuilder.Entity("Absence.DataAccess.Entities.Subject", b =>
@@ -237,6 +297,38 @@ namespace Absence.DataAccess.Migrations
                     b.HasKey("SubjectId");
 
                     b.ToTable("Subjects");
+
+                    b.HasData(
+                        new
+                        {
+                            SubjectId = 1,
+                            Name = "Programmering"
+                        },
+                        new
+                        {
+                            SubjectId = 2,
+                            Name = "Netværk"
+                        },
+                        new
+                        {
+                            SubjectId = 3,
+                            Name = "Engelsk"
+                        },
+                        new
+                        {
+                            SubjectId = 4,
+                            Name = "Dansk"
+                        },
+                        new
+                        {
+                            SubjectId = 5,
+                            Name = "Idræt"
+                        },
+                        new
+                        {
+                            SubjectId = 6,
+                            Name = "Matematik"
+                        });
                 });
 
             modelBuilder.Entity("Absence.DataAccess.Entities.Teacher", b =>
@@ -262,39 +354,43 @@ namespace Absence.DataAccess.Migrations
                     b.HasIndex("FKSubjectId");
 
                     b.ToTable("Teachers");
-                });
 
-            modelBuilder.Entity("Absence.DataAccess.Entities.WeekSchedule", b =>
-                {
-                    b.Property<int>("WeekScheduleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("FKClassroomId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("WeekNumber")
-                        .HasColumnType("int");
-
-                    b.HasKey("WeekScheduleId");
-
-                    b.HasIndex("FKClassroomId");
-
-                    b.ToTable("WeekSchedules");
+                    b.HasData(
+                        new
+                        {
+                            TeacherId = 1,
+                            FKSchoolId = 1,
+                            FKSubjectId = 1,
+                            Name = "Egon Christian Rasmussen"
+                        },
+                        new
+                        {
+                            TeacherId = 2,
+                            FKSchoolId = 1,
+                            FKSubjectId = 2,
+                            Name = "Tina Hansen"
+                        },
+                        new
+                        {
+                            TeacherId = 3,
+                            FKSchoolId = 2,
+                            FKSubjectId = 4,
+                            Name = "Hans Jørgen Petersen"
+                        },
+                        new
+                        {
+                            TeacherId = 4,
+                            FKSchoolId = 2,
+                            FKSubjectId = 6,
+                            Name = "Flemming Nielsen"
+                        });
                 });
 
             modelBuilder.Entity("Absence.DataAccess.Entities.AbsenceReport", b =>
                 {
-                    b.HasOne("Absence.DataAccess.Entities.HourSchedule", "HourSchedule")
+                    b.HasOne("Absence.DataAccess.Entities.Schedule", "Schedule")
                         .WithMany("AbsenceReports")
-                        .HasForeignKey("FKHourScheduleId")
+                        .HasForeignKey("FKScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -304,7 +400,7 @@ namespace Absence.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("HourSchedule");
+                    b.Navigation("Schedule");
 
                     b.Navigation("Student");
                 });
@@ -331,34 +427,53 @@ namespace Absence.DataAccess.Migrations
                     b.Navigation("School");
                 });
 
-            modelBuilder.Entity("Absence.DataAccess.Entities.DaySchedule", b =>
+            modelBuilder.Entity("Absence.DataAccess.Entities.Schedule", b =>
                 {
-                    b.HasOne("Absence.DataAccess.Entities.WeekSchedule", "WeekSchedule")
-                        .WithMany("DaySchedules")
-                        .HasForeignKey("FKWeekScheduleId")
+                    b.HasOne("Absence.DataAccess.Entities.Classroom", "Classroom")
+                        .WithMany("Schedules")
+                        .HasForeignKey("FKClassroomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("WeekSchedule");
-                });
-
-            modelBuilder.Entity("Absence.DataAccess.Entities.HourSchedule", b =>
-                {
-                    b.HasOne("Absence.DataAccess.Entities.DaySchedule", "DaySchedule")
-                        .WithMany("HourSchedules")
-                        .HasForeignKey("FKDayScheduleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("Absence.DataAccess.Entities.StudentClass", "StudentClass")
+                        .WithMany("Schedules")
+                        .HasForeignKey("FKStudentClassId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Absence.DataAccess.Entities.Subject", "Subject")
-                        .WithMany("HourSchedules")
+                        .WithMany("Schedules")
                         .HasForeignKey("FKSubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("DaySchedule");
+                    b.Navigation("Classroom");
+
+                    b.Navigation("StudentClass");
 
                     b.Navigation("Subject");
+                });
+
+            modelBuilder.Entity("Absence.DataAccess.Entities.Student", b =>
+                {
+                    b.HasOne("Absence.DataAccess.Entities.StudentClass", "StudentClass")
+                        .WithMany("Students")
+                        .HasForeignKey("FKStudentClassId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("StudentClass");
+                });
+
+            modelBuilder.Entity("Absence.DataAccess.Entities.StudentClass", b =>
+                {
+                    b.HasOne("Absence.DataAccess.Entities.Teacher", "Teacher")
+                        .WithMany("StudentClasses")
+                        .HasForeignKey("FKTeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("Absence.DataAccess.Entities.Teacher", b =>
@@ -380,30 +495,14 @@ namespace Absence.DataAccess.Migrations
                     b.Navigation("Subject");
                 });
 
-            modelBuilder.Entity("Absence.DataAccess.Entities.WeekSchedule", b =>
-                {
-                    b.HasOne("Absence.DataAccess.Entities.Classroom", "Classroom")
-                        .WithMany("WeekSchedules")
-                        .HasForeignKey("FKClassroomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Classroom");
-                });
-
             modelBuilder.Entity("Absence.DataAccess.Entities.Classroom", b =>
                 {
                     b.Navigation("Camera");
 
-                    b.Navigation("WeekSchedules");
+                    b.Navigation("Schedules");
                 });
 
-            modelBuilder.Entity("Absence.DataAccess.Entities.DaySchedule", b =>
-                {
-                    b.Navigation("HourSchedules");
-                });
-
-            modelBuilder.Entity("Absence.DataAccess.Entities.HourSchedule", b =>
+            modelBuilder.Entity("Absence.DataAccess.Entities.Schedule", b =>
                 {
                     b.Navigation("AbsenceReports");
                 });
@@ -420,16 +519,23 @@ namespace Absence.DataAccess.Migrations
                     b.Navigation("AbsenceReports");
                 });
 
+            modelBuilder.Entity("Absence.DataAccess.Entities.StudentClass", b =>
+                {
+                    b.Navigation("Schedules");
+
+                    b.Navigation("Students");
+                });
+
             modelBuilder.Entity("Absence.DataAccess.Entities.Subject", b =>
                 {
-                    b.Navigation("HourSchedules");
+                    b.Navigation("Schedules");
 
                     b.Navigation("Teachers");
                 });
 
-            modelBuilder.Entity("Absence.DataAccess.Entities.WeekSchedule", b =>
+            modelBuilder.Entity("Absence.DataAccess.Entities.Teacher", b =>
                 {
-                    b.Navigation("DaySchedules");
+                    b.Navigation("StudentClasses");
                 });
 #pragma warning restore 612, 618
         }

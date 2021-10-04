@@ -1,6 +1,6 @@
-﻿using Absence.Service.ClassroomService.DataTransferObjects;
+﻿using Absence.Service.ClassroomService;
 
-namespace Absence.Service.CameraService.DataTransferObjects
+namespace Absence.Service.CameraService
 {
     public class FullCameraDTO
     {

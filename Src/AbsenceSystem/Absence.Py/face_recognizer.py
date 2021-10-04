@@ -5,22 +5,30 @@ import pickle
 import time
 import cv2
 import pika
+import argparse
+
+# construct the argument parser and parse the arguments
+ap = argparse.ArgumentParser()
+ap.add_argument("-ip", "--ip", type=str, required=True, help="The camera's IP Address")
+args = vars(ap.parse_args())
+
+cameraIP = args['ip']
 
 print("Loading model.")
 
 # Load the data from the model.
-data = pickle.loads(open("model2.pickle", "rb").read())
+data = pickle.loads(open("model.pickle", "rb").read())
 
-print("Starting the webcam.")
+print(f"Starting the webcam with the IP: {cameraIP}")
 
 # Initialize the webcam.
-vs = VideoStream(1).start()
+vs = VideoStream(0).start()
 
 # Allow the webcam to warm up.
 time.sleep(2)
 
 alreadyMatchedIds = []
-
+alreadyMatchedIds.append(None)
 # Loop over frames from the webcam.
 while True:
 
@@ -39,7 +47,7 @@ while True:
 	# "hog" = LESS accuracy MORE speed.
 	# "cnn" = MORE accuracy LESS speed.
 	# Detect the (x, y)-coordinates for the faces.
-	boxes = face_recognition.face_locations(imageRGB, model="hog")
+	boxes = face_recognition.face_locations(imageRGB, model="cnn")
 	
 	# Get the facial encodings for the faces.
 	encodings = face_recognition.face_encodings(imageRGB, boxes)
@@ -50,7 +58,7 @@ while True:
 	for encoding in encodings:
 
 		# Attempt to match each face from the webcam stream to our known encodings. (Adjust tolerance for stricter matching.)
-		matches = face_recognition.compare_faces(data["encodings"],	encoding, tolerance=0.5)
+		matches = face_recognition.compare_faces(data["encodings"],	encoding, tolerance=0.4)
 		id = None
 
 		# Check to see if we have found a match.
@@ -79,9 +87,9 @@ while True:
 			credentials = pika.PlainCredentials('guest', 'guest')
 			connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port=5672, virtual_host='/', credentials=credentials))
 			channel = connection.channel()
-			channel.queue_declare(queue="Absence", durable=True)
+			channel.queue_declare(queue=f"Absence-{cameraIP}", durable=True)
 			channel.start_consuming()
-			channel.basic_publish(exchange='', routing_key='Absence', body=f'test')
+			channel.basic_publish(exchange='', routing_key='Absence', body=f'{id}')
 			print(f"Succeded")
 
     # Loop over the recognized faces.

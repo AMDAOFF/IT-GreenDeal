@@ -1,7 +1,7 @@
-﻿using Absence.Service.AbsenceReportService.DataTransferObjects;
+﻿using Absence.Service.AbsenceReportService;
 using System.Collections.Generic;
 
-namespace Absence.Service.StudentService.DataTransferObjects
+namespace Absence.Service.StudentService
 {
     public class FullStudentDTO
     {

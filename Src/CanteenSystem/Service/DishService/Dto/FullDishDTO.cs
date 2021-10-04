@@ -1,4 +1,6 @@
-﻿using Canteen.Service.AttributeService;
+﻿using Canteen.DataAccess.Models;
+using Canteen.Service.AttributeService;
+using Canteen.Service.IngridentsService.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,5 +22,8 @@ namespace Canteen.Service.DishService.Dto
 
         [ModalFieldType(ModalFieldTypes.Checkbox), ModalFieldName("Dagens Menu")]
         public bool DishOfTheDay { get; set; }
+
+        [ModalHideField]
+        public List<FullIngridientDTO> Ingredients { get; set; }
     }
 }

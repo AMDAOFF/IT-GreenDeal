@@ -1,4 +1,6 @@
-﻿using Canteen.Service.AttributeService;
+﻿using Canteen.Service.AllergyService.Dto;
+using Canteen.Service.AttributeService;
+using System.Collections.Generic;
 
 namespace Canteen.Service.IngridentsService.Dto
 {
@@ -9,5 +11,8 @@ namespace Canteen.Service.IngridentsService.Dto
 
         [ModalFieldType(ModalFieldTypes.Text)]
         public string IngridientName { get; set; }
+
+        [ModalHideField]
+        public List<FullAllergyDTO> Allergies { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Canteen.DataAccess.Models
 {
@@ -8,7 +9,7 @@ namespace Canteen.DataAccess.Models
         public string AllergyName { get; set; }
 
         public Ingredient Ingredient { get; set; }
-        public List<UserAllergy> UserAllergies { get; set; }
+        public ICollection<UserAllergy> UserAllergies { get; set; }
     }
 }
  

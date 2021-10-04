@@ -8,5 +8,6 @@ namespace Canteen.DataAccess.Identity
 	{
 		public string Name { get; set; }
 		public string Surname { get; set; }
+		public ICollection<UserAllergy> UserAllergies { get; set; }
 	}
 }

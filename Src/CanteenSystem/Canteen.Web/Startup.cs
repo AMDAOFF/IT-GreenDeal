@@ -1,4 +1,3 @@
-using Canteen.Web.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -39,7 +38,6 @@ namespace Canteen.Web
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
             services.AddTransient<IUserService, UserService>();
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IEncryptionService, EncryptionService>();
@@ -52,7 +50,7 @@ namespace Canteen.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                //app.UseDatabaseErrorPage();
             }
             else
             {

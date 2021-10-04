@@ -1,5 +1,4 @@
 ﻿using System;
-using Canteen.Web.Data;
 using DataAccess.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;

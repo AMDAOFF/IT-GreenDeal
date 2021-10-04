@@ -7,7 +7,7 @@
     Allergy selectedAllergy { get; set; }
     string Test { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         objs.Add(new Allergy {
             Id = 1,

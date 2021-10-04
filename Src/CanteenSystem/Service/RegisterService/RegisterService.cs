@@ -40,11 +40,17 @@ namespace Service.RegisterService
 				if (result.Succeeded)
 				{
 					await CreateRoleIfItDoesNotExist("Admin");
+					await CreateRoleIfItDoesNotExist("Canteen");
+					await CreateRoleIfItDoesNotExist("User");
 
 					// PLEASE DELETE, THIS IS ONLY FOR TESTING
 					if (email == "kenn8174@elevcampus.dk")
 					{
 						await _userManager.AddToRoleAsync(user, "Admin");
+					}
+					else
+					{
+						await _userManager.AddToRoleAsync(user, "User");
 					}
 					// ---------------------------------------
 					await _signInManager.SignInAsync(user, isPersistent: false);

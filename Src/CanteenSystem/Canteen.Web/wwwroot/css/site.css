@@ -27,6 +27,10 @@ h5 {
     margin: 0px;
 }
 
+.text-bold {
+    font-weight: bold;
+}
+
 /* End of global text styling */
 
 .page-row .col-12:first-of-type {
@@ -81,8 +85,69 @@ h5 {
     left: 10px;
 }
 
+.infoscreen-container {
+    color: white;
+
+    position: absolute;
+    z-index: 100000;
+
+    left: 0px;
+    top: 0px;
+
+    background-color: #131313;
+
+    width: 100vw;
+    height: 100vh;
+}
+
+.infoscreen-icon {
+    width: 100px;
+    height: 100px;
+}
+
+.infoscreen-header-info {
+    position: relative;
+}
+
+.infoscreen-header-info .infoscreen-header-info-content {
+    transform: translate(-50%, -50%);
+    width: 100%;
+
+    position: absolute;
+    top: 52%;
+    left: 180px;
+}
+
+.infoscreen-container .infoscreen-dish-item {
+    background-color: white;
+    color: var(--lightFontColor)
+}
+
+.infoscreen-container .infoscreen-dish-item .infoscreen-dish-item-header {
+    text-align: center;
+}
 
 
+
+.dish-info-screen {
+    height: 100vh;
+    width: 100vw;
+
+    background-color: #131313;
+
+    position: absolute;
+    left: 0px;
+    top: 0px;
+
+    z-index: 100000;
+}
+
+.dish-info-screen .dish-info-panel {
+    background-color: #fff;
+
+    height: 100vh;
+    width: 100%;
+}
 
 
 

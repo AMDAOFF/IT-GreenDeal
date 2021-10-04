@@ -3,40 +3,66 @@
 @*<h3>UserList</h3>*@
 
 <div>
-	<table class="table">
+	<table class="table table-dark">
 		<thead>
 			<tr>
-				<th>NAVN</th>
-				<th>ROLLE</th>
-				<th>HANDLING</th>
+				<th scope="col">NAVN</th>
+				<th scope="col">ROLLE</th>
+				<th scope="col">HANDLING</th>
 			</tr>
 		</thead>
 		<tbody>
 			@if (Users != null)
 			{
-				<tr>
-					@foreach (var user in Users)
-					{
-						<td>@user.Name</td>
+				@foreach (var user in Users)
+				{
+					<tr>
+						<td>@user.Name @user.Surname</td>
 						<td>
 							@foreach (var role in user.Roles)
 							{
 								@role
 							}
 						</td>
-					}
-				</tr>
+						<td>
+							<button class="btn btn-danger" @onclick="@(() => DeleteUser(user))">Slet</button>
+							<button class="btn btn-success" @onclick="@(() => LoadInfoModal(user.Email))" data-toggle="modal" data-target="#editUserModal">Edit</button>
+						</td>
+					</tr>
+				}
 			}
 		</tbody>
 	</table>
 </div>
 
+
+<AutomaticObjectEditModal ModalName="editUserModal" ModalData="@UserDTO" ModalTitle="Redigere brugere" ModalActionButtonCallback='@(async () => await EditUser(UserDTO))'></AutomaticObjectEditModal>
+
 @code {
 	private List<SimpleApplicationUserDTO> Users;
+	private SimpleApplicationUserDTO UserDTO;
 
 	protected override async Task OnInitializedAsync()
 	{
 		Users = await _service.GetUsersAsync();
+		StateHasChanged();
+	}
+
+	public void LoadInfoModal(string email)
+	{
+		UserDTO = Users.FirstOrDefault(x => x.Email == email);
+		StateHasChanged();
+	}
+
+	public async Task EditUser(SimpleApplicationUserDTO userDTO)
+	{
+
+	}
+
+	private async Task DeleteUser(SimpleApplicationUserDTO userDTO)
+	{
+		await _service.DeleteUser(userDTO);
+		Users.Remove(userDTO);
 		StateHasChanged();
 	}
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Service.DishService.Dto
 {
-    public class DishDTO
+    public class FullDishDTO
     {
         [ModalHideField]
         public int DishId { get; set; }
@@ -18,7 +18,7 @@ namespace Service.DishService.Dto
         [ModalFieldType(ModalFieldTypes.Number)]
         public int DishCo2 { get; set; }
 
-        [ModalHideField, ModalFieldType(ModalFieldTypes.Checkbox)]
+        [ModalFieldType(ModalFieldTypes.Checkbox)]
         public bool DishOfTheDay { get; set; }
     }
 }

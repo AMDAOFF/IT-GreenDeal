@@ -19,7 +19,7 @@ namespace Service.IngridentsService
             _identityContext = identityContext;
         }
 
-        public async Task<IngridientDTO> CreateIngridientAsync(IngridientDTO ingritiendObject)
+        public async Task<FullIngridientDTO> CreateIngridientAsync(FullIngridientDTO ingritiendObject)
         {
             Ingredient newIngredient = new Ingredient {
                 IngredientId = ingritiendObject.IngridientId,
@@ -30,7 +30,7 @@ namespace Service.IngridentsService
 
             if (await _identityContext.SaveChangesAsync() > 0)
             {
-                return new IngridientDTO
+                return new FullIngridientDTO
                 {
                     IngridientId = newIngredient.IngredientId,
                     IngridientName = newIngredient.IngredientName
@@ -43,7 +43,7 @@ namespace Service.IngridentsService
             }
         }
 
-        public async Task<IngridientDTO> DeleteIngridientAsync(int ingridientId)
+        public async Task<FullIngridientDTO> DeleteIngridientAsync(int ingridientId)
         {
             Ingredient deleteIngredient = _identityContext.Ingredients.Where(ingredient => ingredient.IngredientId == ingridientId).FirstOrDefault();
 
@@ -51,7 +51,7 @@ namespace Service.IngridentsService
 
             if (await _identityContext.SaveChangesAsync() > 0)
             {
-                return new IngridientDTO
+                return new FullIngridientDTO
                 {
                     IngridientId = deleteIngredient.IngredientId,
                     IngridientName = deleteIngredient.IngredientName
@@ -64,13 +64,13 @@ namespace Service.IngridentsService
             }
         }
 
-        public async Task<List<IngridientDTO>> GetDishIngridientsAsync(int dishId)
+        public async Task<List<FullIngridientDTO>> GetDishIngridientsAsync(int dishId)
         {
-            List<IngridientDTO> returnDishIngredients = new List<IngridientDTO>();
+            List<FullIngridientDTO> returnDishIngredients = new List<FullIngridientDTO>();
 
             foreach (Ingredient ingredient in _identityContext.Ingredients.Where(ingredient => ingredient.Dish.DishId == dishId).ToList())
             {
-                returnDishIngredients.Add(new IngridientDTO
+                returnDishIngredients.Add(new FullIngridientDTO
                 {
                     IngridientId = ingredient.IngredientId,
                     IngridientName = ingredient.IngredientName
@@ -80,23 +80,23 @@ namespace Service.IngridentsService
             return returnDishIngredients;
         }
 
-        public async Task<IngridientDTO> GetIngridientAsync(int ingredientId)
+        public async Task<FullIngridientDTO> GetIngridientAsync(int ingredientId)
         {
             Ingredient getIngredient = _identityContext.Ingredients.Where(ingredient => ingredient.IngredientId == ingredientId).FirstOrDefault();
-            return new IngridientDTO
+            return new FullIngridientDTO
             {
                 IngridientId = getIngredient.IngredientId,
                 IngridientName = getIngredient.IngredientName
             };
         }
 
-        public async Task<List<IngridientDTO>> GetIngredientsAsync()
+        public async Task<List<FullIngridientDTO>> GetIngredientsAsync()
         {
-            List<IngridientDTO> returnIngredients = new List<IngridientDTO>();
+            List<FullIngridientDTO> returnIngredients = new List<FullIngridientDTO>();
 
             foreach (Ingredient ingredient in _identityContext.Ingredients.ToList())
             {
-                returnIngredients.Add(new IngridientDTO
+                returnIngredients.Add(new FullIngridientDTO
                 {
                     IngridientId = ingredient.IngredientId,
                     IngridientName = ingredient.IngredientName
@@ -106,7 +106,7 @@ namespace Service.IngridentsService
             return returnIngredients;
         }
 
-        public async Task<IngridientDTO> UpdateIngridientAsync(IngridientDTO ingridientObject)
+        public async Task<FullIngridientDTO> UpdateIngridientAsync(FullIngridientDTO ingridientObject)
         {
             Ingredient updateIngredient = _identityContext.Ingredients.Where(ingredient => ingredient.IngredientId == ingridientObject.IngridientId).FirstOrDefault();
 
@@ -116,7 +116,7 @@ namespace Service.IngridentsService
 
             if (await _identityContext.SaveChangesAsync() > 0)
             {
-                return new IngridientDTO
+                return new FullIngridientDTO
                 {
                     IngridientId = updateIngredient.IngredientId,
                     IngridientName = updateIngredient.IngredientName

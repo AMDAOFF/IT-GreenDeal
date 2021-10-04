@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Canteen.Service.UserService;
+using Canteen.Service.UserService.Dto;
 
 namespace Canteen.Web.Areas.Identity.Pages.Account.Manage
 {

@@ -8,7 +8,5 @@ namespace Canteen.DataAccess.Identity
 	{
 		public string Name { get; set; }
 		public string Surname { get; set; }
-
-		public List<Allergy> allergies { get; set; }
 	}
 }

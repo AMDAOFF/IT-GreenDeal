@@ -2,9 +2,24 @@
 
 namespace DataAccess.Migrations
 {
-    public partial class UserList : Migration
+    public partial class RemovedRelationFromApplicationUser : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Allergies_AspNetUsers_ApplicationUserId",
+                table: "Allergies");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Allergies_ApplicationUserId",
+                table: "Allergies");
+
+            migrationBuilder.DropColumn(
+                name: "ApplicationUserId",
+                table: "Allergies");
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
                 name: "ApplicationUserId",
@@ -24,21 +39,6 @@ namespace DataAccess.Migrations
                 principalTable: "AspNetUsers",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Allergies_AspNetUsers_ApplicationUserId",
-                table: "Allergies");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Allergies_ApplicationUserId",
-                table: "Allergies");
-
-            migrationBuilder.DropColumn(
-                name: "ApplicationUserId",
-                table: "Allergies");
         }
     }
 }

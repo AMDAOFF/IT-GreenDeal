@@ -11,3 +11,4 @@ namespace Canteen.DataAccess.Models
         public List<UserAllergy> UserAllergies { get; set; }
     }
 }
+ 

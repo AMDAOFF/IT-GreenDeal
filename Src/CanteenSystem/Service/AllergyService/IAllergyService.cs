@@ -1,11 +1,11 @@
-﻿using Service.AllergyService.Dto;
+﻿using Canteen.Service.AllergyService.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.AllergyService
+namespace Canteen.Service.AllergyService
 {
     public interface IAllergyService
     {

@@ -1,19 +1,10 @@
-﻿using DataAccess.Identity;
+﻿using Canteen.DataAccess.Identity;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
-using Service.EncryptionService;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
-namespace Service.RegisterService
+namespace Canteen.Service.RegisterService
 {
 	public class RegisterService : IRegisterService
 	{

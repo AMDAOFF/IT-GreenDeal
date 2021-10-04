@@ -1,13 +1,6 @@
-﻿using DataAccess.Identity;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Canteen.DataAccess.Identity;
 
-namespace DataAccess.Models
+namespace Canteen.DataAccess.Models
 {
     public class UserAllergy
     {

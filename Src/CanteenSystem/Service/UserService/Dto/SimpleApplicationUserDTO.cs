@@ -1,11 +1,6 @@
-﻿using DataAccess.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace Service.UserService.Dto
+namespace Canteen.Service.UserService.Dto
 {
 	public class SimpleApplicationUserDTO
 	{

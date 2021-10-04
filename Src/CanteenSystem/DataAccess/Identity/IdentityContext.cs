@@ -1,14 +1,8 @@
-﻿using DataAccess.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using Canteen.DataAccess.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DataAccess.Identity
+namespace Canteen.DataAccess.Identity
 {
 	public class IdentityContext : IdentityDbContext
 	{

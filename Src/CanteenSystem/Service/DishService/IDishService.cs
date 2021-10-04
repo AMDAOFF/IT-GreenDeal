@@ -1,11 +1,8 @@
-﻿using Service.DishService.Dto;
-using System;
+﻿using Canteen.Service.DishService.Dto;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.DishService
+namespace Canteen.Service.DishService
 {
     public interface IDishService
     {
@@ -23,10 +20,10 @@ namespace Service.DishService
         Task<FullDishDTO> GetDishAsync(int dishID);
 
         /// <summary>
-        /// Get all of the dishes that are one the menu today
+        /// Get all of the dishes that are on the menu today
         /// </summary>
         /// <returns></returns>
-        Task<List<FullDishDTO>> GetDishesOfTheDay();
+        List<FullDishDTO> GetDishesOfTheDay();
 
         /// <summary>
         /// Delete a dish defined by its id

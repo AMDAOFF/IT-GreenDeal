@@ -1,24 +1,24 @@
-﻿using Service.AttributeService;
+﻿using Canteen.Service.AttributeService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.DishService.Dto
+namespace Canteen.Service.DishService.Dto
 {
     public class FullDishDTO
     {
-        [ModalHideField]
+        [ModalFieldName("Ret ID")]
         public int DishId { get; set; }
 
-        [ModalFieldType(ModalFieldTypes.Text)]
+        [ModalFieldType(ModalFieldTypes.Text), ModalFieldName("Ret Navn")]
         public string DishName { get; set; }
 
-        [ModalFieldType(ModalFieldTypes.Number)]
+        [ModalFieldType(ModalFieldTypes.Number), ModalFieldName("Rettens CO2 Udskip")]
         public int DishCo2 { get; set; }
 
-        [ModalFieldType(ModalFieldTypes.Checkbox)]
+        [ModalFieldType(ModalFieldTypes.Checkbox), ModalFieldName("Dagens Menu")]
         public bool DishOfTheDay { get; set; }
     }
 }

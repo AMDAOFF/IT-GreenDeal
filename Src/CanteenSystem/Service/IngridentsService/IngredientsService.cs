@@ -1,14 +1,11 @@
-﻿using DataAccess.Identity;
-using Service.IngridentsService.Dto;
-using System;
+﻿using Canteen.DataAccess.Identity;
+using Canteen.Service.IngridentsService.Dto;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using DataAccess.Models;
-using Service.AllergyService.Dto;
+using Canteen.DataAccess.Models;
 
-namespace Service.IngridentsService
+namespace Canteen.Service.IngridentsService
 {
     public class IngredientsService : IIngredientsService
     {

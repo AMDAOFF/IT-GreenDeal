@@ -7,7 +7,12 @@ using System.Threading.Tasks;
 namespace Canteen.Service.AttributeService
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class ModalDisableFieldAttribute : Attribute
+    public class ModalFieldNameAttribute : Attribute
     {
+        public string FieldName { get; set; }
+        public ModalFieldNameAttribute(string fieldName)
+        {
+            FieldName = fieldName;
+        }
     }
 }

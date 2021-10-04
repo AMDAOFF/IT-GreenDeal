@@ -1,14 +1,9 @@
-﻿using DataAccess.Identity;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Service.UserService.Dto;
-using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Canteen.Service.UserService.Dto;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.UserService
+namespace Canteen.Service.UserService
 {
 	public interface IUserService
 	{

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Service.AttributeService
+namespace Canteen.Service.AttributeService
 {
 
     public class ModalFieldTypes

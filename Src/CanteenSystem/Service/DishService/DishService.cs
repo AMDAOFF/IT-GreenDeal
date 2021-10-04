@@ -1,13 +1,13 @@
-﻿using DataAccess.Identity;
-using Service.DishService.Dto;
+﻿using Canteen.DataAccess.Identity;
+using Canteen.Service.DishService.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DataAccess.Models;
+using Canteen.DataAccess.Models;
 
-namespace Service.DishService
+namespace Canteen.Service.DishService
 {
     public class DishService : IDishService
     {
@@ -92,24 +92,21 @@ namespace Service.DishService
             }
         }
 
-        public async Task<List<FullDishDTO>> GetDishesOfTheDay()
+        public List<FullDishDTO> GetDishesOfTheDay()
         {
             List<Dish> dbDishes = _identityContext.Dishes.Where(dish => dish.DishOfTheDay == true).ToList();
             List<FullDishDTO> returnDishes = new List<FullDishDTO>();
 
-            await Task.Run(() =>
+            foreach (Dish item in dbDishes)
             {
-                foreach (Dish item in dbDishes)
+                returnDishes.Add(new FullDishDTO
                 {
-                    returnDishes.Add(new FullDishDTO
-                    {
-                        DishId = item.DishId,
-                        DishCo2 = item.DishCO2,
-                        DishName = item.DishName,
-                        DishOfTheDay = item.DishOfTheDay
-                    });
-                }
-            });
+                    DishId = item.DishId,
+                    DishCo2 = item.DishCO2,
+                    DishName = item.DishName,
+                    DishOfTheDay = item.DishOfTheDay
+                });
+            }
 
             return returnDishes;
         }

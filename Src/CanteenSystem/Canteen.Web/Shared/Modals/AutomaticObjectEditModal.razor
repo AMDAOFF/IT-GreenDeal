@@ -58,6 +58,7 @@
                                 string fieldType = "";
                                 bool hideField = false;
                                 bool disableField = false;
+                                string fieldName = name;
 
                                 if (Attribute.IsDefined(prop, typeof(ModalFieldTypeAttribute)))
                                 {
@@ -72,6 +73,11 @@
                                 if (Attribute.IsDefined(prop, typeof(ModalDisableFieldAttribute)))
                                 {
                                     disableField = true;
+                                }
+
+                                if (Attribute.IsDefined(prop, typeof(ModalFieldNameAttribute)))
+                                {
+                                    fieldName = prop.GetCustomAttribute<ModalFieldNameAttribute>().FieldName;
                                 }
 
 

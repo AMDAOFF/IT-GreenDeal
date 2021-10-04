@@ -1,4 +1,4 @@
-﻿using DataAccess.Identity;
+﻿using Canteen.DataAccess.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -6,13 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Service.UserService.Dto;
-using Service.EncryptionService;
+using Canteen.Service.UserService.Dto;
+using Canteen.Service.EncryptionService;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace Service.UserService
+namespace Canteen.Service.UserService
 {
 	public class UserService : IUserService
 	{

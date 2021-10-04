@@ -1,11 +1,11 @@
-﻿using Service.IngridentsService.Dto;
+﻿using Canteen.Service.IngridentsService.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.IngridentsService
+namespace Canteen.Service.IngridentsService
 {
     public interface IIngredientsService
     {

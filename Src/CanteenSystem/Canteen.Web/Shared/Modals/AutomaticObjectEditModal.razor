@@ -1,6 +1,7 @@
 ﻿@using Canteen.Web.Models;
-@using Service.AttributeService; 
-@using System.Reflection; 
+@using Service.AttributeService;
+@using System.Reflection;
+@using System.Linq;
 
 @code {
     [Parameter]
@@ -90,6 +91,89 @@
                                     </div>
                                 }
 
+
+                                if (prop.PropertyType.Name == "List`1")
+                                {
+
+                                    IEnumerable<object> test = (IEnumerable<object>)Activator.CreateInstance(prop.PropertyType);
+
+                                    test = (IEnumerable<object>)value;
+
+
+                                    <table class="table table-dark">
+                                        <thead>
+                                            <tr>
+                                                <th>Ret</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            @if (test.Count() > 0)
+                                            {
+                                                @foreach (var item in test)
+                                                {
+                                                    @foreach (var obj in item.GetType().GetProperties())
+                                                    {
+                                                        object listValue = obj.GetValue(item, null);
+
+                                                        test.Append(new { 
+                                                            listValue
+                                                        });
+
+                                                        if (!Attribute.IsDefined(obj, typeof(ModalHideFieldAttribute)))
+                                                        {
+                                                            <tr>
+                                                                <th>
+                                                                    <div class="row d-flex">
+                                                                        <div class="col-6 d-flex align-items-center">
+                                                                            <h5>@listValue</h5>
+                                                                        </div>
+
+                                                                        <div class="col-6 d-flex justify-content-end">
+                                                                            <div class="row">
+                                                                                <div class="col-6 justify-content-end">
+                                                                                    <button class="btn btn-primary btn-rounded btn-normal-text">
+                                                                                        <i class="las la-trash"></i>
+                                                                                    </button>
+                                                                                </div>
+
+                                                                                <div class="col-6">
+                                                                                    <button class="btn btn-primary btn-rounded btn-normal-text" data-toggle="modal" data-target="#modalUpdateDish">
+                                                                                        <i class="las la-edit"></i>
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </th>
+                                                            </tr>
+                                                        }
+
+
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <th>
+                                                        <div class="row d-flex">
+                                                            <div class="col-9 text-center">
+                                                                <select class="form-control">
+                                                                    <option>WELCOME</option>
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="col-3">
+                                                                <button type="button" class="btn btn-primary" @onclick="@(() => { prop.SetValue(prop.PropertyType, test); StateHasChanged(); })">Tilføj</button>
+                                                            </div>
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
 
                             }
                         }

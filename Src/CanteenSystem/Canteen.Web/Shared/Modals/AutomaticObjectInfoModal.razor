@@ -14,6 +14,9 @@
     [Parameter]
     public Action ModalActionButtonCallback { get; set; }
 
+    [Parameter]
+    public List<object> ModalSelectOptions { get; set; }
+
     private string ModalLabelName
     {
         get
@@ -46,19 +49,30 @@
                 <div class="modal-body">
                     <div class="row">
 
-                            @{
+                        @{
                             if (ModalData != null)
                             {
                                 foreach (var prop in ModalData.GetType().GetProperties())
                                 {
                                     object value = prop.GetValue(ModalData, null);
                                     var name = prop.Name;
+                                    string fieldName = string.Concat(name.Select(x => Char.IsUpper(x) ? " " + x : x.ToString())).TrimStart(' ');
 
+                                    if (Attribute.IsDefined(prop, typeof(ModalFieldNameAttribute)))
+                                    {
+                                        fieldName = prop.GetCustomAttribute<ModalFieldNameAttribute>().FieldName;
+                                    }
 
                                     if (!Attribute.IsDefined(prop, typeof(ModalHideFieldAttribute)))
                                     {
+
+                                        if (prop.PropertyType.Name == "Boolean")
+                                        {
+                                            value = Convert.ToBoolean(value) ? "Ja" : "Nej";
+                                        }
+
                                         <div class="col-6">
-                                            <h5>@name.ToUpper():<span class="modalInfoVariableValue"> @value</span></h5>
+                                            <h5>@fieldName:<span class="modalInfoVariableValue">@value</span></h5>
                                         </div>
                                     }
 

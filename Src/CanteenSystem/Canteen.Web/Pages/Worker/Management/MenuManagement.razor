@@ -127,6 +127,11 @@
     public void SelectUpdateDish(int dishId)
     {
         selectedUpdateDish = Dishes.Where(dish => dish.DishId == dishId).FirstOrDefault();
+        List<FullIngridientDTO> dishIngridients = ingredientService.GetDishIngridientsAsync(dishId).Result;
+        List<FullIngridientDTO> ingridients = ingredientService.GetIngredientsAsync().Result;
+
+        selectedUpdateDish.Ingridients = dishIngridients;
+
         StateHasChanged();
     }
 
@@ -146,7 +151,6 @@
 
 
     #region Delete Functions
-
     public async void DeleteDish(int dishId)
     {
         FullDishDTO deletedDish = await dishService.DeleteDishAsync(dishId);
@@ -167,7 +171,6 @@
         Allergies.Remove(Allergies.Where(allergy => allergy.AllergyId == deleteAllergy.AllergyId).FirstOrDefault());
         StateHasChanged();
     }
-
     #endregion
 }
 

@@ -3,6 +3,7 @@ using Absence.DataAccess.Entities;
 using Absence.DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Absence.DataAccess.Repositories
@@ -28,7 +29,18 @@ namespace Absence.DataAccess.Repositories
                 .Include(o => o.Classroom)
                 .ThenInclude(o => o.Camera)
                 .AsNoTracking()
-                .SingleAsync(o => o.FKClassroomId == classroomId && o.FKSubjectId == subjectId && o.StartTime > currentTime && o.EndTime < currentTime);
+                .SingleAsync(o => o.FKClassroomId == classroomId && o.FKSubjectId == subjectId && o.StartTime <= currentTime && o.EndTime >= currentTime);
+        }
+
+        public async Task<Schedule> GetSchedule(DateTime currentTime)
+        {
+            return await _dbContext.Schedules
+                .Include(o => o.StudentClass)
+                .ThenInclude(o => o.Students)
+                .Include(o => o.Classroom)
+                .ThenInclude(o => o.Camera)
+                .AsNoTracking()
+                .SingleAsync(o => o.StartTime <= currentTime && o.EndTime >= currentTime);
         }
     }
 }

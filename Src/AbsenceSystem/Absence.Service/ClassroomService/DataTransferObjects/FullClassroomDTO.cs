@@ -1,4 +1,5 @@
 ﻿using Absence.Service.CameraService;
+using Absence.Service.ScheduleService;
 using Absence.Service.SchoolService;
 using System.Collections.Generic;
 
@@ -10,8 +11,8 @@ namespace Absence.Service.ClassroomService
         public string ClassroomNumber { get; set; }
         public string Name { get; set; }
         public int FKSchoolId { get; set; }
-        public int FKWeekScheduleId { get; set; }
         public FullSchoolDTO School { get; set; }
+        public List<FullScheduleDTO> Schedules { get; set; }
         public FullCameraDTO Camera { get; set; }
     }
 }

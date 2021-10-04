@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Absence.DataAccess.Migrations
 {
     [DbContext(typeof(AbsenceContext))]
-    [Migration("20211003222015_Initials")]
+    [Migration("20211004084734_Initials")]
     partial class Initials
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,13 +24,13 @@ namespace Absence.DataAccess.Migrations
             modelBuilder.Entity("Absence.DataAccess.Entities.AbsenceReport", b =>
                 {
                     b.Property<string>("FKStudentId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(8)");
 
                     b.Property<int>("FKScheduleId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Attended")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("Attended")
+                        .HasColumnType("bit");
 
                     b.HasKey("FKStudentId", "FKScheduleId");
 
@@ -90,9 +90,6 @@ namespace Absence.DataAccess.Migrations
                     b.Property<int>("FKSchoolId")
                         .HasColumnType("int");
 
-                    b.Property<int>("FKWeekScheduleId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -108,7 +105,6 @@ namespace Absence.DataAccess.Migrations
                             ClassroomId = 1,
                             ClassroomNumber = "52.211",
                             FKSchoolId = 1,
-                            FKWeekScheduleId = 0,
                             Name = "Tokyo"
                         },
                         new
@@ -116,7 +112,6 @@ namespace Absence.DataAccess.Migrations
                             ClassroomId = 2,
                             ClassroomNumber = "52.212",
                             FKSchoolId = 2,
-                            FKWeekScheduleId = 0,
                             Name = "Oslo"
                         },
                         new
@@ -124,7 +119,6 @@ namespace Absence.DataAccess.Migrations
                             ClassroomId = 3,
                             ClassroomNumber = "51.157",
                             FKSchoolId = 1,
-                            FKWeekScheduleId = 0,
                             Name = "Hongkong"
                         },
                         new
@@ -132,7 +126,6 @@ namespace Absence.DataAccess.Migrations
                             ClassroomId = 4,
                             ClassroomNumber = "51.131",
                             FKSchoolId = 2,
-                            FKWeekScheduleId = 0,
                             Name = "Paris"
                         });
                 });
@@ -205,7 +198,8 @@ namespace Absence.DataAccess.Migrations
             modelBuilder.Entity("Absence.DataAccess.Entities.Student", b =>
                 {
                     b.Property<string>("StudentId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
 
                     b.Property<int>("FKStudentClassId")
                         .HasColumnType("int");
@@ -399,7 +393,7 @@ namespace Absence.DataAccess.Migrations
                     b.HasOne("Absence.DataAccess.Entities.Student", "Student")
                         .WithMany("AbsenceReports")
                         .HasForeignKey("FKStudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Schedule");
@@ -461,7 +455,7 @@ namespace Absence.DataAccess.Migrations
                     b.HasOne("Absence.DataAccess.Entities.StudentClass", "StudentClass")
                         .WithMany("Students")
                         .HasForeignKey("FKStudentClassId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("StudentClass");

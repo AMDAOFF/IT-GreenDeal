@@ -57,5 +57,20 @@ namespace Absence.Service.ScheduleService
                 return null;
             }
         }
+
+        public async Task<FullScheduleDTO> GetSchedule(DateTime currentTime)
+        {
+            try
+            {
+                FullScheduleDTO schedule = _mappingService._mapper.Map<FullScheduleDTO>(await _scheduleRepository.GetSchedule(currentTime));
+                LogInformation($"Successfully fetched the Schedule with the currentTime: {currentTime}");
+                return schedule;
+            }
+            catch (Exception e)
+            {
+                LogError($"Failed to fetch the Schedule with the currentTime: {currentTime}", e);
+                return null;
+            }
+        }
     }
 }

@@ -17,6 +17,7 @@ using Absence.Service.SubjectService;
 using Absence.Service.TeacherService;
 using Absence.Service.AutoMappingService;
 using Absence.Service.StudentClassService;
+using Absence.Service.PythonService;
 
 namespace Absence.Web
 {
@@ -56,6 +57,7 @@ namespace Absence.Web
             services.AddScoped<ISubjectService, SubjectService>();
             services.AddScoped<ITeacherService, TeacherService>();
             services.AddScoped<IStudentClassService, StudentClassService>();
+            services.AddScoped<IPythonService, PythonService>();
             services.AddScoped<MappingService, MappingService>();
         }
 

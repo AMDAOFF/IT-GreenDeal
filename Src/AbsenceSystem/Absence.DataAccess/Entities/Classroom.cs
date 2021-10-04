@@ -8,7 +8,6 @@ namespace Absence.DataAccess.Entities
         public string ClassroomNumber { get; set; }
         public string Name { get; set; }
         public int FKSchoolId { get; set; }
-        public int FKWeekScheduleId { get; set; }
         public School School { get; set; }
         public List<Schedule> Schedules { get; set; }
         public Camera Camera { get; set; }

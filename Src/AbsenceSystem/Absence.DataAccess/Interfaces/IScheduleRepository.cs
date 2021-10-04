@@ -15,5 +15,11 @@ namespace Absence.DataAccess.Interfaces
         /// Gets a <see cref="Schedule"/> by <paramref name="classroomId"/>, <paramref name="subjectId"/> and <paramref name="currentTime"/>
         /// </summary>
         Task<Schedule> GetSchedule(int classroomId, int subjectId, DateTime currentTime);
+
+        /// <summary>
+        /// Gets a <see cref="Schedule"/> by <paramref name="currentTime"/>
+        /// </summary>
+        Task<Schedule> GetSchedule(DateTime currentTime);
+
     }
 }

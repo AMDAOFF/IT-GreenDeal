@@ -27,10 +27,11 @@ namespace Absence.WebCore.Pages
             _logger = logger;
             _classroomService = classroomService;
         }
-
-        public async void OnGet()
+        public List<FullClassroomDTO> Classrooms { get; set; }
+        public async Task OnGet()
         {
-            List<FullClassroomDTO> classrooms = await _classroomService.GetAll();
+            var classroom = await _classroomService.GetById(1);
+            Classrooms = await _classroomService.GetAll();
         }
     }
 }

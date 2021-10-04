@@ -42,8 +42,7 @@ namespace Absence.DataAccess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClassroomNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FKSchoolId = table.Column<int>(type: "int", nullable: false),
-                    FKWeekScheduleId = table.Column<int>(type: "int", nullable: false)
+                    FKSchoolId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -160,7 +159,7 @@ namespace Absence.DataAccess.Migrations
                 name: "Students",
                 columns: table => new
                 {
-                    StudentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    StudentId = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FKStudentClassId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -172,16 +171,16 @@ namespace Absence.DataAccess.Migrations
                         column: x => x.FKStudentClassId,
                         principalTable: "StudentClasses",
                         principalColumn: "StudentClassId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "AbsenceReports",
                 columns: table => new
                 {
-                    FKStudentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FKStudentId = table.Column<string>(type: "nvarchar(8)", nullable: false),
                     FKScheduleId = table.Column<int>(type: "int", nullable: false),
-                    Attended = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Attended = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -197,7 +196,7 @@ namespace Absence.DataAccess.Migrations
                         column: x => x.FKStudentId,
                         principalTable: "Students",
                         principalColumn: "StudentId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
@@ -224,13 +223,13 @@ namespace Absence.DataAccess.Migrations
 
             migrationBuilder.InsertData(
                 table: "Classrooms",
-                columns: new[] { "ClassroomId", "ClassroomNumber", "FKSchoolId", "FKWeekScheduleId", "Name" },
+                columns: new[] { "ClassroomId", "ClassroomNumber", "FKSchoolId", "Name" },
                 values: new object[,]
                 {
-                    { 1, "52.211", 1, 0, "Tokyo" },
-                    { 3, "51.157", 1, 0, "Hongkong" },
-                    { 2, "52.212", 2, 0, "Oslo" },
-                    { 4, "51.131", 2, 0, "Paris" }
+                    { 1, "52.211", 1, "Tokyo" },
+                    { 3, "51.157", 1, "Hongkong" },
+                    { 2, "52.212", 2, "Oslo" },
+                    { 4, "51.131", 2, "Paris" }
                 });
 
             migrationBuilder.InsertData(

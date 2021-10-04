@@ -13,16 +13,19 @@
 @using Absence.Service.ClassroomService;
 @using Absence.Service.StudentService;
 @using Absence.Service.AbsenceReportService;
+@using Absence.Service.PythonService;
 @using System.Threading;
+@using System.Diagnostics;
 @inject IStudentClassService StudentClassService
 @inject ISubjectService SubjectService
 @inject IClassroomService ClassroomService
 @inject IScheduleService ScheduleService
 @inject IStudentService StudentService
+@inject IPythonService PythonService
 
 <h1>Absence</h1>
 
-@if (AbsentStudents.Count == 0)
+@if (AbsentStudents == null)
 {
     <p><em>Loading absent students...</em></p>
 }
@@ -47,7 +50,7 @@ else
 
 }
 
-@if (RegistratedStudents.Count == 0)
+@if (RegistratedStudents == null)
 {
     <p><em>Waiting for Python script...</em></p>
 }
@@ -72,7 +75,7 @@ else
 
 }
 
-<form>
+<form @onsubmit="StartAbsenceRegistration">
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
@@ -107,12 +110,14 @@ else
         <div class="col-md-4">
             <div class="form-group">
                 <div class="input-group input-group-lg">
-                    <button type="submit" class="form-control btn btn-success" @onclick="StartAbsenceRegistration">Start Registration</button>
+                    <button type="submit" class="form-control btn btn-success">Start Fraværsregistering</button>
                 </div>
             </div>
         </div>
     </div>
 </form>
+
+<button type="button" @onclick="StopAbsenceRegistration">Stop Fraværsregistrering</button>
 
 @* //TODO: Button to start the script. *@
 @* //TODO: Timer or button to end the script. *@
@@ -123,16 +128,19 @@ else
 
     public List<FullStudentDTO> RegistratedStudents { get; set; }
 
-    public List<FullSubjectDTO> Subjects { get; set; }
+    public List<FullSubjectDTO> Subjects { get; set; } = new List<FullSubjectDTO>();
 
-    public List<FullClassroomDTO> Classrooms { get; set; }
+    public List<FullClassroomDTO> Classrooms { get; set; } = new List<FullClassroomDTO>();
+
+    public FullScheduleDTO Schedule { get; set; }
 
     public int SelectedSubjectId { get; set; }
 
     public int SelectedClassroomId { get; set; }
 
+    public Process PythonScriptProcess { get; set; }
 
-
+    public CancellationTokenSource RabbitMQTokenSource { get; set; }
     public CancellationToken RabbitMQToken { get; set; }
 
 
@@ -140,32 +148,38 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        //TODO: Fix error - StudentClass could be the problem
         Classrooms = await ClassroomService.GetAll();
         Subjects = await SubjectService.GetAll();
 
-
         AbsentStudents = new List<FullStudentDTO>();
         RegistratedStudents = new List<FullStudentDTO>();
-
+        await InvokeAsync(StateHasChanged);
     }
 
     private async Task StartAbsenceRegistration()
     {
         DateTime dateTime = DateTime.Now;
-        FullScheduleDTO Schedule = await ScheduleService.GetSchedule(SelectedClassroomId, SelectedSubjectId, dateTime);
+
+        Schedule = await ScheduleService.GetSchedule(dateTime);
+
+        // Schedule = await ScheduleService.GetSchedule(dateTime);
 
         AbsentStudents = Schedule.StudentClass.Students.ToList();
 
         string cameraIP = Schedule.Classroom.Camera.IP;
 
-        CancellationTokenSource source = new CancellationTokenSource();
-        RabbitMQToken = source.Token;
+        PythonScriptProcess = await PythonService.StartAbsenceScript(cameraIP);
+        RabbitMQTokenSource = new CancellationTokenSource();
+        RabbitMQToken = RabbitMQTokenSource.Token;
 
         Task rabbitMQTask = Task.Run(() => RunRabbitMQ(cameraIP));
+    }
 
+    private async Task StopAbsenceRegistration()
+    {
+        await PythonService.StopAbsenceScript(PythonScriptProcess);
 
-
+        RabbitMQTokenSource.Cancel();
     }
 
     private Task RunRabbitMQ(string cameraIP)
@@ -176,6 +190,7 @@ else
         using (IConnection connection = factory.CreateConnection())
         using (IModel channel = connection.CreateModel())
         {
+            channel.QueueDeclare($"Absence-{cameraIP}", true, false, false);
             EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
             consumer.Received += ConsumerReceived;
             channel.BasicConsume(queue: $"Absence-{cameraIP}", autoAck: true, consumer: consumer);

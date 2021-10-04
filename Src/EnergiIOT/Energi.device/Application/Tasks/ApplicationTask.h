@@ -17,6 +17,7 @@ public:
 	~ApplicationTask() = default;
 
 	void Service() final override;
+	void SetConfig();
 		
 	private:
 	Board& _board;

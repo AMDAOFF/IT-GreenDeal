@@ -127,9 +127,10 @@ namespace Energi.Service.DeviceService
                 OnlineStatus = device.OnlineStatus,
                 Temperature = device.Temperature,
                 Radiator = device.Radiator,
+                HeatingStatus = device.EnvirementStatus == EnvirementStatus.Consumer ? true : false,
                 VentilationValveStatus = device.VentilationValveStatus,
                 EnvirementStatus = Enum.GetName(typeof(EnvirementStatus), device.EnvirementStatus)
-            };
+            };            
         }
 
         public Device StatusDeviceAsDevice(StatusDeviceDTO device)

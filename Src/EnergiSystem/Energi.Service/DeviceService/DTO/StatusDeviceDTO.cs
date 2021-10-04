@@ -26,5 +26,8 @@ namespace Energi.Service.DeviceService.DTO
         public bool HeatingStatus { get; set; } = false;
         public bool RecyclingStatus { get; set; } = false;
         public string EnvirementStatus { get; set; }
+
+        // Online ping
+        public DateTime OnlinePing { get; set; }
     }
 }

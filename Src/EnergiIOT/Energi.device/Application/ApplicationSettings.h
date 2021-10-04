@@ -24,7 +24,7 @@ serverInfo_t serverInfo
 
 connectSettings_t connectSettings =
 {	
-	"JKClient2",
+	"JKClient1",
 	"guest",
 	"guest",
 	QoS0,
@@ -34,13 +34,13 @@ connectSettings_t connectSettings =
 publishMessage_t publishMessage =
 {
 	"#Online#",
-	"device/update/2",
+	"device/update/1",
 	&connectSettings
 };
 
 
 subscribeTopic_t subscribeTopic {
-	"device/settings/2",
+	"device/settings/1",
 	&connectSettings
 };
 

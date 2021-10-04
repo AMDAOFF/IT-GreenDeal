@@ -5,11 +5,12 @@
 @using Energi.Service.DeviceService.DTO
 @using Microsoft.AspNetCore.SignalR.Client
 @inject NavigationManager NavigationManager
+@using Energi.Service.DatabaseService
 @implements IAsyncDisposable
 
 
 @inject IDeviceService deviceService
-
+@inject IDatabaseService databaseService
 
 <h3>Dashboard</h3>
 
@@ -41,11 +42,11 @@
                         @*Shadow https://toruskit.com/docs/utilities/shadows/*@
                         <div class="col-6">
                             <div style="display:flex">
-                                <div class="boardImg @(device.HeatingStatus ? "running" : "") " @onclick="() => Heating(device.Id)">
+                                <div class="boardImg @(device.OnlineStatus == true && device.HeatingStatus ? "running" : "") " @onclick="() => Heating(device.Id)">
                                     <img style="margin:5px;" src="@(device.OnlineStatus ? "Images/Heating.svg" : "Images/HeatingGray.svg")" />
                                     <p class="boardP">Heating</p>
                                 </div>
-                                <div class="boardImg @(device.RecyclingStatus ? "running" : "") " @onclick="() => Recycling(device.Id)">
+                                <div class="boardImg @(device.OnlineStatus == true && device.RecyclingFan ? "running" : "") " @onclick="() => Recycling(device.Id)">
                                     <img style="margin:5px;" src="@(device.OnlineStatus ? "Images/Recycling.svg" : "Images/RecyclingGray.svg")" />
                                     <p class="text-center boardP">Recycling</p>
                                 </div>
@@ -86,6 +87,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await SeedDatabase(); // POC DATA!!!
+
         deviceList = await deviceService.GetAllDevicesStatusAsync();
 
         if (deviceList == null)
@@ -122,6 +125,8 @@
 
             device.VentilationFan = (device.VentilationFan == false) ? true : false; ;
             device.Radiator = (device.Radiator == false) ? true : false; ;
+
+            deviceService.UpdateDevice(device);
         }
     }
 
@@ -134,6 +139,8 @@
             device.RecyclingStatus = (device.RecyclingStatus == false) ? true : false;
 
             device.RecyclingFan = (device.RecyclingFan == false) ? true : false;
+            
+            deviceService.UpdateDevice(device);
         }
     }
 
@@ -143,5 +150,13 @@
         {
             await hubConnection.DisposeAsync();
         }
+    }
+
+    //  This is only for the POC applications!!!
+    private async Task SeedDatabase()
+    {
+        await databaseService.DeleteDatabase();
+        await databaseService.SeedData();
+        await Task.Delay(20);
     }
 }

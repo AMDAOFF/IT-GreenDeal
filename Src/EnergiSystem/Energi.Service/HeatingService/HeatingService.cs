@@ -46,15 +46,13 @@ namespace Energi.Service.HeatingService
                     return deviceChangeList;
                 }
 
-
-
                 // Consumer has provider.
                 device.EnvirementStatus = Enum.GetName(typeof(EnvirementStatus), EnvirementStatus.Consumer);
                 device.VentilationValveStatus = true;
                 device.RecyclingFan = true;
                 device.HeatingStatus = true;
                 device.RecyclingStatus = true;
-                device.VentilationFan = false;
+                device.VentilationFan = false;                
 
                 deviceChangeList.Add(provider);                
                 provider.EnvirementStatus = Enum.GetName(typeof(EnvirementStatus), EnvirementStatus.Provider);
@@ -62,6 +60,7 @@ namespace Energi.Service.HeatingService
                 provider.RecyclingFan = true;
                 provider.RecyclingStatus = true;
                 provider.VentilationValveStatus = false;
+                device.HeatingStatus = false;
 
                 await _deviceService.UpdateDevice(device);
                 await _deviceService.UpdateDevice(provider);
@@ -75,7 +74,7 @@ namespace Energi.Service.HeatingService
                 config.RecyclingFan = device.RecyclingFan;
                 config.Radiator = device.Radiator;
                 config.VentilationFan = device.VentilationFan;
-                mqttService.SendConfig(config);
+                await mqttService.SendConfig(config);
 
                 // Provider.
                 config.Id = provider.Id;
@@ -83,7 +82,7 @@ namespace Energi.Service.HeatingService
                 config.RecyclingFan = provider.RecyclingFan;
                 config.Radiator = device.Radiator;
                 config.VentilationFan = provider.VentilationFan;
-                mqttService.SendConfig(config);
+                await mqttService.SendConfig(config);
 
                 return deviceChangeList;
             }
@@ -109,8 +108,6 @@ namespace Energi.Service.HeatingService
                 provider.EnvirementStatus = Enum.GetName(typeof(EnvirementStatus), EnvirementStatus.Provider);
 
                 // SEND INSTRUCTION HERE
-
-
             }
 
             // Be provider.
@@ -119,7 +116,7 @@ namespace Energi.Service.HeatingService
 
             // Provider has consumer.
 
-            return default; // deviceChangeList;
+            return default;
         }
 
         public async Task SendLastConfig(IMqttService mqttService, int id)
@@ -134,7 +131,7 @@ namespace Energi.Service.HeatingService
             config.RecyclingFan = device.RecyclingFan;
             config.Radiator = device.Radiator;
             config.VentilationFan = device.VentilationFan;
-            mqttService.SendConfig(config);
+            await mqttService.SendConfig(config);
         }
 
     }

@@ -53,6 +53,14 @@ int main(void)
 			_board.GetLedController().ToggleLed(Leds::Ready);
 			task1 = _board.GetChronos().Time();
 		}
+		
+		// Application service.
+		if(_board.GetChronos().Time() - task3 > 500)
+		{
+			applicationTask.Service();
+			task3 = _board.GetChronos().Time();
+		}
+		
 		// Publish. now temperature task.
 		if(_board.GetChronos().Time() - task4 > 900)
 		{
@@ -63,12 +71,7 @@ int main(void)
 
 			task4 = _board.GetChronos().Time();
 		}
-		// Application service.
-		if(_board.GetChronos().Time() - task3 > 500)
-		{
-			applicationTask.Service();
-			task3 = _board.GetChronos().Time();
-		}
+		
 		// Watchdog.
 		if(_board.GetChronos().Time() - task2 > 4000)
 		{

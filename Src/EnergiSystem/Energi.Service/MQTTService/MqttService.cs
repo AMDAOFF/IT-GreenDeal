@@ -12,6 +12,7 @@ namespace Energi.Service.MQTTService
     {
         private MqttClient client;
         private IOTSettings _settings;
+        private bool _configReceived;
 
         Func<double, int, Task> methodAsDouble;
         Func<string, int, Task> methodAsString;
@@ -39,11 +40,29 @@ namespace Energi.Service.MQTTService
             client.Subscribe(new string[] { topic }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE });
         }
 
-        public void SendConfig(ConfigMessage config)
+        public async Task SendConfig(ConfigMessage config)
         {
             string message = $"#{Convert.ToInt32(config.VentilationFan)}{Convert.ToInt32(config.RecyclingFan)}{Convert.ToInt32(config.VentilationValveStatus)}{Convert.ToInt32(config.Radiator)}00#";
 
-            Publish(_settings.PubTopic + "/" + config.Id.ToString(), message);
+            // Wait for config file is received, or try again.
+            int times = 0;
+            while (times < 5)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    Publish(_settings.PubTopic + "/" + config.Id.ToString(), message);
+                    await Task.Delay(500);
+                }
+
+                if (_configReceived)
+                {
+                    break;
+                }
+                else
+                {
+                    times++;
+                }                
+            }            
         }
 
         private async void MessageReceived(object sender, MqttMsgPublishEventArgs e)
@@ -66,6 +85,10 @@ namespace Energi.Service.MQTTService
             else if(rawStr.Contains("Online"))
             {
                 await methodAsString(Encoding.Default.GetString(e.Message), id);
+            }
+            else if (rawStr.Contains("Config"))
+            {
+                _configReceived = true;
             }
         }
     }

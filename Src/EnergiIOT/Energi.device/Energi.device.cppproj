@@ -227,6 +227,9 @@
     <Compile Include="HAL\IRunnable.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="HAL\IScheduler.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="HAL\ISerialport.h">
       <SubType>compile</SubType>
     </Compile>
@@ -246,6 +249,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Mqtt\MqttClient.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Osal\Scheduler.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Osal\Scheduler.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="PortExpander\CD4052BM96.cpp">
@@ -315,10 +324,10 @@
     <Folder Include="Application" />
     <Folder Include="Mqtt" />
     <Folder Include="Adc" />
+    <Folder Include="Osal" />
     <Folder Include="Watchdog" />
     <Folder Include="Wifi" />
     <Folder Include="Serialport" />
-    <Folder Include="Osal" />
     <Folder Include="Utility" />
     <Folder Include="PortExpander" />
     <Folder Include="Utility\Logging" />

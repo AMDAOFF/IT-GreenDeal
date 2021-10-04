@@ -58,7 +58,7 @@
                                 string fieldType = "";
                                 bool hideField = false;
                                 bool disableField = false;
-                                string fieldName = name;
+                                string fieldName = string.Concat(name.Select(x => Char.IsUpper(x) ? " " + x : x.ToString())).TrimStart(' ');
 
                                 if (Attribute.IsDefined(prop, typeof(ModalFieldTypeAttribute)))
                                 {
@@ -85,7 +85,7 @@
                                 if (!hideField)
                                 {
                                     <div class="form-group">
-                                        <label>@string.Concat(name.Select(x => Char.IsUpper(x) ? " " + x : x.ToString())).TrimStart(' ')</label>
+                                        <label>@fieldName</label>
                                         <input type="@fieldType" disabled="@disableField" value="@value" checked="@value" @onchange="@((ChangeEventArgs e) => prop.SetValue(ModalData, Convert.ChangeType(e.Value.ToString(), prop.PropertyType)))" class="form-control" />
                                     </div>
                                 }

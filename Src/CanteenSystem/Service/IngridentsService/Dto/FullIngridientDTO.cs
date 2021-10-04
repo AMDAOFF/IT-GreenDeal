@@ -7,7 +7,7 @@ namespace Canteen.Service.IngridentsService.Dto
         [ModalHideField]
         public int IngridientId { get; set; }
 
-        [ModalFieldType(ModalFieldTypes.Text)]
+        [ModalFieldType(ModalFieldTypes.Text), ModalFieldName("Ingridiens Navn")]
         public string IngridientName { get; set; }
     }
 }

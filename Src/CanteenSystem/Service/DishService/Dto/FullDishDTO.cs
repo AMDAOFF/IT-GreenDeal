@@ -9,7 +9,7 @@ namespace Canteen.Service.DishService.Dto
 {
     public class FullDishDTO
     {
-        [ModalFieldName("Ret ID")]
+        [ModalFieldName("Ret ID"), ModalHideField]
         public int DishId { get; set; }
 
         [ModalFieldType(ModalFieldTypes.Text), ModalFieldName("Ret Navn")]

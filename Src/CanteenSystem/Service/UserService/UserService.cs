@@ -11,6 +11,9 @@ using Canteen.Service.EncryptionService;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Canteen.Service.AllergyService.Dto;
+using Canteen.DataAccess.Models;
+using Canteen.Service.UserAllergyService;
 
 namespace Canteen.Service.UserService
 {
@@ -22,13 +25,15 @@ namespace Canteen.Service.UserService
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly SignInManager<ApplicationUser> _signInManager;
 		private readonly RoleManager<IdentityRole> _roleManager;
+		private readonly IUserAllergyService _userAllergyService;
 
 		public UserService(IdentityContext identityContext,
 			IEncryptionService encryptionService,
 			IHttpContextAccessor httpContextAccessor,
 			UserManager<ApplicationUser> userManager,
 			SignInManager<ApplicationUser> signInManager,
-			RoleManager<IdentityRole> roleManager)
+			RoleManager<IdentityRole> roleManager,
+			IUserAllergyService userAllergyService)
 		{
 			_identityContext = identityContext;
 			_encryptionService = encryptionService;
@@ -36,6 +41,7 @@ namespace Canteen.Service.UserService
 			_userManager = userManager;
 			_signInManager = signInManager;
 			_roleManager = roleManager;
+			_userAllergyService = userAllergyService;
 		}
 
 		public async Task<List<SlimApplicationUserDTO>> GetUsersAsync()
@@ -103,11 +109,23 @@ namespace Canteen.Service.UserService
 		//	return userRoles.FirstOrDefault();
 		//}
 
-		public async Task<string> ChangeUserAsync(ModelStateDictionary modelState, SlimApplicationUserDTO userDTO)
+		public async Task<string> ChangeUserAsync(ModelStateDictionary modelState, SlimApplicationUserDTO userDTO, List<FullAllergyDTO> allergiesDTO)
 		{
 			var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
 			if (modelState.IsValid && userDTO != null)
 			{
+				await _userAllergyService.RemoveUserAllergy(userDTO.Id);
+				foreach (var allergy in allergiesDTO)
+				{
+					UserAllergy userAllergy = new UserAllergy
+					{
+						AllergyId = allergy.AllergyId,
+						UserId = userDTO.Id
+					};
+
+					await _identityContext.UserAllergies.AddAsync(userAllergy);
+					await _identityContext.SaveChangesAsync();
+				}
 
 				byte[] encryptedName = _encryptionService.Encrypt(userDTO.Name);
 				byte[] encryptedSurname = _encryptionService.Encrypt(userDTO.Surname);
@@ -119,16 +137,6 @@ namespace Canteen.Service.UserService
 				return "Success";
 			}
 			return "Not Valid";
-
-			//var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
-
-			//if (modelState.IsValid && user != null)
-			//{
-			//	await _signInManager.RefreshSignInAsync(user);
-			//	return "Success";
-			//}
-
-			//return "Not Valid";
 
 		}
 

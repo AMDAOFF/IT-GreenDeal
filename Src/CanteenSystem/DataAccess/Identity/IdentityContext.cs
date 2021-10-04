@@ -1,6 +1,8 @@
 ﻿using Canteen.DataAccess.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 
 namespace Canteen.DataAccess.Identity
 {
@@ -38,5 +40,6 @@ namespace Canteen.DataAccess.Identity
 			//	ua.UserAllergyId
 			//});
 		}
+
 	}
 }

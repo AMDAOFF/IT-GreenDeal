@@ -1,4 +1,5 @@
-﻿using Canteen.Service.AttributeService;
+﻿using Canteen.DataAccess.Models;
+using Canteen.Service.AttributeService;
 using Canteen.Service.IngridentsService.Dto;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,6 @@ namespace Canteen.Service.DishService.Dto
         public bool DishOfTheDay { get; set; }
 
         [ModalHideField]
-        public List<FullIngridientDTO> Ingridients { get; set; } = new List<FullIngridientDTO>();
+        public List<FullIngridientDTO> Ingredients { get; set; }
     }
 }

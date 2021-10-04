@@ -25,7 +25,7 @@
     {
         selectedDish = TodaysDishes.Where(obj => obj.DishId == dishId).FirstOrDefault();
 
-        selectedDish.Ingridients.Add(new Service.IngridentsService.Dto.FullIngridientDTO
+        selectedDish.Ingredients.Add(new Service.IngridentsService.Dto.FullIngridientDTO
         {
             IngridientName = "Test",
             IngridientId = 1

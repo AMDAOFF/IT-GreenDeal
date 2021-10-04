@@ -13,6 +13,6 @@ namespace Canteen.Service.IngridentsService.Dto
         public string IngridientName { get; set; }
 
         [ModalHideField]
-        public List<FullAllergyDTO> Allergies { get; set; }
+        public List<FullAllergyDTO> Allergies { get; set; } = new List<FullAllergyDTO>();
     }
 }

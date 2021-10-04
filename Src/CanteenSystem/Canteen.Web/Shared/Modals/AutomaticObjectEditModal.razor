@@ -7,36 +7,42 @@
 @using Canteen.Service.IngridentsService.Dto;
 
 @code {
-	[Parameter]
-	public string ModalName { get; set; }
+    [Parameter]
+    public string ModalName { get; set; }
 
-	[Parameter]
-	public string ModalTitle { get; set; }
+    [Parameter]
+    public string ModalTitle { get; set; }
 
-	[Parameter]
-	public object ModalData { get; set; }
+    [Parameter]
+    public object ModalData { get; set; }
 
-	[Parameter]
-	public EventCallback<object> ModalActionButtonCallback { get; set; }
+    [Parameter]
+    public EventCallback<object> ModalActionButtonCallback { get; set; }
 
-	private string ModalLabelName
-	{
-		get
-		{
-			return ModalName + "Label";
-		}
+    [Parameter]
+    public EventCallback<int> ModalUpdatedObjectList { get; set; }
 
-		set
-		{
-			ModalLabelName = value;
-		}
-	}
+    [Parameter]
+    public List<dynamic> ModalAddObjectList { get; set; }
+
+    private string ModalLabelName
+    {
+        get
+        {
+            return ModalName + "Label";
+        }
+
+        set
+        {
+            ModalLabelName = value;
+        }
+    }
 
 
-	protected override async Task OnInitializedAsync()
-	{
+    protected override async Task OnInitializedAsync()
+    {
 
-	}
+    }
 }
 
 
@@ -116,13 +122,15 @@
                                             {
                                                 @foreach (var item in test)
                                                 {
+
+                                                    int objectId = 0;
+
                                                     @foreach (var obj in item.GetType().GetProperties())
                                                     {
                                                         object listValue = obj.GetValue(item, null);
 
-                                                        test.Append(new { 
-                                                            listValue
-                                                        });
+                                                        objectId = obj.Name.Contains("Id") ? Convert.ToInt32(listValue) : 0;
+
 
                                                         if (!Attribute.IsDefined(obj, typeof(ModalHideFieldAttribute)))
                                                         {
@@ -135,17 +143,12 @@
 
                                                                         <div class="col-6 d-flex justify-content-end">
                                                                             <div class="row">
-                                                                                <div class="col-6 justify-content-end">
+                                                                                <div class="col-12 justify-content-end">
                                                                                     <button class="btn btn-primary btn-rounded btn-normal-text">
                                                                                         <i class="las la-trash"></i>
                                                                                     </button>
                                                                                 </div>
 
-                                                                                <div class="col-6">
-                                                                                    <button class="btn btn-primary btn-rounded btn-normal-text" data-toggle="modal" data-target="#modalUpdateDish">
-                                                                                        <i class="las la-edit"></i>
-                                                                                    </button>
-                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -157,24 +160,20 @@
                                                     }
                                                 }
                                             }
-                                            else
-                                            {
-                                                <tr>
-                                                    <th>
-                                                        <div class="row d-flex">
-                                                            <div class="col-9 text-center">
-                                                                <select class="form-control">
-                                                                    <option>WELCOME</option>
-                                                                </select>
-                                                            </div>
 
-                                                            <div class="col-3">
-                                                                <button type="button" class="btn btn-primary" @onclick="@(() => { prop.SetValue(prop.PropertyType, test); StateHasChanged(); })">Tilføj</button>
-                                                            </div>
+
+                                            <tr>
+                                                <th>
+                                                    <div class="row d-flex">
+                                                        <div class="col-6">
+                                                            <select>
+                                                            </select>
                                                         </div>
-                                                    </th>
-                                                </tr>
-                                            }
+                                                    </div>
+                                                </th>
+                                            </tr>
+
+
                                         </tbody>
                                     </table>
                                 }

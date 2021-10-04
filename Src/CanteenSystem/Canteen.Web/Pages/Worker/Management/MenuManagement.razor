@@ -130,7 +130,7 @@
         List<FullIngridientDTO> dishIngridients = ingredientService.GetDishIngridientsAsync(dishId).Result;
         List<FullIngridientDTO> ingridients = ingredientService.GetIngredientsAsync().Result;
 
-        selectedUpdateDish.Ingridients = dishIngridients;
+        selectedUpdateDish.Ingredients = dishIngridients;
 
         StateHasChanged();
     }
@@ -148,7 +148,6 @@
     }
 
     #endregion
-
 
     #region Delete Functions
     public async void DeleteDish(int dishId)
@@ -171,6 +170,10 @@
         Allergies.Remove(Allergies.Where(allergy => allergy.AllergyId == deleteAllergy.AllergyId).FirstOrDefault());
         StateHasChanged();
     }
+    #endregion
+
+    #region Add Functions
+
     #endregion
 }
 
@@ -203,7 +206,7 @@
                                 </div>
 
                                 <div class="col-3 d-flex align-items-center">
-                                    <h5>@dish.DishCo2</h5>
+                                    <h5>@dish.DishCo2 gram</h5>
                                 </div>
 
                                 <div class="col-6 d-flex justify-content-end">

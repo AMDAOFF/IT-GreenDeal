@@ -24,6 +24,6 @@ namespace Canteen.Service.DishService.Dto
         public bool DishOfTheDay { get; set; }
 
         [ModalHideField]
-        public List<FullIngridientDTO> Ingredients { get; set; }
+        public List<FullIngridientDTO> Ingredients { get; set; } = new List<FullIngridientDTO>();
     }
 }

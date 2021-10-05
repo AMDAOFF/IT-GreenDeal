@@ -8,8 +8,8 @@ Watchdog::Watchdog()
 
 void Watchdog::Enable(WdtTime time)
 {
-		wdt_enable(time);
-		return;
+	wdt_enable(time);
+	return;
 }
 
 void Watchdog::ResetTimer()

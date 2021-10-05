@@ -34,6 +34,9 @@
     Both
   };
 
+  /**
+  * @brief Defines the serial port number.
+  */
   enum class SerialPorts
   {
 	  Serial1,

@@ -17,6 +17,6 @@ public:
     */
     virtual void Service() = 0;	
 
-}; //IRunnable
+}; 
 
-#endif //__IRUNNABLE_H__
+#endif 

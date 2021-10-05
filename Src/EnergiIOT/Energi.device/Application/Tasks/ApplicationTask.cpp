@@ -7,9 +7,7 @@ _board { board },
 _publishMessage { publishMessage },
 _connectionSettings { connectSettings },
 _subscribeTopic { subscribeTopic }
-{
-	//_gotConfig = false;
-}
+{}
 
 // WARNING!
 // The implementation of the serial RX interrupt driver is easy to expose to stack overflow!!!!
@@ -54,7 +52,6 @@ void ApplicationTask::Service()
 {
 	if (process_data)
 	{
-		//_gotConfig = true;
 		_board.SetReadyState(true);
 
 		SetConfig();
@@ -65,7 +62,7 @@ void ApplicationTask::Service()
 		_board.GetMqttClient().Publish(&_publishMessage);
 		
 		process_data = false;
-	}	
+	}
 	
 	if (_board.GetReadyState() == false)
 	{
@@ -123,10 +120,12 @@ void ApplicationTask::SetConfig()
 	if (_rxBuffer[3] == '1')
 	{
 		_board.GetLedController().SetLedState(Leds::Busy, true);
+		//_board.GetRadiator();
 	}
 	else
 	{
 		_board.GetLedController().SetLedState(Leds::Busy, false);
+		//_board.GetRadiator();
 	}
 	
 	return;

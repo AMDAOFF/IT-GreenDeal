@@ -4,6 +4,7 @@
 
 #include <avr/wdt.h>
 
+// This needs to be moved to the board
 typedef enum WdtTime
 {
 	MS15 = WDTO_15MS,
@@ -18,16 +19,34 @@ typedef enum WdtTime
 	S8 = WDTO_8S
 };
 
+/**
+* @brief Provides an interface to kick the watchdog.
+*/
 class IWatchdog
 {
 
-public:
+	public:
 	virtual ~IWatchdog() = default;
 	
+	/**
+	* @brief Enables the watchdog.
+	*/
 	virtual void Enable(WdtTime time) = 0;
+	
+	/**
+	* @brief Resdets the watchdog. This must be done regulary to avoid timeout and system reset.
+	*/
 	virtual void ResetTimer() = 0;
+	
+	/**
+	* @brief Force a software reset
+	*/
 	virtual void ResetBoard() = 0;
+	
+	/**
+	* @brief Disables the watchdog.
+	*/
 	virtual void Disable() = 0;
-}; 
+};
 
-#endif 
+#endif

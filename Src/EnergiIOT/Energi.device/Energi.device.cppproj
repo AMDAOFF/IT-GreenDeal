@@ -306,8 +306,6 @@
   <ItemGroup>
     <Folder Include="Application\Tasks" />
     <Folder Include="Boards\GreenDealDevice" />
-    <Folder Include="Boards\328P" />
-    <Folder Include="Boards\2560" />
     <Folder Include="I2C" />
     <Folder Include="HAL" />
     <Folder Include="Boards" />

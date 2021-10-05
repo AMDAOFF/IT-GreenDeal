@@ -16,5 +16,10 @@ namespace Absence.Service.ScheduleService
         /// Gets a <see cref="FullScheduleDTO"/> by <paramref name="classroomId"/>, <paramref name="subjectId"/> and <paramref name="currentTime"/>
         /// </summary>
         Task<FullScheduleDTO> GetSchedule(int classroomId, int subjectId, DateTime currentTime);
+
+        /// <summary>
+        /// Gets a <see cref="FullScheduleDTO"/> by <paramref name="currentTime"/>
+        /// </summary>
+        Task<FullScheduleDTO> GetSchedule(DateTime currentTime);
     }
 }

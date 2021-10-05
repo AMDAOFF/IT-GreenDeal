@@ -17,7 +17,7 @@ cameraIP = args['ip']
 print("Loading model.")
 
 # Load the data from the model.
-data = pickle.loads(open("model.pickle", "rb").read())
+data = pickle.loads(open("C:\\Users\\jimmy\\source\\repos\\IT-GreenDeal\\Src\\AbsenceSystem\\Absence.Py\\model.pickle", "rb").read())
 
 print(f"Starting the webcam with the IP: {cameraIP}")
 
@@ -58,7 +58,7 @@ while True:
 	for encoding in encodings:
 
 		# Attempt to match each face from the webcam stream to our known encodings. (Adjust tolerance for stricter matching.)
-		matches = face_recognition.compare_faces(data["encodings"],	encoding, tolerance=0.4)
+		matches = face_recognition.compare_faces(data["encodings"],	encoding, tolerance=0.5)
 		id = None
 
 		# Check to see if we have found a match.
@@ -89,7 +89,7 @@ while True:
 			channel = connection.channel()
 			channel.queue_declare(queue=f"Absence-{cameraIP}", durable=True)
 			channel.start_consuming()
-			channel.basic_publish(exchange='', routing_key='Absence', body=f'{id}')
+			channel.basic_publish(exchange='', routing_key=f'Absence-{cameraIP}', body=f'{id}')
 			print(f"Succeded")
 
     # Loop over the recognized faces.

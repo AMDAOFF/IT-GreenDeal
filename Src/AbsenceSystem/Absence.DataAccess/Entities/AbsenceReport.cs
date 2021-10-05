@@ -4,7 +4,7 @@
     {
         public string FKStudentId { get; set; }
         public int FKScheduleId { get; set; }
-        public string Attended { get; set; }
+        public bool Attended { get; set; }
         public Student Student { get; set; }
         public Schedule Schedule { get; set; }
     }

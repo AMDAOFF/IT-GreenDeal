@@ -27,7 +27,7 @@ namespace Absence.DataAccess.EFCore
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             #region Primary Keys
-            modelBuilder.Entity<AbsenceReport>().HasKey(o => new { o.FKStudentId, o.FKScheduleId });
+            modelBuilder.Entity<AbsenceReport>().HasKey(o => new { o.FKStudentId, o.FKScheduleId});
             modelBuilder.Entity<Camera>().HasKey(o => o.IP);
             modelBuilder.Entity<Classroom>().HasKey(o => o.ClassroomId);
             modelBuilder.Entity<Schedule>().HasKey(o => o.ScheduleId);
@@ -39,8 +39,9 @@ namespace Absence.DataAccess.EFCore
             #endregion
 
             #region Navigation Properties
+
+            modelBuilder.Entity<AbsenceReport>().HasOne(o => o.Student).WithMany(o => o.AbsenceReports).HasForeignKey(o => o.FKStudentId).OnDelete(DeleteBehavior.Restrict); ;
             modelBuilder.Entity<AbsenceReport>().HasOne(o => o.Schedule).WithMany(o => o.AbsenceReports).HasForeignKey(o => o.FKScheduleId);
-            modelBuilder.Entity<AbsenceReport>().HasOne(o => o.Student).WithMany(o => o.AbsenceReports).HasForeignKey(o => o.FKStudentId);
 
             modelBuilder.Entity<Camera>().HasOne(o => o.Classroom).WithOne(o => o.Camera).HasForeignKey<Camera>(o => o.FKClassroomId);
 
@@ -56,7 +57,7 @@ namespace Absence.DataAccess.EFCore
 
             modelBuilder.Entity<StudentClass>().HasOne(o => o.Teacher).WithMany(o => o.StudentClasses).HasForeignKey(o => o.FKTeacherId);
 
-            modelBuilder.Entity<Student>().HasOne(o => o.StudentClass).WithMany(o => o.Students).HasForeignKey(o => o.FKStudentClassId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Student>().HasOne(o => o.StudentClass).WithMany(o => o.Students).HasForeignKey(o => o.FKStudentClassId);
             #endregion
 
             #region Data Seeding

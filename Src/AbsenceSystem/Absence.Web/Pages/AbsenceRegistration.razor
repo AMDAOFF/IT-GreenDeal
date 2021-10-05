@@ -1,0 +1,263 @@
+﻿@page "/Absence"
+
+@using System.Collections.Generic;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using RabbitMQ.Client;
+@using RabbitMQ.Client.Events;
+@using System;
+@using System.Text;
+@using System.Threading.Tasks;
+@using Absence.Service.StudentClassService;
+@using Absence.Service.SubjectService;
+@using Absence.Service.ScheduleService;
+@using Absence.Service.ClassroomService;
+@using Absence.Service.StudentService;
+@using Absence.Service.AbsenceReportService;
+@using Absence.Service.PythonService;
+@using System.Threading;
+@using System.Diagnostics;
+@inject IStudentClassService StudentClassService
+@inject ISubjectService SubjectService
+@inject IClassroomService ClassroomService
+@inject IScheduleService ScheduleService
+@inject IStudentService StudentService
+@inject IPythonService PythonService
+@inject IAbsenceReportService AbsenceReportService
+@inject NavigationManager NavigationManager
+
+<h1>Fraværsregistrering</h1>
+<div class="row">
+    <div class="col-md-3">
+        <div class="form-group">
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <label class="input-group-text">Klasselokale</label>
+                </div>
+                <select @bind="SelectedClassroomId" class="form-control" required>
+                    <option selected value="0" disabled>Vælg klasselokale</option>
+                    @foreach (var classroom in Classrooms)
+                    {
+                        <option value="@classroom.ClassroomId">@classroom.Name</option>
+                    }
+                </select>
+            </div>
+            @if (SelectedClassroomId == 0)
+            {
+                <div class="alert-danger">
+                    Ugyldigt klasselokale
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <label class="input-group-text">Fag</label>
+                </div>
+                <select @bind="SelectedSubjectId" class="form-control" required>
+                    <option selected value="0" disabled>Vælg fag</option>
+                    @foreach (var subject in Subjects)
+                    {
+                        <option value="@subject.SubjectId">@subject.Name</option>
+                    }
+                </select>
+            </div>
+            @if (SelectedSubjectId == 0)
+            {
+                <div class="alert-danger">
+                    Ugyldigt fag
+                </div>
+            }
+        </div>
+    </div>
+    @if (SelectedClassroomId != 0 && SelectedSubjectId != 0)
+    {
+        <div class="col-md-3">
+            <div class="form-group">
+                <div class="input-group input-group-lg">
+                    <button type="button" class="form-control btn btn-success" @onclick="StartAbsenceRegistration">Start Fraværsregistering</button>
+                </div>
+            </div>
+        </div>
+    }
+    @if (Schedule != null)
+    {
+        <div class="col-md-3">
+            <div class="form-group">
+                <div class="input-group input-group-lg">
+                    <button type="button" class="form-control btn btn-danger" @onclick="StopAbsenceRegistration">Stop Fraværsregistrering</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@if (AbsentStudents != null)
+{
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-lg-9">Fraværende elever</th>
+                    <th class="col-lg-3"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var student in AbsentStudents)
+                {
+                    <tr>
+                        <td>@student.Name</td>
+                        <td><button type="button" class="btn btn-success" @onclick="() => AddStudent(student)">Manuel registrering</button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+}
+
+@if (RegistratedStudents != null)
+{
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-lg-9">Registrerede elever</th>
+                    <th class="col-lg-3"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var student in RegistratedStudents)
+                {
+                    <tr>
+                        <td>@student.Name</td>
+                        <td><button type="button" class="btn btn-danger" @onclick="() => RemoveStudent(student)">Registrer fraværende</button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+
+
+
+@code {
+    public List<FullStudentDTO> AbsentStudents { get; set; }
+
+    public List<FullStudentDTO> RegistratedStudents { get; set; }
+
+    public List<FullSubjectDTO> Subjects { get; set; } = new List<FullSubjectDTO>();
+
+    public List<FullClassroomDTO> Classrooms { get; set; } = new List<FullClassroomDTO>();
+
+    public FullScheduleDTO Schedule { get; set; }
+
+    public int SelectedSubjectId { get; set; }
+
+    public int SelectedClassroomId { get; set; }
+
+    public Process PythonScriptProcess { get; set; }
+
+    public CancellationTokenSource RabbitMQTokenSource { get; set; }
+
+    public CancellationToken RabbitMQToken { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Classrooms = await ClassroomService.GetAll();
+        Subjects = await SubjectService.GetAll();
+
+        AbsentStudents = new List<FullStudentDTO>();
+        RegistratedStudents = new List<FullStudentDTO>();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task StartAbsenceRegistration()
+    {
+        DateTime dateTime = DateTime.Now;
+
+        Schedule = await ScheduleService.GetSchedule(SelectedClassroomId, SelectedSubjectId, dateTime);
+
+        AbsentStudents = Schedule.StudentClass.Students.ToList();
+
+        string cameraIP = Schedule.Classroom.Camera.IP;
+
+        PythonScriptProcess = await PythonService.StartAbsenceScript(cameraIP);
+        RabbitMQTokenSource = new CancellationTokenSource();
+        RabbitMQToken = RabbitMQTokenSource.Token;
+
+        Task rabbitMQTask = Task.Run(() => RunRabbitMQ(cameraIP));
+    }
+
+    private async void StopAbsenceRegistration()
+    {
+        await PythonService.StopAbsenceScript(PythonScriptProcess);
+
+        RabbitMQTokenSource.Cancel();
+
+        foreach (var student in AbsentStudents)
+        {
+            await AbsenceReportService.Create(new FullAbsenceReportDTO { Attended = false, FKScheduleId = Schedule.ScheduleId, FKStudentId = student.StudentId });
+        }
+
+        foreach (var student in RegistratedStudents)
+        {
+            await AbsenceReportService.Create(new FullAbsenceReportDTO { Attended = true, FKScheduleId = Schedule.ScheduleId, FKStudentId = student.StudentId });
+        }
+
+        NavigationManager.NavigateTo("/success");
+    }
+
+    private async Task AddStudent(FullStudentDTO student)
+    {
+        RegistratedStudents.Add(student);
+        AbsentStudents.Remove(student);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task RemoveStudent(FullStudentDTO student)
+    {
+        RegistratedStudents.Remove(student);
+        AbsentStudents.Add(student);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private Task RunRabbitMQ(string cameraIP)
+    {
+        ConnectionFactory factory = new ConnectionFactory() { HostName = "localhost", UserName = "guest", Password = "guest", VirtualHost = "/" };
+
+
+        using (IConnection connection = factory.CreateConnection())
+        using (IModel channel = connection.CreateModel())
+        {
+            channel.QueueDeclare($"Absence-{cameraIP}", true, false, false);
+            EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
+            consumer.Received += ConsumerReceived;
+            channel.BasicConsume(queue: $"Absence-{cameraIP}", autoAck: true, consumer: consumer);
+            while (true)
+            {
+                if (RabbitMQToken.IsCancellationRequested)
+                {
+                    consumer.Received -= ConsumerReceived;
+                    break;
+                }
+            }
+        }
+        return null;
+    }
+
+    private async void ConsumerReceived(object sender, BasicDeliverEventArgs ea)
+    {
+
+        byte[] body = ea.Body.ToArray();
+        string studentId = Encoding.UTF8.GetString(body);
+
+        FullStudentDTO student = await StudentService.GetById(studentId);
+        RegistratedStudents.Add(student);
+
+        AbsentStudents.Remove(AbsentStudents.Single(o => o.StudentId == student.StudentId));
+
+        await InvokeAsync(StateHasChanged);
+    }
+}

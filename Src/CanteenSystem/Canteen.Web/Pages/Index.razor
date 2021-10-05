@@ -1,38 +1,39 @@
 ﻿@page "/"
 
-@using Canteen.Web.Models;
+@using Canteen.Service.AllergyService
+@using Canteen.Service.AllergyService.Dto
+
+@using Canteen.Service.DishService
+@using Canteen.Service.DishService.Dto
+
+@inject IDishService dishService
+@inject IAllergyService allergyService
 
 @code {
-    string Test { get; set; }
-    Allergy selectedAllergy { get; set; }
-    List<Allergy> allergies { get; set; } = new List<Allergy>();
-    string modalTitle { get; set; }
 
-    protected override void OnInitialized()
+    public List<FullAllergyDTO> Allergies { get; set; }
+    public List<FullDishDTO> TodaysDishes { get; set; }
+
+    public FullDishDTO selectedDish { get; set; }
+
+    protected override async Task OnInitializedAsync()
     {
-        allergies.Add(new Allergy
-        {
-            Id = 1,
-            Name = "Test"
-        });
-
-        allergies.Add(new Allergy
-        {
-            Id = 2,
-            Name = "Test2"
-        });
+        TodaysDishes = dishService.GetDishesOfTheDay();
     }
 
-    public void LoadInfoModal(int allergyID)
+    public void LoadInfoModal(int dishId)
     {
-        selectedAllergy = allergies.Where(obj => obj.Id == allergyID).FirstOrDefault();
+        selectedDish = TodaysDishes.Where(obj => obj.DishId == dishId).FirstOrDefault();
+
+        selectedDish.Ingredients.Add(new Service.IngridentsService.Dto.FullIngridientDTO
+        {
+            IngridientName = "Test",
+            IngridientId = 1
+        });
+
         StateHasChanged();
     }
 
-    public void Funz()
-    {
-
-    }
 }
 
 
@@ -44,65 +45,18 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-6">
-            <div class="canteenMenuItem allergic">
-                <span class="canteenMenuItemInfoIcon" @onclick="@(() => LoadInfoModal(1))" data-toggle="modal" data-target="#exampleModal"><i class="las la-info-circle"></i></span>
-                <div class="canteenMenuItemContent">
-                    <h1>Menu Title</h1>
-                    <h5>Menu Description</h5>
+        @foreach (FullDishDTO dish in TodaysDishes)
+        {
+            <div class="col-6">
+                <div class="canteenMenuItem allergic">
+                    <span class="canteenMenuItemInfoIcon" @onclick="@(() => LoadInfoModal(dish.DishId))" data-toggle="modal" data-target="#exampleModal"><i class="las la-info-circle"></i></span>
+                    <div class="canteenMenuItemContent">
+                        <h1>@dish.DishName</h1>
+                        <h5>@dish.DishCo2 mg</h5>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div class="col-6">
-            <div class="canteenMenuItem notAllergic">
-                <span class="canteenMenuItemInfoIcon" @onclick="@(() => LoadInfoModal(2))" data-toggle="modal" data-target="#exampleModal"><i class="las la-info-circle"></i></span>
-                <div class="canteenMenuItemContent">
-                    <h1>Menu Title</h1>
-                    <h5>Menu Description</h5>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6">
-            <div class="canteenMenuItem notAllergic">
-                <span class="canteenMenuItemInfoIcon"><i class="las la-info-circle"></i></span>
-                <div class="canteenMenuItemContent">
-                    <h1>Menu Title</h1>
-                    <h5>Menu Description</h5>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6">
-            <div class="canteenMenuItem notAllergic">
-                <span class="canteenMenuItemInfoIcon"><i class="las la-info-circle"></i></span>
-                <div class="canteenMenuItemContent">
-                    <h1>Menu Title</h1>
-                    <h5>Menu Description</h5>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6">
-            <div class="canteenMenuItem notAllergic">
-                <span class="canteenMenuItemInfoIcon"><i class="las la-info-circle"></i></span>
-                <div class="canteenMenuItemContent">
-                    <h1>Menu Title</h1>
-                    <h5>Menu Description</h5>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6">
-            <div class="canteenMenuItem allergic">
-                <span class="canteenMenuItemInfoIcon"><i class="las la-info-circle"></i></span>
-                <div class="canteenMenuItemContent">
-                    <h1>Menu Title</h1>
-                    <h5>Menu Description</h5>
-                </div>
-            </div>
-        </div>
+        }
     </div>
 </div>
 
@@ -210,11 +164,5 @@
     </div>
 </div>
 
-@{ 
-    if (selectedAllergy != null)
-    {
-        modalTitle = "View " + selectedAllergy.Name;
-    }
-}
 
-<AutomaticObjectInfoModal ModalName="exampleModal" ModalData="@selectedAllergy" ModalTitle="@modalTitle"></AutomaticObjectInfoModal>
+<AutomaticObjectInfoModal ModalName="exampleModal" ModalData="@selectedDish" ModalTitle="Ret information"></AutomaticObjectInfoModal>

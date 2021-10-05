@@ -11,6 +11,7 @@ using Canteen.Service.DishService;
 using Canteen.Service.IngridentsService;
 using Canteen.Service.AllergyService;
 using Microsoft.AspNetCore.Http;
+using Canteen.Service.UserAllergyService;
 
 namespace Canteen.Web
 {
@@ -35,6 +36,7 @@ namespace Canteen.Web
             services.AddScoped<IIngredientsService, IngredientsService>();
             services.AddScoped<IAllergyService, AllergyService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IUserAllergyService, UserAllergyService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

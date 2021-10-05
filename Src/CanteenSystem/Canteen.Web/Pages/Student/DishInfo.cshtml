@@ -7,23 +7,21 @@
         <div class="dish-info-panel">
             <div class="row">
                 <div class="col-12 text-center">
-                    DAGENS RET
+                    @Model.Dish.DishName
                 </div>
 
                 <div class="container">
-                    <div class="row ml-0 mr-0 p-5">
-                        <div class="col-6">
-                            <h4>Tomater</h4>
-                        </div>
-
-                        <div class="col-6">
-                            <h4>Tomater</h4>
-                        </div>
-
-                        <div class="col-6">
-                            <h4>Tomater</h4>
-                        </div>
-                    </div>
+					<div class="row ml-0 mr-0 p-5">
+						@*@if (Model.Ingredients != null)
+						{
+							@foreach (var ingredients in Model.Ingredients)
+							{
+								<div class="col-6">
+									<h4>@ingredients.IngridientName</h4>
+								</div>
+							}
+						}*@
+					</div>
                 </div>
             </div>
         </div>

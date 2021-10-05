@@ -1,6 +1,7 @@
 ﻿using Canteen.DataAccess.Identity;
 using Canteen.DataAccess.Models;
 using Canteen.Service.AllergyService.Dto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -104,44 +105,31 @@ namespace Canteen.Service.AllergyService
 
         public async Task<List<FullAllergyDTO>> GetDishAllergiesAsync(int dishId)
         {
-            List<FullAllergyDTO> returnDishAllergies = new List<FullAllergyDTO>();
+            //List<FullAllergyDTO> returnDishAllergies = new List<FullAllergyDTO>();
 
 
-            await Task.Run(() =>
-            {
-                foreach (Ingredient ingredient in _identityContext.Ingredients.Where(dish => dish.Dish.DishId == dishId))
-                {
-                    foreach (Allergy allergy in ingredient.Allergies)
-                    {
-                        returnDishAllergies.Add(new FullAllergyDTO
-                        {
-                            AllergyId = allergy.AllergyId,
-                            AllergyName = allergy.AllergyName
-                        });
-                    }
-                }
-            });
-         
-            return returnDishAllergies;
+            //await Task.Run(() =>
+            //{
+            //    foreach (Ingredient ingredient in _identityContext.Ingredients.Where(dish => dish.Dish.DishId == dishId))
+            //    {
+            //        foreach (Allergy allergy in ingredient.Allergies)
+            //        {
+            //            returnDishAllergies.Add(new FullAllergyDTO
+            //            {
+            //                AllergyId = allergy.AllergyId,
+            //                AllergyName = allergy.AllergyName
+            //            });
+            //        }
+            //    }
+            //});
+
+            //return returnDishAllergies;
+            throw new NotImplementedException();
         }
 
         public async Task<List<FullAllergyDTO>> GetIngredientAllergiesAsync(int ingredientId)
         {
-            List<FullAllergyDTO> returnIngredientAllergies = new List<FullAllergyDTO>();
-
-            await Task.Run(() =>
-            {
-                foreach (Allergy allergy in _identityContext.Allergies.Where(allergy => allergy.Ingredient.IngredientId == ingredientId).ToList())
-                {
-                    returnIngredientAllergies.Add(new FullAllergyDTO
-                    {
-                        AllergyId = allergy.AllergyId,
-                        AllergyName = allergy.AllergyName
-                    });
-                }
-            });
-
-            return returnIngredientAllergies;
+            throw new NotImplementedException();
         }
 
         public async Task<FullAllergyDTO> UpdateAllergyAsync(FullAllergyDTO allergyObject)

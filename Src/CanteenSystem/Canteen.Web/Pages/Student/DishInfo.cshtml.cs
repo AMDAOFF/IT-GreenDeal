@@ -35,8 +35,8 @@ namespace Canteen.Web.Pages.Student
         public async Task OnGetAsync(int dishId)
         {
             Dish = await _dishService.GetDishAsync(dishId);
-            Ingredients = await _ingredientsService.GetDishIngridientsAsync(dishId);
-            Allergies = await _allergyService.GetDishAllergiesAsync(dishId);          
+            //Ingredients = await _ingredientsService.GetDishIngridientsAsync(dishId);
+            //Allergies = await _allergyService.GetDishAllergiesAsync(dishId);          
         }
     }
 }

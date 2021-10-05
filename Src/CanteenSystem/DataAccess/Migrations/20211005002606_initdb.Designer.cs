@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    [Migration("20211004104911_Fixed")]
-    partial class Fixed
+    [Migration("20211005002606_initdb")]
+    partial class initdb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,12 +31,7 @@ namespace DataAccess.Migrations
                     b.Property<string>("AllergyName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("IngredientId")
-                        .HasColumnType("int");
-
                     b.HasKey("AllergyId");
-
-                    b.HasIndex("IngredientId");
 
                     b.ToTable("Allergies");
                 });
@@ -62,6 +57,26 @@ namespace DataAccess.Migrations
                     b.ToTable("Dishes");
                 });
 
+            modelBuilder.Entity("Canteen.DataAccess.Models.DishIngredient", b =>
+                {
+                    b.Property<int>("DishId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IngredientId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AllergyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DishId", "IngredientId");
+
+                    b.HasIndex("AllergyId");
+
+                    b.HasIndex("IngredientId");
+
+                    b.ToTable("DishIngredients");
+                });
+
             modelBuilder.Entity("Canteen.DataAccess.Models.Ingredient", b =>
                 {
                     b.Property<int>("IngredientId")
@@ -69,17 +84,30 @@ namespace DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("DishId")
-                        .HasColumnType("int");
-
                     b.Property<string>("IngredientName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IngredientId");
 
-                    b.HasIndex("DishId");
-
                     b.ToTable("Ingredients");
+                });
+
+            modelBuilder.Entity("Canteen.DataAccess.Models.IngredientAllergy", b =>
+                {
+                    b.Property<int>("IngredientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AllergyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IngredientId1")
+                        .HasColumnType("int");
+
+                    b.HasKey("IngredientId", "AllergyId");
+
+                    b.HasIndex("IngredientId1");
+
+                    b.ToTable("IngredientAllergies");
                 });
 
             modelBuilder.Entity("Canteen.DataAccess.Models.UserAllergy", b =>
@@ -316,28 +344,52 @@ namespace DataAccess.Migrations
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
-            modelBuilder.Entity("Canteen.DataAccess.Models.Allergy", b =>
+            modelBuilder.Entity("Canteen.DataAccess.Models.DishIngredient", b =>
                 {
+                    b.HasOne("Canteen.DataAccess.Models.Allergy", null)
+                        .WithMany("DishIngredients")
+                        .HasForeignKey("AllergyId");
+
+                    b.HasOne("Canteen.DataAccess.Models.Dish", "Dish")
+                        .WithMany("DishIngredients")
+                        .HasForeignKey("DishId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Canteen.DataAccess.Models.Ingredient", "Ingredient")
-                        .WithMany("Allergies")
-                        .HasForeignKey("IngredientId");
+                        .WithMany("DishIngredients")
+                        .HasForeignKey("IngredientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Dish");
 
                     b.Navigation("Ingredient");
                 });
 
-            modelBuilder.Entity("Canteen.DataAccess.Models.Ingredient", b =>
+            modelBuilder.Entity("Canteen.DataAccess.Models.IngredientAllergy", b =>
                 {
-                    b.HasOne("Canteen.DataAccess.Models.Dish", "Dish")
-                        .WithMany("Ingredients")
-                        .HasForeignKey("DishId");
+                    b.HasOne("Canteen.DataAccess.Models.Allergy", "Allergy")
+                        .WithMany("IngredientAllergies")
+                        .HasForeignKey("IngredientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Dish");
+                    b.HasOne("Canteen.DataAccess.Models.Ingredient", "Ingredient")
+                        .WithMany("IngredientAllergies")
+                        .HasForeignKey("IngredientId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Allergy");
+
+                    b.Navigation("Ingredient");
                 });
 
             modelBuilder.Entity("Canteen.DataAccess.Models.UserAllergy", b =>
                 {
                     b.HasOne("Canteen.DataAccess.Models.Allergy", "Allergy")
-                        .WithMany("UserAllergies")
+                        .WithMany()
                         .HasForeignKey("AllergyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -406,17 +458,21 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Canteen.DataAccess.Models.Allergy", b =>
                 {
-                    b.Navigation("UserAllergies");
+                    b.Navigation("DishIngredients");
+
+                    b.Navigation("IngredientAllergies");
                 });
 
             modelBuilder.Entity("Canteen.DataAccess.Models.Dish", b =>
                 {
-                    b.Navigation("Ingredients");
+                    b.Navigation("DishIngredients");
                 });
 
             modelBuilder.Entity("Canteen.DataAccess.Models.Ingredient", b =>
                 {
-                    b.Navigation("Allergies");
+                    b.Navigation("DishIngredients");
+
+                    b.Navigation("IngredientAllergies");
                 });
 
             modelBuilder.Entity("Canteen.DataAccess.Identity.ApplicationUser", b =>

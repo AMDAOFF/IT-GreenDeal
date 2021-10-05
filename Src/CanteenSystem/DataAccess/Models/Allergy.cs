@@ -8,8 +8,8 @@ namespace Canteen.DataAccess.Models
         public int AllergyId { get; set; }
         public string AllergyName { get; set; }
 
-        public Ingredient Ingredient { get; set; }
-        public ICollection<UserAllergy> UserAllergies { get; set; }
+        public List<IngredientAllergy> IngredientAllergies { get; set; }
+        public List<DishIngredient> DishIngredients { get; set; }
     }
 }
  

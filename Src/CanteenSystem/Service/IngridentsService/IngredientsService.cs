@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Canteen.DataAccess.Models;
+using System;
 
 namespace Canteen.Service.IngridentsService
 {
@@ -63,18 +64,7 @@ namespace Canteen.Service.IngridentsService
 
         public async Task<List<FullIngridientDTO>> GetDishIngridientsAsync(int dishId)
         {
-            List<FullIngridientDTO> returnDishIngredients = new List<FullIngridientDTO>();
-
-            foreach (Ingredient ingredient in _identityContext.Ingredients.Where(ingredient => ingredient.Dish.DishId == dishId).ToList())
-            {
-                returnDishIngredients.Add(new FullIngridientDTO
-                {
-                    IngridientId = ingredient.IngredientId,
-                    IngridientName = ingredient.IngredientName
-                });
-            }
-
-            return returnDishIngredients;
+            throw new NotImplementedException();
         }
 
         public async Task<FullIngridientDTO> GetIngridientAsync(int ingredientId)

@@ -73,27 +73,14 @@ namespace Canteen.Service.DishService
 
         public async Task<FullDishDTO> GetDishAsync(int dishID)
         {
-            Dish returnDish = null;
+            Dish foundDish = _identityContext.Dishes.Where(dish => dish.DishId == dishID).FirstOrDefault();
 
-            await Task.Run(() => {
-                //returnDish = _identityContext.Dishes.Where(dish => dish.DishId == dishID).FirstOrDefault();
-                returnDish = _identityContext.Dishes.Include(x => x.Ingredients).ThenInclude(x => x.Allergies).FirstOrDefault();
-            });
-
-            if (returnDish != null)
-            {
-                return new FullDishDTO { 
-                    DishId = returnDish.DishId,
-                    DishName = returnDish.DishName,
-                    DishCo2 = returnDish.DishCO2,
-                    DishOfTheDay = returnDish.DishOfTheDay                 
-                };
-            }
-
-            else
-            {
-                return null;
-            }
+            return new FullDishDTO { 
+                DishId = foundDish.DishId,
+                DishName = foundDish.DishName,
+                DishCo2 = foundDish.DishCO2,
+                DishOfTheDay = foundDish.DishOfTheDay
+            };
         }
 
         public List<FullDishDTO> GetDishesOfTheDay()

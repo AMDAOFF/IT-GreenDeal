@@ -11,6 +11,6 @@ namespace Canteen.DataAccess.Models
         public int DishCO2 { get; set; }
         public bool DishOfTheDay { get; set; }
 
-        public List<Ingredient> Ingredients { get; set; }
+        public List<DishIngredient> DishIngredients { get; set; }
     }
 }

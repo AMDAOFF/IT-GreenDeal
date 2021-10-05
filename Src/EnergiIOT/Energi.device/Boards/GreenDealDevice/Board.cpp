@@ -57,7 +57,6 @@ void Board::Initialize()
 	_ledController.ClearAll();
 	_adc.Initialize();
 	
-	
 	_ledController.SetLedState(Leds::Working, true);
 	_chronos.Delay(1500);
 	_ledController.SetLedState(Leds::Working, false);
@@ -95,7 +94,7 @@ IWifi& Board::GetWifi()
 
 //IDigitalOutput& Board::GetRadiator()
 //{
-	////return _radiator;
+////return _radiator;
 //}
 
 IMqttClient& Board::GetMqttClient()

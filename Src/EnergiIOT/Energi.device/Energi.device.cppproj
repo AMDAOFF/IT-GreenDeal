@@ -313,7 +313,6 @@
     <Folder Include="Application" />
     <Folder Include="Mqtt" />
     <Folder Include="Adc" />
-    <Folder Include="Osal" />
     <Folder Include="Watchdog" />
     <Folder Include="Wifi" />
     <Folder Include="Serialport" />

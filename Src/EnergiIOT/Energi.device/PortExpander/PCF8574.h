@@ -25,9 +25,9 @@ class PCF8574 final : public ILedController
 	PCF8574& operator=( const PCF8574 &c );
 	
 	II2C* _i2c;
-	
+
 	uint8_t _address;
 	uint8_t _ledMask;
 };
 
-#endif //__PCF8574_H__
+#endif

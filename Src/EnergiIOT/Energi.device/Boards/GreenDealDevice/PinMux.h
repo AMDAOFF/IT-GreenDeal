@@ -30,4 +30,4 @@ enum Leds : uint8_t
 // Extern.
 #define PCF8574_ADDRESS 0x38
 
-#endif /* PINMUX_H_ */
+#endif

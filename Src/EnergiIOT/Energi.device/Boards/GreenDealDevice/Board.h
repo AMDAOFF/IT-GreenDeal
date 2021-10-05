@@ -46,7 +46,7 @@ class Board
 	IAdc& GetAdc();
 	IWatchdog& GetWatchdog();
 	bool GetReadyState();
-	void SetReadyState(bool state);	
+	void SetReadyState(bool state);
 
 	void DelayInMS(unsigned long ms);
 
@@ -72,4 +72,4 @@ class Board
 	bool _readyState;
 };
 
-#endif //__BOARD_H__
+#endif

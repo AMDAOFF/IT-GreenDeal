@@ -32,4 +32,4 @@ class I2C final : public II2C
 	void Stop(void);
 };
 
-#endif //__I2CHANDLER_H__
+#endif

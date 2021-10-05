@@ -18,6 +18,6 @@ class MqttPingTask : public IRunnable
 	private:
 	connectSettings_t& _connectionSettings;
 	IMqttClient& _mqttClient;
-}; //MqttPingTask
+};
 
-#endif //__MQTTPINGTASK_H__
+#endif

@@ -9,7 +9,7 @@
 class TemperatureTask : public IRunnable
 {
 
-public:
+	public:
 	TemperatureTask(Board& board, publishMessage_t& publishMessage);
 
 	~TemperatureTask() = default;
@@ -18,6 +18,6 @@ public:
 	private:
 	Board& _board;
 	publishMessage_t& _publishMessage;
-}; 
+};
 
-#endif //__TEMPERATURETASK_H__
+#endif

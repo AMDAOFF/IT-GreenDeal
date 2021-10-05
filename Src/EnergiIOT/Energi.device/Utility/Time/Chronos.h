@@ -15,4 +15,4 @@ class Chronos final : public IChronos
 	void Delay(unsigned long timeout) final override;
 };
 
-#endif //__CHRONOS_H__
+#endif

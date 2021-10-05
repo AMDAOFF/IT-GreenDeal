@@ -10,9 +10,7 @@
 #include "../Boards/GreenDealDevice/Board.h"
 #include "../Boards/GreenDealDevice/PinMux.h"
 #include "../Utility/Types.h"
-
 #include "ApplicationSettings.h"
-
 #include "Tasks/MqttPingTask.h"
 #include "Tasks/ApplicationTask.h"
 #include "Tasks/TemperatureTask.h"

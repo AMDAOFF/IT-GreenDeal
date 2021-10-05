@@ -29,7 +29,7 @@ void PCF8574::ToggleLed(uint8_t ledNumber)
 }
 
 void PCF8574::ClearAll()
-{		
+{
 	_ledMask = 0x00;
 	_i2c->WriteRegister(&_address, &_ledMask);
 }

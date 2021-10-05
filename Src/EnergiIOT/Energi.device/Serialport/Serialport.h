@@ -41,6 +41,4 @@ class Serialport : public ISerialport
 	Chronos* _chronos;
 };
 
-#endif //__SERIALPORT_H__
-
-
+#endif

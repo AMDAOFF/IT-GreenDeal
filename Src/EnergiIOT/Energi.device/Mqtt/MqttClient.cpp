@@ -13,7 +13,7 @@ _connectStatus { false }
 
 
 void MqttClient::Connect(connectSettings_t* settings)
-{	
+{
 	// Protocol name and settings byte count.
 	uint8_t mqttBasePacketLength = 12;
 	

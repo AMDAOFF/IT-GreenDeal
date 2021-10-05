@@ -7,7 +7,6 @@
 #include <stdbool.h>
 #include <string.h>
 #include <math.h>
-
 #include <avr/pgmspace.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -71,5 +70,5 @@ void RingBuffer::GetStr(char* destination, unsigned int skipChars)
 
 	int len = ringBufP - ringBuf - skipChars;
 	// copy buffer to destination string
-	strncpy(destination, ringBuf, len);	
+	strncpy(destination, ringBuf, len);
 }

@@ -17,13 +17,13 @@ wifiSettings_t wifiSettings
 // Mqtt.
 serverInfo_t serverInfo
 {
-	//"192.168.87.120", // Home
-	"192.168.137.1", // EUC
+	"192.168.137.1",
 	TCP,
 };
 
+// Connection settings.
 connectSettings_t connectSettings =
-{	
+{
 	"JKClient1",
 	"guest",
 	"guest",
@@ -31,6 +31,7 @@ connectSettings_t connectSettings =
 	&serverInfo
 };
 
+// Publich settings.
 publishMessage_t publishMessage =
 {
 	"#Online#",
@@ -38,10 +39,10 @@ publishMessage_t publishMessage =
 	&connectSettings
 };
 
-
+// Subscibe settings.
 subscribeTopic_t subscribeTopic {
 	"device/settings/1",
 	&connectSettings
 };
 
-#endif /* APPLICATIONSETTINGS_H_ */
+#endif

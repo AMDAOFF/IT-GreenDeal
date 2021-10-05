@@ -15,7 +15,7 @@ ISR(ADC_vect)
 	float tempK = 1/(0.001129148+(0.000234125+(0.0000000876741*temp*temp))*temp);
 	_value = tempK - 273.15;
 	
-	ADCSRA &= ~(1<<ADSC); //clear PC3	
+	ADCSRA &= ~(1<<ADSC); //clear PC3
 }
 
 TemperatureTask::TemperatureTask(Board& board, publishMessage_t& publishMessage) :
@@ -26,15 +26,15 @@ _publishMessage { publishMessage }
 void TemperatureTask::Service()
 {
 	char buffer[7];
-	dtostrf(_value,4,2,buffer);	
+	dtostrf(_value,4,2,buffer);
 
 	char str[14];
 	memset(str, 0, 14);
-	strcpy(str, "#Temp="); // 3 is a fixed number, we need to control free sockets in software.
+	strcpy(str, "#Temp=");
 	strcat(str, buffer);
 	strcat(str, "#");
 
-	_publishMessage.message = str;	
+	_publishMessage.message = str;
 	_board.GetMqttClient().Publish(&_publishMessage);
 
 	ADCSRA |= (1<<ADSC);

@@ -24,4 +24,4 @@ class DigitalOutput : public IDigitalOutput
 	LogicalState _currentState;
 };
 
-#endif //__DIGITALOUTPUT_H__
+#endif

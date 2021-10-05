@@ -26,9 +26,9 @@ class EspCommunicator : public IWifi
 	void HardwareReset();
 	void SoftwareReset();
 	void Ping(const char *host) final override;
-	uint8_t IsConnected() final override;	
+	uint8_t IsConnected() final override;
 
-	private:	
+	private:
 	uint8_t WriteCMD(const char* msg);
 	uint8_t WriteCMD(const char* msg, unsigned int timeout, const char* tag);
 	uint8_t ReadRespone(unsigned int timeout, const char* tag, bool findTags);
@@ -36,7 +36,7 @@ class EspCommunicator : public IWifi
 	bool wifiConnect(const char* ssid, const char* password);
 	bool NetworkStatus();
 	void CheckEspVersion();
-	void DisconnectAP();	
+	void DisconnectAP();
 	char* GetPort(serverInfo_t* info);
 
 	char _msgBuffer[32];
@@ -44,11 +44,11 @@ class EspCommunicator : public IWifi
 	SerialPorts _defaultPort;
 	DigitalOutput* _resetPin;
 	Chronos* _chronos;
-	uint8_t TagsCount = 5;	
+	uint8_t TagsCount = 5;
 	char* _ssid;
 	char* _password;
-	bool _espInitialize;	
+	bool _espInitialize;
 	bool _isConnected;
 };
 
-#endif //__ESPICOMMUNICATOR_H__
+#endif

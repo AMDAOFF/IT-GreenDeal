@@ -122,7 +122,7 @@ bool EspCommunicator::wifiConnect(const char* ssid, const char* password)
 	strcat(str, password);
 	strcat(str, "\"");
 
-	WriteCMD(str, 5000, "\r\nOK\r\n");	
+	WriteCMD(str, 5000, "\r\nOK\r\n");
 
 	return true;
 }
@@ -178,8 +178,8 @@ void EspCommunicator::SendData(serverInfo_t* serverInfo, char data[], uint8_t da
 	array[2] = 0x00;
 	sprintf(array, "%d", dataLength);
 	
-	str[bufferSize - 3] = array[0]; 
-	str[bufferSize - 2] = array[1]; 
+	str[bufferSize - 3] = array[0];
+	str[bufferSize - 2] = array[1];
 	str[bufferSize - 1] = 0x00;
 
 	// Start connection.

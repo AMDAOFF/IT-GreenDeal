@@ -23,7 +23,7 @@ void Serialport::Initialize(){
 	//UMSEL01 and UMSEL00 are both 0 for asynchronous communication.
 	//UPM01 and UPM00 sets "no parity".
 	//USBS0 set to 0 is 1 stop bit. set to 1 is 2 stop bits.
-	//USCZ00 - USCZ02 sets the character size, to 8 bits.		
+	//USCZ00 - USCZ02 sets the character size, to 8 bits.
 	UCSR0C = (1 << UCSZ01) | (3<<UCSZ00);
 	
 	sei();
@@ -136,7 +136,7 @@ bool Serialport::ReadByteWithTimeout(unsigned char* byte, unsigned int timeout)
 
 void Serialport::EnableInterrupt()
 {
-	UCSR0B |= (1 << RXCIE0);	
+	UCSR0B |= (1 << RXCIE0);
 	return;
 }
 

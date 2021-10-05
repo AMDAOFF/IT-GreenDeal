@@ -31,7 +31,7 @@ Chronos::Chronos(unsigned long f_cpu)
 	TIMSK1 |= (1 << OCIE1A);
 	
 	sei();
-} 
+}
 
 
 unsigned long Chronos::Time()
@@ -52,7 +52,7 @@ void Chronos::ResetTimer()
 
 void Chronos::Delay(unsigned long timeout)
 {
-		unsigned long start = Time();
-		
-		while (Time() - start < timeout){}
+	unsigned long start = Time();
+	
+	while (Time() - start < timeout){}
 }

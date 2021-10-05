@@ -17,7 +17,7 @@ using static MessageBroker.Contracts.Contracts;
 
 namespace Energi.Web.HostedService
 {
-    public class MessageHostedService : IHostedService, IConsumer<MessageAsString>
+    public class MessageHostedService : IHostedService
     {
         private readonly IHubContext<DeviceHub> _deviceHub;
         private readonly IMessageService _messageService;
@@ -73,7 +73,7 @@ namespace Energi.Web.HostedService
                 if (device.OnlinePing < DateTime.Now)
                 {
                     device.OnlineStatus = false;
-                    deviceUpdate.Add(device);                    
+                    deviceUpdate.Add(device);
                     _deviceService.UpdateDevice(device);
                     deviceChange = true;
                 }
@@ -86,49 +86,34 @@ namespace Energi.Web.HostedService
             }
         }
 
-        public async Task Consume(ConsumeContext<MessageAsString> context)
+        public async Task Consume(RoomUpdate context)
         {
             int deviceId;
 
-            // Cut string and create object.
-            string message = context.Message.ToString();
-            int startindex = message.IndexOf('=');
-            int Endindex = message.IndexOf('}');
-            string outputstring = message.Substring(startindex + 1, Endindex - startindex - 1).Trim();
-            List<string> stringList = outputstring.Split(';').ToList();
+            // Get and update device.
+            ClassInfoDTO calssInfo = new ClassInfoDTO() { Classroom = context.RoomNr, PeopleCount = context.PeopleCount, TimeStamp = context.TimeStamp };
+            StatusDeviceDTO device = await _deviceService.GetDeviceByClassNumber(calssInfo.Classroom);
 
-            // A simple check, this data can still be invalid.
-            if (stringList.Count == 3)
-            {
-                // Get and update device.
-                ClassInfoDTO calssInfo = new ClassInfoDTO() { Classroom = stringList[0], PeopleCount = int.Parse(stringList[1]), TimeStamp = DateTime.Parse(stringList[2]) };
-                StatusDeviceDTO device = await _deviceService.GetDeviceByClassNumber(calssInfo.Classroom);
-
-                if (device == null)
-                {
-                    return;
-                }
-
-                calssInfo.Id = device.Id;
-                device.PeopleCount = calssInfo.PeopleCount;
-                await _deviceService.UpdateClasseRoom(calssInfo);
-
-                // Heat control.
-                List<StatusDeviceDTO> deviceList = await _heatingService.HeadControl(device, _mqttService);
-
-                // Send to browser.
-                if (deviceList == null)
-                {
-                    return;
-                }
-                _deviceHub.Clients.All.SendAsync("UpdateDevice", deviceList);
-            }
-            else
+            if (device == null)
             {
                 return;
             }
 
-            Console.WriteLine("Classroom update: {0}", context.Message);
+            calssInfo.Id = device.Id;
+            device.PeopleCount = calssInfo.PeopleCount;
+            await _deviceService.UpdateClasseRoom(calssInfo);
+
+            // Heat control.
+            List<StatusDeviceDTO> deviceList = await _heatingService.HeadControl(device, _mqttService);
+
+            // Send to browser.
+            if (deviceList == null)
+            {
+                return;
+            }
+            _deviceHub.Clients.All.SendAsync("UpdateDevice", deviceList);
+
+            Console.WriteLine("Classroom update: {0}", context);
         }
 
         public async Task IOTMessageReceived(double temperature, int id)
@@ -140,7 +125,7 @@ namespace Energi.Web.HostedService
             {
                 onlineDevices.Where(x => x.Id == device.Id).FirstOrDefault().OnlinePing = DateTime.Now + new TimeSpan(0, 0, 5);
             }
-   
+
             device.Temperature = temperature;
 
             _deviceService.UpdateDevice(device);
@@ -151,7 +136,6 @@ namespace Energi.Web.HostedService
             _deviceHub.Clients.All.SendAsync("UpdateDevice", deviceList);
 
             return;
-
         }
 
         public async Task IOTMessageReceived(string Message, int id)
@@ -161,7 +145,7 @@ namespace Energi.Web.HostedService
             // Add to online status list
             device.OnlineStatus = true;
             device.OnlinePing = DateTime.Now + new TimeSpan(0, 0, 5);
-            onlineDevices.Add(device);          
+            onlineDevices.Add(device);
 
             // Update device.
             _deviceService.UpdateDevice(device);

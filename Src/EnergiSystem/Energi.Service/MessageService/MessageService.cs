@@ -1,5 +1,7 @@
 ﻿using Energi.Service.MessageService.DTO;
 using MassTransit;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +14,10 @@ namespace Energi.Service.MessageService
 {
     public class MessageService : IMessageService
     {
-        private MessageBusSettings _setting;
-        IBusControl _busControl;
+        private MessageBusSettings _settings;
+        IBusControl _busControl;        
+        public CancellationToken RabbitMQToken { get; set; }
+        Func<RoomUpdate, Task> messageCallback;
 
         public async Task SendMessage(PublishMessageDTO message)
         {
@@ -26,27 +30,53 @@ namespace Energi.Service.MessageService
         }
 
 
-        public async Task Initialize(MessageBusSettings settings, Func<ConsumeContext<MessageAsString>, Task> callback)
+        public async Task Initialize(MessageBusSettings settings, Func<RoomUpdate, Task> callback)
         {
-            _setting = settings;
+            _settings = settings;
 
-            _busControl = Bus.Factory.CreateUsingRabbitMq(cfg =>
+            messageCallback = callback;
+
+            Task rabbitMQTask = Task.Run(() => RunRabbitMQ(settings));
+        }
+
+        private Task RunRabbitMQ(MessageBusSettings settings)
+        {
+            ConnectionFactory factory = new ConnectionFactory() { HostName = settings.Host, UserName = settings.UserName, Password = settings.Password, VirtualHost = "/" };
+
+
+            using (IConnection connection = factory.CreateConnection())
+            using (IModel channel = connection.CreateModel())
             {
-                cfg.Host(_setting.Host, "/", h =>
+                channel.QueueDeclare(settings.Queue, true, false, false);
+                EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
+                consumer.Received += ConsumerReceived;
+                channel.BasicConsume(queue: settings.Queue, autoAck: true, consumer: consumer);
+                while (true)
                 {
-                    h.Username(_setting.UserName);
-                    h.Password(_setting.Password);
-                });
+                    if (RabbitMQToken.IsCancellationRequested)
+                    {
+                        consumer.Received -= ConsumerReceived;
+                        break;
+                    }
+                }
+            }
+            return null;
+        }
 
-                cfg.ReceiveEndpoint(_setting.Queue, e =>
-                {
-                    e.Consumer(() => (IConsumer<MessageAsString>)callback.Target);
-                });
-            });
+        private async void ConsumerReceived(object sender, BasicDeliverEventArgs ea)
+        {
+            byte[] body = ea.Body.ToArray();
+            List<string> strList = Encoding.UTF8.GetString(body).Split(';').ToList();
 
-            var source = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            // This is a simple check for the POC.
+            if (strList.Count == 3)
+            {                
+                RoomUpdate update = new RoomUpdate(strList[0], Convert.ToInt32(strList[1]), Convert.ToDateTime(strList[2]));
 
-            await _busControl.StartAsync(source.Token);
+                messageCallback.Invoke(update);
+            }
+
+            return;
         }
     }
 }

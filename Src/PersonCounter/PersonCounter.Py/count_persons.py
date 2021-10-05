@@ -7,6 +7,12 @@ import cv2
 import pika
 import pyodbc
 import os
+import argparse
+
+# construct the argument parser and parse the arguments
+ap = argparse.ArgumentParser()
+ap.add_argument("--poc", required=False, help="Enable Proof Of Concept mode")
+args = vars(ap.parse_args())
 
 try:
     SQLServer = "(LocalDb)\MSSQLLocalDB"
@@ -16,7 +22,10 @@ try:
     SQLConnectionString = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER='+SQLServer+';DATABASE='+SQLDatabase+';UID='+SQLUsername+';PWD='+ SQLPassword
     conn = pyodbc.connect(SQLConnectionString)
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM Cameras")
+    if args['poc'] is not None:
+        cursor.execute("SELECT TOP (1) * FROM Cameras")
+    else:
+        cursor.execute("SELECT * FROM Cameras")
     IPs = []
     classrooms = []
     for row in cursor.fetchall():
@@ -31,9 +40,8 @@ try:
 
     while index < len(IPs):
         cameraIP = IPs[index]
-        ######## Real implementation: ########
-        # vs = cv2.VideoCapture(f"http://{IP}/video")
-        ######## POC: ########
+
+        # Initialize the webcam.
         vs = cv2.VideoCapture(0)
         # Allow the webcam to warm up.
         time.sleep(2)

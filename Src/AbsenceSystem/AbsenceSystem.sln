@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Absence.DataAccess", "Absen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Absence.Service", "Absence.Service\Absence.Service.csproj", "{2682F79E-7AE8-4D1D-BD70-7CE079FC41F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Absence.WebCore", "Absence.WebCore\Absence.WebCore.csproj", "{03E153DC-002F-4F3D-81D5-E9A668F61CBE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{2682F79E-7AE8-4D1D-BD70-7CE079FC41F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2682F79E-7AE8-4D1D-BD70-7CE079FC41F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2682F79E-7AE8-4D1D-BD70-7CE079FC41F8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{03E153DC-002F-4F3D-81D5-E9A668F61CBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{03E153DC-002F-4F3D-81D5-E9A668F61CBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{03E153DC-002F-4F3D-81D5-E9A668F61CBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{03E153DC-002F-4F3D-81D5-E9A668F61CBE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

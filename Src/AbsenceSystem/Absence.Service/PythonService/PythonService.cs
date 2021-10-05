@@ -5,8 +5,8 @@ namespace Absence.Service.PythonService
 {
     public class PythonService : LoggingService.LoggingService, IPythonService
     {
-        private const string _scriptLocation = @"C:\Users\jimm1576\source\repos\IT-GreenDeal\Src\AbsenceSystem\Absence.Py\face_recognizer.py";
-        private const string _pythonLocation = @"C:\Users\jimm1576\AppData\Local\Programs\Python\Python37\python.exe";
+        private const string _scriptLocation = @"C:\Users\jimmy\source\repos\IT-GreenDeal\Src\AbsenceSystem\Absence.Py\face_recognizer.py";
+        private const string _pythonLocation = @"C:\Users\jimmy\AppData\Local\Programs\Python\Python37\python.exe";
 
         public async Task<Process> StartAbsenceScript(string IP)
         {
@@ -23,7 +23,7 @@ namespace Absence.Service.PythonService
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
-                        CreateNoWindow = false
+                        CreateNoWindow = true
                     },
                     EnableRaisingEvents = true
                 };

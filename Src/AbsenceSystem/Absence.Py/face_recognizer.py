@@ -17,7 +17,7 @@ cameraIP = args['ip']
 print("Loading model.")
 
 # Load the data from the model.
-data = pickle.loads(open("C:\\Users\\jimm1576\\source\\repos\\IT-GreenDeal\\Src\\AbsenceSystem\\Absence.Py\\model.pickle", "rb").read())
+data = pickle.loads(open("C:\\Users\\jimmy\\source\\repos\\IT-GreenDeal\\Src\\AbsenceSystem\\Absence.Py\\model.pickle", "rb").read())
 
 print(f"Starting the webcam with the IP: {cameraIP}")
 
@@ -47,7 +47,7 @@ while True:
 	# "hog" = LESS accuracy MORE speed.
 	# "cnn" = MORE accuracy LESS speed.
 	# Detect the (x, y)-coordinates for the faces.
-	boxes = face_recognition.face_locations(imageRGB, model="hog")
+	boxes = face_recognition.face_locations(imageRGB, model="cnn")
 	
 	# Get the facial encodings for the faces.
 	encodings = face_recognition.face_encodings(imageRGB, boxes)
@@ -58,7 +58,7 @@ while True:
 	for encoding in encodings:
 
 		# Attempt to match each face from the webcam stream to our known encodings. (Adjust tolerance for stricter matching.)
-		matches = face_recognition.compare_faces(data["encodings"],	encoding, tolerance=0.4)
+		matches = face_recognition.compare_faces(data["encodings"],	encoding, tolerance=0.5)
 		id = None
 
 		# Check to see if we have found a match.

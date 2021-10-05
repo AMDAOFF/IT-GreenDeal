@@ -5,9 +5,9 @@ namespace Absence.Service.AbsenceReportService
 {
     public class FullAbsenceReportDTO
     {
-        public int FKStudentId { get; set; }
+        public string FKStudentId { get; set; }
         public int FKScheduleId { get; set; }
-        public string Attended { get; set; }
+        public bool Attended { get; set; }
         public FullStudentDTO Student { get; set; }
         public FullScheduleDTO Schedule { get; set; }
     }

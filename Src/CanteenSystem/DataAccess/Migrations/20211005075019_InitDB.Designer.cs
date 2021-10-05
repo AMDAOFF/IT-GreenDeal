@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace DataAccess.Migrations
+namespace Canteen.DataAccess.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    [Migration("20210924090706_ApplicationUser")]
-    partial class ApplicationUser
+    [Migration("20211005075019_InitDB")]
+    partial class InitDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,107 @@ namespace DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Canteen.DataAccess.Models.Allergy", b =>
+                {
+                    b.Property<int>("AllergyId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AllergyName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("AllergyId");
+
+                    b.ToTable("Allergies");
+                });
+
+            modelBuilder.Entity("Canteen.DataAccess.Models.Dish", b =>
+                {
+                    b.Property<int>("DishId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("DishCO2")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DishName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("DishOfTheDay")
+                        .HasColumnType("bit");
+
+                    b.HasKey("DishId");
+
+                    b.ToTable("Dishes");
+                });
+
+            modelBuilder.Entity("Canteen.DataAccess.Models.DishIngredient", b =>
+                {
+                    b.Property<int>("DishId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IngredientId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AllergyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DishId", "IngredientId");
+
+                    b.HasIndex("AllergyId");
+
+                    b.HasIndex("IngredientId");
+
+                    b.ToTable("DishIngredients");
+                });
+
+            modelBuilder.Entity("Canteen.DataAccess.Models.Ingredient", b =>
+                {
+                    b.Property<int>("IngredientId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("IngredientName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IngredientId");
+
+                    b.ToTable("Ingredients");
+                });
+
+            modelBuilder.Entity("Canteen.DataAccess.Models.IngredientAllergy", b =>
+                {
+                    b.Property<int>("IngredientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AllergyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("IngredientId", "AllergyId");
+
+                    b.HasIndex("AllergyId");
+
+                    b.ToTable("IngredientAllergies");
+                });
+
+            modelBuilder.Entity("Canteen.DataAccess.Models.UserAllergy", b =>
+                {
+                    b.Property<int>("AllergyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("AllergyId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserAllergies");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -227,7 +328,7 @@ namespace DataAccess.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("DataAccess.Identity.ApplicationUser", b =>
+            modelBuilder.Entity("Canteen.DataAccess.Identity.ApplicationUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
@@ -238,6 +339,67 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
+                });
+
+            modelBuilder.Entity("Canteen.DataAccess.Models.DishIngredient", b =>
+                {
+                    b.HasOne("Canteen.DataAccess.Models.Allergy", null)
+                        .WithMany("DishIngredients")
+                        .HasForeignKey("AllergyId");
+
+                    b.HasOne("Canteen.DataAccess.Models.Dish", "Dish")
+                        .WithMany("DishIngredients")
+                        .HasForeignKey("DishId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Canteen.DataAccess.Models.Ingredient", "Ingredient")
+                        .WithMany("DishIngredients")
+                        .HasForeignKey("IngredientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Dish");
+
+                    b.Navigation("Ingredient");
+                });
+
+            modelBuilder.Entity("Canteen.DataAccess.Models.IngredientAllergy", b =>
+                {
+                    b.HasOne("Canteen.DataAccess.Models.Allergy", "Allergy")
+                        .WithMany("IngredientAllergies")
+                        .HasForeignKey("AllergyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Canteen.DataAccess.Models.Ingredient", "Ingredient")
+                        .WithMany("IngredientAllergies")
+                        .HasForeignKey("IngredientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Allergy");
+
+                    b.Navigation("Ingredient");
+                });
+
+            modelBuilder.Entity("Canteen.DataAccess.Models.UserAllergy", b =>
+                {
+                    b.HasOne("Canteen.DataAccess.Models.Allergy", "Allergy")
+                        .WithMany()
+                        .HasForeignKey("AllergyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Canteen.DataAccess.Identity.ApplicationUser", "User")
+                        .WithMany("UserAllergies")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Allergy");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -289,6 +451,30 @@ namespace DataAccess.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Canteen.DataAccess.Models.Allergy", b =>
+                {
+                    b.Navigation("DishIngredients");
+
+                    b.Navigation("IngredientAllergies");
+                });
+
+            modelBuilder.Entity("Canteen.DataAccess.Models.Dish", b =>
+                {
+                    b.Navigation("DishIngredients");
+                });
+
+            modelBuilder.Entity("Canteen.DataAccess.Models.Ingredient", b =>
+                {
+                    b.Navigation("DishIngredients");
+
+                    b.Navigation("IngredientAllergies");
+                });
+
+            modelBuilder.Entity("Canteen.DataAccess.Identity.ApplicationUser", b =>
+                {
+                    b.Navigation("UserAllergies");
                 });
 #pragma warning restore 612, 618
         }

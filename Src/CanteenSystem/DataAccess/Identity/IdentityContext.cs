@@ -40,7 +40,13 @@ namespace Canteen.DataAccess.Identity
 
             builder.Entity<DishIngredient>()
                 .HasOne(di => di.Dish)
-                .WithMany(di => di.DishIngredients);
+                .WithMany(di => di.DishIngredients)
+                .HasForeignKey(di => di.DishId);
+
+            builder.Entity<DishIngredient>()
+                .HasOne(di => di.Ingredient)
+                .WithMany(di => di.DishIngredients)
+                .HasForeignKey(di => di.IngredientId);
 
             builder.Entity<Ingredient>()
                 .HasMany(i => i.DishIngredients)
@@ -54,11 +60,17 @@ namespace Canteen.DataAccess.Identity
 
             #region Allergies -> IngredientAllergies 
             builder.Entity<IngredientAllergy>()
-                .HasKey(ia => new { ia.IngredientId, ia.AllergyId });
+                .HasKey(di => new { di.IngredientId, di.AllergyId });
 
             builder.Entity<IngredientAllergy>()
                 .HasOne(ia => ia.Allergy)
-                .WithMany(ia => ia.IngredientAllergies);
+                .WithMany(ia => ia.IngredientAllergies)
+                .HasForeignKey(ia => ia.AllergyId);
+
+            builder.Entity<IngredientAllergy>()
+                .HasOne(ia => ia.Ingredient)
+                .WithMany(ia => ia.IngredientAllergies)
+                .HasForeignKey(ia => ia.IngredientId);
 
             builder.Entity<Ingredient>()
                 .HasMany(i => i.IngredientAllergies)

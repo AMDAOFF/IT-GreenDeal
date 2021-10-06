@@ -1,5 +1,4 @@
 ﻿using Energi.Service.MessageService.DTO;
-using MassTransit;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
@@ -14,19 +13,18 @@ namespace Energi.Service.MessageService
 {
     public class MessageService : IMessageService
     {
-        private MessageBusSettings _settings;
-        IBusControl _busControl;        
+        private MessageBusSettings _settings;               
         public CancellationToken RabbitMQToken { get; set; }
         Func<RoomUpdate, Task> messageCallback;
 
         public async Task SendMessage(PublishMessageDTO message)
         {
-            await _busControl.Publish(new RoomUpdate(message.RoomNr, message.PeopleCount, message.TimeStamp));
+            //await _busControl.Publish(new RoomUpdate(message.RoomNr, message.PeopleCount, message.TimeStamp));
         }
 
         public async Task StopListener()
-        {
-            await _busControl.StopAsync();
+        {            
+            //await _busControl.StopAsync();
         }
 
 

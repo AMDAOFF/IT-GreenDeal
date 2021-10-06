@@ -1,5 +1,4 @@
 ﻿using Energi.Service.MessageService.DTO;
-using MassTransit;
 using System;
 using System.Threading.Tasks;
 using static MessageBroker.Contracts.Contracts;

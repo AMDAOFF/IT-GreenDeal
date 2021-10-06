@@ -4,7 +4,6 @@ using Energi.Service.HeatingService;
 using Energi.Service.MessageService;
 using Energi.Service.MQTTService;
 using Energi.Web.Hubs;
-using MassTransit;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -39,7 +38,6 @@ namespace Energi.Web.HostedService
             _heatingService = heatingService;
             _mqttService = mqttService;
             onlineDevices = new List<StatusDeviceDTO>();
-
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)

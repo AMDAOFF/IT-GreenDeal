@@ -7,27 +7,42 @@
 @using Energi.Service.MessageService
 @using Energi.Service.MessageService.DTO
 @using Energi.Service.DatabaseService
+@using Energi.Service.MQTTService
 
-
+@inject IMqttService mqttService
 @inject IJSRuntime JsRuntime
 @inject IDeviceService deviceService
 @inject IMessageService messageService
 @inject IDatabaseService databaseService
 
-<h3>Settings</h3>
+<h3>Seed data</h3>
 
 <p>
     Seed the database:
     <button class="btn btn-primary btn-sm" @onclick="SeedData">SeedData</button>
+
+</p>
+
+<h3>RabbitMQ</h3>
+
+<p>
+    Send message:
     <button class="btn btn-primary btn-sm" @onclick="SendMessageRabbitMQ">SendMessageRabbitMQ</button>
 </p>
 
+<h3>MqttTest</h3>
 
+<p>
+    Controlle device.
+    <button class="btn btn-primary btn-sm" @onclick="TurnOn">On</button>
+    <button class="btn btn-primary btn-sm" @onclick="TurnOff">Off</button>
+</p>
 
 @code {
 
     //  This is only for the POC applications!!!
-    private async void SeedData()    {
+    private async void SeedData()
+    {
         await databaseService.DeleteDatabase();
         await databaseService.SeedData();
 
@@ -41,5 +56,18 @@
         await messageService.SendMessage(message);
 
 
+    }
+
+    //  This is only for the POC applications!!!
+    private async void TurnOn()
+    {
+
+        mqttService.Publish("", "#1111#");
+    }
+
+    private async void TurnOff()
+    {
+
+        mqttService.Publish("", "#0000#");
     }
 }

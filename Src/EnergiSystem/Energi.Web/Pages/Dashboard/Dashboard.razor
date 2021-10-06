@@ -1,5 +1,5 @@
-﻿@*@page "/dashboard"*@
-@page "/"
+﻿@page "/"
+@page "/dashboard"
 
 @using Energi.Service.DeviceService
 @using Energi.Service.DeviceService.DTO
@@ -139,7 +139,7 @@
             device.RecyclingStatus = (device.RecyclingStatus == false) ? true : false;
 
             device.RecyclingFan = (device.RecyclingFan == false) ? true : false;
-            
+
             deviceService.UpdateDevice(device);
         }
     }

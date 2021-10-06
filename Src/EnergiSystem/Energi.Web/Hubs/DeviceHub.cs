@@ -9,9 +9,5 @@ namespace Energi.Web.Hubs
 {
     public class DeviceHub : Hub
     {
-        //public async Task TaskAsync(StatusDeviceDTO device)
-        //{
-        //    await Clients.All.SendAsync("UpdateDevice", device);
-        //}
     }
 }

@@ -14,7 +14,7 @@ class II2C
 	/**
 	* @brief Write to an I2C slave and performs a complete write transaction.
 	* @param address - address of the slave device to be written to.
-	* @param registerAddress -  The register to be sent to the slave.
+	* @param registerAddress -  The register that need to be sent to the slave.
 	*/
 	virtual void WriteRegister(uint8_t* address, uint8_t* reg) = 0;
 	

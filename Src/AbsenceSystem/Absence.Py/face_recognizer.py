@@ -17,7 +17,7 @@ cameraIP = args['ip']
 print("Loading model.")
 
 # Load the data from the model.
-data = pickle.loads(open("C:\\Users\\jimmy\\source\\repos\\IT-GreenDeal\\Src\\AbsenceSystem\\Absence.Py\\model.pickle", "rb").read())
+data = pickle.loads(open("C:\\Users\\jimm1576\\source\\repos\\IT-GreenDeal\\Src\\AbsenceSystem\\Absence.Py\\model.pickle", "rb").read())
 
 print(f"Starting the webcam with the IP: {cameraIP}")
 
@@ -47,7 +47,7 @@ while True:
 	# "hog" = LESS accuracy MORE speed.
 	# "cnn" = MORE accuracy LESS speed.
 	# Detect the (x, y)-coordinates for the faces.
-	boxes = face_recognition.face_locations(imageRGB, model="cnn")
+	boxes = face_recognition.face_locations(imageRGB, model="hog")
 	
 	# Get the facial encodings for the faces.
 	encodings = face_recognition.face_encodings(imageRGB, boxes)
@@ -90,7 +90,7 @@ while True:
 			channel.queue_declare(queue=f"Absence-{cameraIP}", durable=True)
 			channel.start_consuming()
 			channel.basic_publish(exchange='', routing_key=f'Absence-{cameraIP}', body=f'{id}')
-			print(f"Succeded")
+			print(f"Succeded - Sent {id}")
 
     # Loop over the recognized faces.
 	for ((top, right, bottom, left), id) in zip(boxes, ids):

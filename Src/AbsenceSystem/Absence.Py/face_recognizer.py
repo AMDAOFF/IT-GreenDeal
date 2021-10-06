@@ -90,7 +90,7 @@ while True:
 			channel.queue_declare(queue=f"Absence-{cameraIP}", durable=True)
 			channel.start_consuming()
 			channel.basic_publish(exchange='', routing_key=f'Absence-{cameraIP}', body=f'{id}')
-			print(f"Succeded")
+			print(f"Succeded - Sent {id}")
 
     # Loop over the recognized faces.
 	for ((top, right, bottom, left), id) in zip(boxes, ids):

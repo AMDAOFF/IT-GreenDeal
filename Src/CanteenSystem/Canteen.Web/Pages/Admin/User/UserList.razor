@@ -10,6 +10,7 @@
 
 @if (Users != null)
 {
+	// Table of users with their roles.
 	<div class="container">
 		<table class="table table-dark">
 			<thead>
@@ -40,9 +41,11 @@
 }
 else
 {
+	// If the users havent been loaded yet.
 	<label>Loading...</label>
 }
 
+@* Modal for editing of user *@
 <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="userEditModalLabel" aria-hidden="true">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -82,7 +85,7 @@ else
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Luk</button>
-						<input type="submit" class="btn btn-primary" />
+						<input type="submit" class="btn btn-primary" value="Gem" />
 					</div>
 				</EditForm>
 			</div>
@@ -98,6 +101,8 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
+		// Gets current logged ind user and checks if the user is admin.
+		// If not, then the user will be redirected to the frontpage.
 		try
 		{
 			var authState = await authStateProvider.GetAuthenticationStateAsync();
@@ -127,12 +132,7 @@ else
 
 	public async Task EditUser()
 	{
-		//bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Er du sikker på at du vil opdatere denne bruger?");
-		//if (confirmed == true)
-		//{
 		await _service.EditUser(UserDTO);
-		//StateHasChanged();
-		//}
 	}
 
 	private async Task DeleteUser(SlimApplicationUserDTO userDTO)

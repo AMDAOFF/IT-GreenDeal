@@ -19,6 +19,10 @@ namespace Canteen.Service.UserAllergyService
 			_identityContext = identityContext;
 		}
 
+		/// <summary>
+		/// Gets all the userallergy relations in a list.
+		/// </summary>
+		/// <returns>A list of user and allergy relations.</returns>
 		public async Task<List<FullUserAllergyDTO>> GetAllUserAllergy()
 		{
 			List<UserAllergy> userAllergies = await _identityContext.UserAllergies.ToListAsync();
@@ -36,6 +40,11 @@ namespace Canteen.Service.UserAllergyService
 			return userAllergyDTO;
 		}
 
+		/// <summary>
+		/// Removes relation between user and allergy.
+		/// </summary>
+		/// <param name="userId"></param>
+		/// <returns></returns>
 		public async Task RemoveUserAllergy(string userId)
 		{
 			List<UserAllergy> userAllergies = await _identityContext.UserAllergies.ToListAsync();

@@ -1,46 +1,64 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">Canteen.Web</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+﻿@using System.Security.Claims
+@inject AuthenticationStateProvider authStateProvider
+
+<div class="top-row pl-4 navbar navbar-dark">
+	<a class="navbar-brand" href="">Euc-syd kantine</a>
+	<button class="navbar-toggler" @onclick="ToggleNavMenu">
+		<span class="navbar-toggler-icon"></span>
+	</button>
 </div>
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        @*<li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Hjem
-            </NavLink>
-        </li>*@
+	<ul class="nav flex-column">
 
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-plus" aria-hidden="true"></span> Elev Dashbord
-            </NavLink>
-        </li>
+		<li class="nav-item px-3">
+			<NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+				<span class="oi oi-plus" aria-hidden="true"></span> Hjem
+			</NavLink>
+		</li>
 
-
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="/worker/management/menu" Match="NavLinkMatch.All">
-                <span class="oi oi-plus" aria-hidden="true"></span> Menu Management
-            </NavLink>
-        </li>
-
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="/dishes" Match="NavLinkMatch.All">
-                <span class="oi oi-plus" aria-hidden="true"></span> Hjem
-            </NavLink>
-        </li>
-    </ul>
+		@if (claimUser.IsInRole("Admin") || claimUser.IsInRole("Canteen"))
+		{
+			<li class="nav-item px-3">
+				<NavLink class="nav-link" href="/worker/management/menu" Match="NavLinkMatch.All">
+					<span class="oi oi-plus" aria-hidden="true"></span> Kantine management
+				</NavLink>
+			</li>
+		}
+		@if (claimUser.IsInRole("Admin"))
+		{
+			<li class="nav-item px-3">
+				<NavLink class="nav-link" href="/admin/user/userlist" Match="NavLinkMatch.All">
+					<span class="oi oi-plus" aria-hidden="true"></span> Admin
+				</NavLink>
+			</li>
+		}
+	</ul>
 </div>
 
 @code {
-    private bool collapseNavMenu = true;
+	private ClaimsPrincipal claimUser;
+	private bool collapseNavMenu = true;
 
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+	private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
+	private void ToggleNavMenu()
+	{
+		collapseNavMenu = !collapseNavMenu;
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		// Getting current logged ind user for authorization
+		try
+		{
+			var authState = await authStateProvider.GetAuthenticationStateAsync();
+			claimUser = authState.User;
+		}
+		catch (Exception)
+		{
+
+			throw;
+		}
+	}
 }

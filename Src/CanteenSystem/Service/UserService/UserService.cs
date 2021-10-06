@@ -44,6 +44,10 @@ namespace Canteen.Service.UserService
 			_userAllergyService = userAllergyService;
 		}
 
+		/// <summary>
+		/// Gets all the users, which is stored in the database.
+		/// </summary>
+		/// <returns>A list of users.</returns>
 		public async Task<List<SlimApplicationUserDTO>> GetUsersAsync()
 		{
 			List<SlimApplicationUserDTO> applicationUsers = new();
@@ -77,6 +81,10 @@ namespace Canteen.Service.UserService
 			return applicationUsers;
 		}
 
+		/// <summary>
+		/// Get the current logged in user.
+		/// </summary>
+		/// <returns></returns>
 		public async Task<SlimApplicationUserDTO> GetUserAsync()
 		{
 			var currentUser = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
@@ -102,19 +110,26 @@ namespace Canteen.Service.UserService
 			}
 		}
 
-		//public async Task<string> GetCurrentUserRole(string currentUserId)
-		//{
-		//	ApplicationUser user = _identityContext.Users.OfType<ApplicationUser>().FirstOrDefault(x => x.Id == currentUserId);
-		//	List<string> userRoles = (List<string>)await _userManager.GetRolesAsync(user);
-		//	return userRoles.FirstOrDefault();
-		//}
-
+		/// <summary>
+		/// This method edit the current logged in user.
+		/// </summary>
+		/// <param name="modelState"></param>
+		/// <param name="userDTO"></param>
+		/// <param name="allergiesDTO"></param>
+		/// <returns>A result string.</returns>
 		public async Task<string> ChangeUserAsync(ModelStateDictionary modelState, SlimApplicationUserDTO userDTO, List<FullAllergyDTO> allergiesDTO)
 		{
+			// Get the current logged in user.
 			var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+
+			// If what the user typed is valid return success, else return not valid.
+			// This helps the user to know if what they submites is valid or not.
 			if (modelState.IsValid && userDTO != null)
 			{
+				// Removes all the relations between the current logged in user and allergy.
 				await _userAllergyService.RemoveUserAllergy(userDTO.Id);
+
+				// Creates a realtion for each allery that has been submitet
 				foreach (var allergy in allergiesDTO)
 				{
 					UserAllergy userAllergy = new UserAllergy
@@ -123,16 +138,27 @@ namespace Canteen.Service.UserService
 						UserId = userDTO.Id
 					};
 
+					// Adds the User - Allergy relations to the context
 					await _identityContext.UserAllergies.AddAsync(userAllergy);
+
+					// Saves and submits the changes to the database
 					await _identityContext.SaveChangesAsync();
 				}
 
+				// Encrypts the submittet name
 				byte[] encryptedName = _encryptionService.Encrypt(userDTO.Name);
+
+				// Encrypts the submittet surname
 				byte[] encryptedSurname = _encryptionService.Encrypt(userDTO.Surname);
 
+				// Converts the encryptet name and surname to a string
 				user.Name = Convert.ToBase64String(encryptedName);
 				user.Surname = Convert.ToBase64String(encryptedSurname);
+
+				// Updates the user
 				await _userManager.UpdateAsync(user);
+
+				// Logges the user out and in again after the submit succeds
 				await _signInManager.RefreshSignInAsync(user);
 				return "Success";
 			}
@@ -140,11 +166,13 @@ namespace Canteen.Service.UserService
 
 		}
 
+		/// <summary>
+		/// Edits the uses. This is used for the administration of users.
+		/// </summary>
+		/// <param name="userDTO"></param>
+		/// <returns></returns>
 		public async Task EditUser(SlimApplicationUserDTO userDTO)
 		{
-			//List<ApplicationUser> users = await _identityContext.Users.OfType<ApplicationUser>().ToListAsync();
-			//ApplicationUser user = users.Find(x => x.Id == userDTO.Id);
-
 			byte[] encryptedName = _encryptionService.Encrypt(userDTO.Name);
 			byte[] encryptedSurname = _encryptionService.Encrypt(userDTO.Surname);
 
@@ -166,6 +194,11 @@ namespace Canteen.Service.UserService
 			await _userManager.UpdateAsync(user);
 		}
 
+		/// <summary>
+		/// Delets a user. This is used by the admin of the site.
+		/// </summary>
+		/// <param name="userDTO"></param>
+		/// <returns></returns>
 		public async Task DeleteUser(SlimApplicationUserDTO userDTO)
 		{
 			List<ApplicationUser> users = await _identityContext.Users.OfType<ApplicationUser>().ToListAsync();
@@ -174,6 +207,10 @@ namespace Canteen.Service.UserService
 			await _userManager.DeleteAsync(user);
 		}
 
+		/// <summary>
+		/// This method gets all the roles that are available.
+		/// </summary>
+		/// <returns></returns>
 		public async Task<IEnumerable<string>> GetRoles()
 		{
 			List<string> roles = new();

@@ -184,11 +184,11 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Luk</button>
 
 				@if (ModalActionButtonCallback.HasDelegate)
 				{
-					<button type="button" class="btn btn-primary" @onclick="@(() => { ModalActionButtonCallback.InvokeAsync(ModalData); })" data-dismiss="modal">Save changes</button>
+					<button type="button" class="btn btn-primary" @onclick="@(() => { ModalActionButtonCallback.InvokeAsync(ModalData); })" data-dismiss="modal">Gem</button>
 				}
 			</div>
 		</div>

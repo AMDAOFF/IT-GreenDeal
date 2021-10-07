@@ -5,7 +5,6 @@
     /* Background colors */
     --primaryColor: #131313;
     --secondaryColor: #2A2A2A;
-
     /* Font colors */
     --darkFontColor: white;
     --lightFontColor: black;
@@ -49,34 +48,34 @@ h5 {
     color: var(--darkFontColor);
 }
 
-.canteenMenuItem .canteenMenuItemInfoIcon {
-    position: absolute;
-    top: 22px;
-    right: 25px;
-    font-size: 25px;
-    opacity: 0.6;
-    transition: opacity 0.5s ease;
-}
+    .canteenMenuItem .canteenMenuItemInfoIcon {
+        position: absolute;
+        top: 22px;
+        right: 25px;
+        font-size: 25px;
+        opacity: 0.6;
+        transition: opacity 0.5s ease;
+    }
 
-.canteenMenuItem .canteenMenuItemInfoIcon:hover {
-    opacity: 1;
-}
+        .canteenMenuItem .canteenMenuItemInfoIcon:hover {
+            opacity: 1;
+        }
 
-.canteenMenuItem .canteenMenuItemContent {
-    transform: translate(-50%, -50%);
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    text-align: center;
-}
+    .canteenMenuItem .canteenMenuItemContent {
+        transform: translate(-50%, -50%);
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        text-align: center;
+    }
 
-.canteenMenuItem.allergic {
-    box-shadow: rgba(255, 0, 0) 0px 0px 10px;
-}
+    .canteenMenuItem.allergic {
+        box-shadow: rgba(255, 0, 0) 0px 0px 10px;
+    }
 
-.canteenMenuItem.notAllergic {
-    box-shadow: rgba(0, 240, 10) 0px 0px 10px;
-}
+    .canteenMenuItem.notAllergic {
+        box-shadow: rgba(0, 240, 10) 0px 0px 10px;
+    }
 
 .modalInfoVariableValue {
     font-size: 17px;
@@ -87,15 +86,11 @@ h5 {
 
 .infoscreen-container {
     color: white;
-
     position: absolute;
     z-index: 100000;
-
     left: 0px;
     top: 0px;
-
     background-color: #131313;
-
     width: 100vw;
     height: 100vh;
 }
@@ -109,45 +104,40 @@ h5 {
     position: relative;
 }
 
-.infoscreen-header-info .infoscreen-header-info-content {
-    transform: translate(-50%, -50%);
-    width: 100%;
-
-    position: absolute;
-    top: 52%;
-    left: 180px;
-}
+    .infoscreen-header-info .infoscreen-header-info-content {
+        transform: translate(-50%, -50%);
+        width: 100%;
+        position: absolute;
+        top: 52%;
+        left: 180px;
+    }
 
 .infoscreen-container .infoscreen-dish-item {
     background-color: white;
     color: var(--lightFontColor)
 }
 
-.infoscreen-container .infoscreen-dish-item .infoscreen-dish-item-header {
-    text-align: center;
-}
+    .infoscreen-container .infoscreen-dish-item .infoscreen-dish-item-header {
+        text-align: center;
+    }
 
 
 
 .dish-info-screen {
     height: 100vh;
     width: 100vw;
-
     background-color: #131313;
-
     position: absolute;
     left: 0px;
     top: 0px;
-
     z-index: 100000;
 }
 
-.dish-info-screen .dish-info-panel {
-    background-color: #fff;
-
-    height: 100vh;
-    width: 100%;
-}
+    .dish-info-screen .dish-info-panel {
+        background-color: #fff;
+        height: 100vh;
+        width: 100%;
+    }
 
 
 
@@ -157,11 +147,11 @@ table.table-dark {
     background-color: var(--primaryColor);
 }
 
-/* Change the background color of the table header */
-table.table-dark thead {
-    background-color: var(--secondaryColor);
-    color: var(--darkFontColor);
-}
+    /* Change the background color of the table header */
+    table.table-dark thead {
+        background-color: var(--secondaryColor);
+        color: var(--darkFontColor);
+    }
 
 /* Remove all of the borders from the dark tables */
 .table-dark td, .table-dark th, .table-dark thead th {
@@ -175,17 +165,17 @@ table.table-dark thead {
     padding: 5px 11px;
 }
 
-.btn.btn-rounded.btn-small-text {
-    font-size: 20px;
-}
+    .btn.btn-rounded.btn-small-text {
+        font-size: 20px;
+    }
 
-.btn.btn-rounded.btn-normal-text {
-    font-size: 25px;
-}
+    .btn.btn-rounded.btn-normal-text {
+        font-size: 25px;
+    }
 
-.btn.btn-rounded.btn-big-text {
-    font-size: 30px;
-}
+    .btn.btn-rounded.btn-big-text {
+        font-size: 30px;
+    }
 
 
 
@@ -230,9 +220,9 @@ a, .btn-link {
     z-index: 1000;
 }
 
-#blazor-error-ui .dismiss {
-    cursor: pointer;
-    position: absolute;
-    right: 0.75rem;
-    top: 0.5rem;
-}
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }

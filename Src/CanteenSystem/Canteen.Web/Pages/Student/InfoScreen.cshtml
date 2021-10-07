@@ -1,12 +1,12 @@
 ﻿@page "/infoscreen"
 @model Canteen.Web.Pages.Student.InfoScreenModel
 
-@using QRCoder 
+@using QRCoder
 @using System.Drawing
 @using System.IO
 @using Canteen.Service.DishService.Dto;
 
-@{ 
+@{
     byte[] ConvertBitmapToBytes(Bitmap bitmap)
     {
         using (MemoryStream memoryStream = new MemoryStream())
@@ -28,7 +28,6 @@
                 <div class="col-8 infoscreen-header-info">
                     <div class="infoscreen-header-info-content">
                         <h3 class="text-bold">Kantinen (EUC Syd)</h3>
-                        <h3>12:00</h3>
                     </div>
                 </div>
             </div>
@@ -40,7 +39,7 @@
         <div class="row mr-auto">
             @foreach (FullDishDTO dish in Model.DishesToday)
             {
-                <div class="col-4">
+                <div class="col-4 mb-4">
                     <div class="infoscreen-dish-item">
                         <div class="infoscreen-dish-item-header">
                             <h2>@dish.DishName</h2>
@@ -65,7 +64,7 @@
 
                                     <img width="100px" src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(File(bitmapBytes, "image/jpeg").FileContents))" />
                                 </div>
-                            </div
+                            </div>
                         </div>
                     </div>
                 </div>
